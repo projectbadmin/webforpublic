@@ -1,5 +1,11 @@
 import logging
 from logging.handlers import RotatingFileHandler
+from functools import wraps
+import shutil
+import os
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 def init_logging(app):
     # Set up file logging (with rotation)
@@ -17,3 +23,24 @@ def init_logging(app):
     # Add handlers to app logger
     app.logger.addHandler(file_handler)
     app.logger.addHandler(console_handler)
+    
+def log_action(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        logger.info(f"Calling {func.__name__} with args: {args}, kwargs: {kwargs}")
+        result = func(*args, **kwargs)
+        logger.info(f"{func.__name__} returned {result}")
+        return result
+    return wrapper
+
+# Wrap shutil functions with the logging decorator
+shutil.copy = log_action(shutil.copy)
+shutil.copy2 = log_action(shutil.copy2)
+shutil.copyfile = log_action(shutil.copyfile)
+shutil.move = log_action(shutil.move)
+shutil.rmtree = log_action(shutil.rmtree)
+shutil.make_archive = log_action(shutil.make_archive)
+shutil.unpack_archive = log_action(shutil.unpack_archive)
+shutil.disk_usage = log_action(shutil.disk_usage)
+shutil.chown = log_action(shutil.chown)
+

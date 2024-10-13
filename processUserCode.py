@@ -7,15 +7,15 @@ def process(app, code_for_onStart, code_for_onProess, code_for_onEnd, requestid,
     try:
         # copy the cloudBatchJobTemplate repository
         shutil.copytree(f"{app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment", f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}")
-        app.logger.info(f"Copied {app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment to {app.config['clone_of_cloudBatchJobTemplate']}{requestid}")
         
         # Write the main logic file
         if requestContentInJSON["FUT_OPT"] == "F":
-            with open(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java", 'w') as file:
+            with open(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java", 'r') as file:
                 file_content = file.read()
-            updated_content = file_content.replace("/*code_for_onStart*/", code_for_onStart)
-            updated_content = file_content.replace("/*code_for_onProess*/", code_for_onProess)
-            updated_content = file_content.replace("/*code_for_onEnd*/", code_for_onEnd)
+            updated_content = file_content
+            updated_content = updated_content.replace("/*code_for_onStart*/", code_for_onStart)
+            updated_content = updated_content.replace("/*code_for_onProess*/", code_for_onProess)
+            updated_content = updated_content.replace("/*code_for_onEnd*/", code_for_onEnd)
             with open(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java", 'w') as file:
                 file.write(updated_content)
         app.logger.info(f"Wrote the main logic file to {app.config['clone_of_cloudBatchJobTemplate']}{requestid}/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java")
@@ -54,7 +54,13 @@ def process(app, code_for_onStart, code_for_onProess, code_for_onEnd, requestid,
         app.logger.error(e)
     finally:
         shutil.rmtree(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}", ignore_errors=True)
+        shutil.rmtree(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
+        jar_file_path = os.path.join(app.config['clone_of_cloudBatchJobTemplate'], f'{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar')
+        if os.path.exists(jar_file_path):
+            os.remove(jar_file_path)
+            app.logger.info(f"Removed {jar_file_path}")
         
+            
 
 def realTimeUpdateLog(app, requestid):
     output = ""
@@ -67,3 +73,48 @@ def realTimeUpdateLog(app, requestid):
     except Exception as e:
         app.logger.error(e)
     return output
+
+def checkSyntax(app, part_of_code, code, requestid, requestContentInJSON):
+    try:
+        # copy the cloudBatchJobTemplate repository
+        if os.path.exists(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly")==False:
+            shutil.copytree(f"{app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment_interfaceOnly", f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly")
+        else:
+            shutil.copy(
+                f"{app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java",
+                f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java"
+            )
+
+        # Write the main logic file   
+        if requestContentInJSON["FUT_OPT"] == "F":
+            with open(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java", 'r') as file:
+                    file_content = file.read()
+            updated_content = file_content
+            if part_of_code == "onStart":
+                updated_content = updated_content.replace("/*code_for_onStart*/", code)
+            if part_of_code == "onProcess":
+                updated_content = updated_content.replace("/*code_for_onProess*/", code)
+            if part_of_code == "onEnd":
+                updated_content = updated_content.replace("/*code_for_onEnd*/", code)
+            with open(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java", 'w') as file:
+                file.write(updated_content)
+            file.close()
+        app.logger.info(f"Wrote the main logic file to {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java")
+        
+        # javac compile all java files inside requestid_interfaceOnly folder
+        result = subprocess.run(f"javac $(find {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java -name '*.java')", capture_output=True, text=True, shell=True)
+        if result.returncode != 0:
+            errors = result.stderr
+            return errors
+        
+        # run the Main
+        result = subprocess.run([f"java -classpath {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java Main"], capture_output=True, text=True, shell=True)
+        if result.returncode != 0:
+            errors = result.stderr
+            return errors
+
+        return ""
+    except Exception as e:
+        app.logger.error(e)
+        shutil.rmtree(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
+
