@@ -11,15 +11,22 @@ app = Flask(__name__)
 init_logging(app)
 app.logger.info('Initialized logging')
 
+# Parse command-line arguments
+parser = argparse.ArgumentParser(description='Run the Flask app with a specific environment.')
+parser.add_argument('--env', type=str, default='local', help='Environment to run the app in (local, cloud)')
+args = parser.parse_args()
+env = args.env
+
 # load the config file
 try:
     config = configparser.ConfigParser()
     config.read('config.ini')
-    app.config['https_of_cloudBatchJobTemplateDevelopment'] = config.get('local', 'https_of_cloudBatchJobTemplateDevelopment')
-    app.config['clone_of_cloudBatchJobTemplate'] = config.get('local', 'clone_of_cloudBatchJobTemplate')
-    app.config['logDirectory_of_cloudBatchJobTemplate'] = config.get('local', 'logDirectory_of_cloudBatchJobTemplate')
-    app.config['AWS_ACCESS_KEY_ID'] = config.get('local', 'AWS_ACCESS_KEY_ID')
-    app.config['AWS_SECRET_ACCESS_KEY'] = config.get('local', 'AWS_SECRET_ACCESS_KEY')
+    app.config['env'] = env
+    app.config['https_of_cloudBatchJobTemplateDevelopment'] = config.get(env, 'https_of_cloudBatchJobTemplateDevelopment')
+    app.config['clone_of_cloudBatchJobTemplate'] = config.get(env, 'clone_of_cloudBatchJobTemplate')
+    app.config['logDirectory_of_cloudBatchJobTemplate'] = config.get(env, 'logDirectory_of_cloudBatchJobTemplate')
+    app.config['AWS_ACCESS_KEY_ID'] = config.get(env, 'AWS_ACCESS_KEY_ID')
+    app.config['AWS_SECRET_ACCESS_KEY'] = config.get(env, 'AWS_SECRET_ACCESS_KEY')
 except Exception as e:
     app.logger.error(e)
 
