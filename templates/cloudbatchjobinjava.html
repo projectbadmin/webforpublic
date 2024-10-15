@@ -15,7 +15,7 @@
 </head>
 <body>
     <h1 class="header">Java Code Editor</h1>
-    <form action="/runJAVACode" method="post">
+    <form action="/cloudbatchjobinjava/submit" method="post">
         <div>
             <input name="requestid" value="1dc4655d-879d-11ef-90f4-d76dbcd64478"/>
         </div>
@@ -44,7 +44,6 @@
         <button type="submit" id="submitCloudbatchjobinjava" disabled>Submit</button>
     </form>
     <pre id="output" style="width: 100%; height: 50px;">{{ output }}</pre>
-    <pre id="errors" style="width: 100%; height: 50px; color: red;">{{ errors }}</pre>
 
     <script>
         var editor_for_OnStart = CodeMirror.fromTextArea(document.getElementById('code_for_onStart'), {
@@ -92,10 +91,11 @@
                 async: true
             }
         });
-
+        
+        var onstart_annotations = [];
         function checkSyntaxForOnStart(cm, updateLinting, options) {
             if(editor_for_OnStart!=null){
-                fetch('/check_syntax_for_onStart', {
+                fetch('/cloudbatchjobinjava/check_syntax_for_onStart', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -108,34 +108,38 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    var annotations = [];
+                    onstart_annotations = [];
                     if (data.errors) {
                         var lines = data.errors.split('\n');
                         for (var i = 0; i < lines.length; i++) {
                             var match = lines[i].match(/:(\d+): error: (.*)/);
                             if (match) {
-                                annotations.push({
+                                onstart_annotations.push({
                                     message: match[2],
                                     severity: 'error',
-                                    from: CodeMirror.Pos(parseInt(match[1]) - 16, 0),
-                                    to: CodeMirror.Pos(parseInt(match[1]) - 16, 0)
+                                    from: CodeMirror.Pos(parseInt(match[1]) - 17, 0),
+                                    to: CodeMirror.Pos(parseInt(match[1]) - 17, 0)
                                 });
                             }
                         }
                     }
-                    document.getElementById('submitCloudbatchjobinjava').disabled = (annotations.length > 0) || 
+                    document.getElementById('submitCloudbatchjobinjava').disabled = 
+                        (onstart_annotations.length > 0) || 
+                        (onprocess_annotations.length > 0) || 
+                        (onend_annotations.length > 0) || 
                         !editor_for_OnStart.getValue().trim() || 
                         !editor_for_OnProcess.getValue().trim() || 
                         !editor_for_OnEnd.getValue().trim();
-                    updateLinting(annotations);
+                    updateLinting(onstart_annotations);
                 })
                 .catch(error => console.error('Error checking syntax:', error));
             }
         }
 
+        var onprocess_annotations = [];
         function checkSyntaxForOnProcess(cm, updateLinting, options) {
             if(editor_for_OnProcess!=null){
-                fetch('/check_syntax_for_onProcess', {
+                fetch('/cloudbatchjobinjava/check_syntax_for_onProcess', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -148,13 +152,13 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    var annotations = [];
+                    onprocess_annotations = [];
                     if (data.errors) {
                         var lines = data.errors.split('\n');
                         for (var i = 0; i < lines.length; i++) {
                             var match = lines[i].match(/:(\d+): error: (.*)/);
                             if (match) {
-                                annotations.push({
+                                onprocess_annotations.push({
                                     message: match[2],
                                     severity: 'error',
                                     from: CodeMirror.Pos(parseInt(match[1]) - 30, 0),
@@ -163,19 +167,23 @@
                             }
                         }
                     }
-                    document.getElementById('submitCloudbatchjobinjava').disabled = (annotations.length > 0) || 
+                    document.getElementById('submitCloudbatchjobinjava').disabled = 
+                        (onstart_annotations.length > 0) || 
+                        (onprocess_annotations.length > 0) || 
+                        (onend_annotations.length > 0) || 
                         !editor_for_OnStart.getValue().trim() || 
                         !editor_for_OnProcess.getValue().trim() || 
                         !editor_for_OnEnd.getValue().trim();
-                    updateLinting(annotations);
+                    updateLinting(onprocess_annotations);
                 })
                 .catch(error => console.error('Error checking syntax:', error));
             }
         }
 
+        var onend_annotations = [];
         function checkSyntaxForOnEnd(cm, updateLinting, options) {
             if(editor_for_OnEnd!=null){
-                fetch('/check_syntax_for_onEnd', {
+                fetch('/cloudbatchjobinjava/check_syntax_for_onEnd', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -188,26 +196,29 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    var annotations = [];
+                    onend_annotations = [];
                     if (data.errors) {
                         var lines = data.errors.split('\n');
                         for (var i = 0; i < lines.length; i++) {
                             var match = lines[i].match(/:(\d+): error: (.*)/);
                             if (match) {
-                                annotations.push({
+                                onend_annotations.push({
                                     message: match[2],
                                     severity: 'error',
-                                    from: CodeMirror.Pos(parseInt(match[1]) -33, 0),
-                                    to: CodeMirror.Pos(parseInt(match[1]) -33, 0)
+                                    from: CodeMirror.Pos(parseInt(match[1]) -34, 0),
+                                    to: CodeMirror.Pos(parseInt(match[1]) -34, 0)
                                 });
                             }
                         }
                     }
-                    document.getElementById('submitCloudbatchjobinjava').disabled = (annotations.length > 0) || 
+                    document.getElementById('submitCloudbatchjobinjava').disabled =
+                        (onstart_annotations.length > 0) || 
+                        (onprocess_annotations.length > 0) || 
+                        (onend_annotations.length > 0) || 
                         !editor_for_OnStart.getValue().trim() || 
                         !editor_for_OnProcess.getValue().trim() || 
                         !editor_for_OnEnd.getValue().trim();
-                    updateLinting(annotations);
+                    updateLinting(onend_annotations);
                 })
                 .catch(error => console.error('Error checking syntax:', error));
             }
@@ -215,15 +226,22 @@
 
         function fetchLatestOutput() {
             var requestid = document.querySelector('input[name="requestid"]').value;
-            fetch(`/latest_output?requestid=${requestid}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('output').textContent = data.output;
-                })
-                .catch(error => console.error('Error fetching latest output:', error));
+            fetch('/cloudbatchjobinjava/latest_output', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ requestid: requestid })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').textContent = data.output;
+            })
+            .catch(error => console.error('Error fetching latest output:', error));
         }
 
         setInterval(fetchLatestOutput, 2000); // Fetch latest output every 2 seconds
+
     </script>
 </body>
 </html>

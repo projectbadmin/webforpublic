@@ -29,8 +29,9 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
             app.logger.info(f"Wrote the main logic file to {app.config['clone_of_cloudBatchJobTemplate']}{requestid}/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java")
                     
         # Maven build the project
-        project_dir = f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}/cloudBatchJobInJava"
-        subprocess.run(['sudo', 'mvn', 'clean', 'install', 'package'], cwd=project_dir, capture_output=True, text=True)
+        project_dir = f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}/cloudBatchJobInJava/"
+        cmd_prefix = 'sudo ' if app.config['env'] == 'cloud' else ''
+        subprocess.run([f"{cmd_prefix}mvn clean install package -f {project_dir}pom.xml"], capture_output=True, text=True, shell=True)
         app.logger.info(f"Ran Maven build in {project_dir}")
         
         # Copy the with-dependencies.jar file to another directory and rename it
@@ -44,8 +45,9 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         app.logger.info(f"Copied {jar_file} to {destination_dir}")
         
         # Run the jar file
+        cmd_prefix = 'sudo ' if app.config['env'] == 'cloud' else ''
         result = subprocess.run(
-            ['sudo', 'java', '-jar', f'{destination_dir}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar', requestid, json.dumps(requestContentInJSON)],
+            [f"{cmd_prefix}java", '-jar', f'{destination_dir}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar', requestid, json.dumps(requestContentInJSON)],
             capture_output=True,
             text=True,
             env=env

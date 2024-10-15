@@ -35,7 +35,7 @@ except Exception as e:
 def cloudbatchjobinjava():
     return render_template('cloudbatchjobinjava.html')
 
-@app.route('/submitCloudbatchjobinjava', methods=['POST'])
+@app.route('/cloudbatchjobinjava/submit', methods=['POST'])
 def submitCloudbatchjobinjava():
     requestid = request.form['requestid']
     requestContentInJSON = json.loads(request.form['requestContentInJSON'])
@@ -50,14 +50,15 @@ def submitCloudbatchjobinjava():
     return render_template('cloudbatchjobinjava.html', output='', requestid=requestid, requestContentInJSON=requestContentInJSON, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd)
 
 
-@app.route('/latest_output', methods=['GET'])
+@app.route('/cloudbatchjobinjava/latest_output', methods=['POST'])
 def get_latest_output():
-    requestid = request.args.get('requestid')
+    data = request.get_json()
+    requestid = data['requestid']
     output = realTimeUpdateLog(app, requestid)
     return jsonify({'output': output})
 
 
-@app.route('/check_syntax_for_onStart', methods=['POST'])
+@app.route('/cloudbatchjobinjava/check_syntax_for_onStart', methods=['POST'])
 def check_syntax_for_onStart():
     data = request.get_json()
     requestid = data['requestid']
@@ -66,7 +67,7 @@ def check_syntax_for_onStart():
     result = checkSyntax(app, "onStart", code_for_onStart, requestid, requestContentInJSON)
     return jsonify({'errors': result})
 
-@app.route('/check_syntax_for_onProcess', methods=['POST'])
+@app.route('/cloudbatchjobinjava/check_syntax_for_onProcess', methods=['POST'])
 def check_syntax_for_onProcess():
     data = request.get_json()
     requestid = data['requestid']
@@ -75,7 +76,7 @@ def check_syntax_for_onProcess():
     result = checkSyntax(app, "onProcess", code_for_onProcess, requestid, requestContentInJSON)
     return jsonify({'errors': result})
 
-@app.route('/check_syntax_for_onEnd', methods=['POST'])
+@app.route('/cloudbatchjobinjava/check_syntax_for_onEnd', methods=['POST'])
 def check_syntax_for_onEnd():
     data = request.get_json()
     requestid = data['requestid']
