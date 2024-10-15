@@ -3,7 +3,7 @@ import shutil
 import os
 import json
 
-def process(app, code_for_onStart, code_for_onProess, code_for_onEnd, requestid, requestContentInJSON):
+def process(app, code_for_onStart, code_for_onPrcoess, code_for_onEnd, requestid, requestContentInJSON):
     try:
         # Set environment variables
         env = os.environ.copy()
@@ -22,7 +22,7 @@ def process(app, code_for_onStart, code_for_onProess, code_for_onEnd, requestid,
                 file_content = file.read()
             updated_content = file_content
             updated_content = updated_content.replace("/*code_for_onStart*/", code_for_onStart)
-            updated_content = updated_content.replace("/*code_for_onProess*/", code_for_onProess)
+            updated_content = updated_content.replace("/*code_for_onPrcoess*/", code_for_onPrcoess)
             updated_content = updated_content.replace("/*code_for_onEnd*/", code_for_onEnd)
             with open(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java", 'w') as file:
                 file.write(updated_content)
@@ -104,7 +104,7 @@ def checkSyntax(app, part_of_code, code, requestid, requestContentInJSON):
             if part_of_code == "onStart":
                 updated_content = updated_content.replace("/*code_for_onStart*/", code)
             if part_of_code == "onProcess":
-                updated_content = updated_content.replace("/*code_for_onProess*/", code)
+                updated_content = updated_content.replace("/*code_for_onPrcoess*/", code)
             if part_of_code == "onEnd":
                 updated_content = updated_content.replace("/*code_for_onEnd*/", code)
             with open(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java", 'w') as file:

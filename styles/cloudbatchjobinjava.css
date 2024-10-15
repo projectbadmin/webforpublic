@@ -1,0 +1,24 @@
+.CodeMirror {
+    width: 1000px;
+    height: 100px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    background-color: #ffffff;
+    color: #2e2e2e;
+    resize: none;
+}
+
+.code-label {
+    width: 1000px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    color: #2e2e2e;
+    background-color: #f8f8f2;
+    padding: 5px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.header {
+    font-family: 'Courier New', Courier, monospace;
+}

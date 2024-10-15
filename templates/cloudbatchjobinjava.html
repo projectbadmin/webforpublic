@@ -6,20 +6,42 @@
     <title>Code Editor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/lint.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.css">
+    <link rel="stylesheet" href="../styles/cloudbatchjobinjava.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/clike/clike.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/lint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
 </head>
 <body>
-    <h1>Java Code Editor</h1>
-    <form action="/execute" method="post">
-        <input name="requestid" value="1dc4655d-879d-11ef-90f4-d76dbcd64478"/>
-        <input name="requestContentInJSON" value='{"USERID":"b7f0d3d9-68f4-11ef-a86a-b735f9964bce","DATETIMESELECTIONTYPE":"1","FROMDATE":"20230403","TODATE":"20230503","FROMTIME":"155500","TOTIME":"163000","CLASS_CODE":"HSI","FUT_OPT":"F","EXPIRY_MTH":"","STRIKE_PRC":"","CALL_PUT":"","RETENTION_HOUR":"1"}'/>
-        
-        <textarea id="code_for_onStart" name="code_for_onStart"></textarea>
-        <textarea id="code_for_onProess" name="code_for_onProess"></textarea>
-        <textarea id="code_for_onEnd" name="code_for_onEnd"></textarea>
-        <button type="submit">Run Code</button>
+    <h1 class="header">Java Code Editor</h1>
+    <form action="/runJAVACode" method="post">
+        <div>
+            <input name="requestid" value="1dc4655d-879d-11ef-90f4-d76dbcd64478"/>
+        </div>
+        <p style="margin: 10px 0;"></p>
+        <div>
+            <input name="requestContentInJSON" value='{"USERID":"b7f0d3d9-68f4-11ef-a86a-b735f9964bce","DATETIMESELECTIONTYPE":"1","FROMDATE":"20230403","TODATE":"20230503","FROMTIME":"155500","TOTIME":"163000","CLASS_CODE":"HSI","FUT_OPT":"F","EXPIRY_MTH":"","STRIKE_PRC":"","CALL_PUT":"","RETENTION_HOUR":"1"}'/>
+        </div>
+        <p style="margin: 50px 0;"></p>
+        <div>
+            <label for="code_for_onStart" class="code-label">onStart() {</label>
+            <textarea id="code_for_onStart" name="code_for_onStart"></textarea>
+            <label for="code_for_onStart" class="code-label">}</label>
+        </div>
+        <p style="margin: 50px 0;">
+        <div>
+            <label for="code_for_onPrcoess" class="code-label">onProess(FutureDataStructure data){</label>
+            <textarea id="code_for_onPrcoess" name="code_for_onPrcoess"></textarea>
+            <label for="code_for_onStart" class="code-label">}</label>
+        </div>
+        <p style="margin: 50px 0;">
+        <div>
+            <label for="code_for_onEnd" class="code-label">onEnd() {</label>
+            <textarea id="code_for_onEnd" name="code_for_onEnd"></textarea>
+            <label for="code_for_onStart" class="code-label">}</label>
+        </div>
+        <button type="submit">Submit</button>
     </form>
     <pre id="output" style="width: 100%; height: 50px;">{{ output }}</pre>
     <pre id="errors" style="width: 100%; height: 50px; color: red;">{{ errors }}</pre>
@@ -29,15 +51,27 @@
             mode: 'text/x-java',
             lineNumbers: true,
             gutters: ["CodeMirror-lint-markers"],
+            extraKeys: {
+                "Ctrl-Space": "autocomplete"
+            },
+            hintOptions: {
+                hint: CodeMirror.hint.anyword
+            },
             lint: {
                 getAnnotations: checkSyntaxForOnStart,
                 async: true
             }
         });
-        var editor_for_OnProcess = CodeMirror.fromTextArea(document.getElementById('code_for_onProess'), {
+        var editor_for_OnProcess = CodeMirror.fromTextArea(document.getElementById('code_for_onPrcoess'), {
             mode: 'text/x-java',
             lineNumbers: true,
             gutters: ["CodeMirror-lint-markers"],
+            extraKeys: {
+                "Ctrl-Space": "autocomplete"
+            },
+            hintOptions: {
+                hint: CodeMirror.hint.anyword
+            },
             lint: {
                 getAnnotations: checkSyntaxForOnProcess,
                 async: true
@@ -47,6 +81,12 @@
             mode: 'text/x-java',
             lineNumbers: true,
             gutters: ["CodeMirror-lint-markers"],
+            extraKeys: {
+                "Ctrl-Space": "autocomplete"
+            },
+            hintOptions: {
+                hint: CodeMirror.hint.anyword
+            },
             lint: {
                 getAnnotations: checkSyntaxForOnEnd,
                 async: true
