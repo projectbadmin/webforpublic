@@ -84,7 +84,7 @@ def checkSyntax(app, part_of_code, code, requestid, requestContentInJSON):
             if app.config['env'] == 'local':
                 shutil.copytree(f"{app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment_interfaceOnly", f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly")
             if app.config['env'] == 'cloud':
-                subprocess.run([f"sudo aws s3 synv s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True)
+                subprocess.run([f"sudo aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True)
         else:
             if app.config['env'] == 'local':
                 shutil.copy(
