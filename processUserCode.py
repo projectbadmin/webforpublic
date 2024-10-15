@@ -9,7 +9,9 @@ def process(app, code_for_onStart, code_for_onProess, code_for_onEnd, requestid,
         if app.config['env'] == 'local':
             shutil.copytree(f"{app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment", f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}")
         if app.config['env'] == 'cloud':
-            subprocess.run([f"sudo aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/Cloud_BatchJob_In_Java/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}"], capture_output=True, text=True, shell=True)
+            os.makedirs(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}", exist_ok=True)
+            subprocess.run(['sudo', 'chmod', '777', f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}"], capture_output=True, text=True, shell=True)
+            subprocess.run([f"aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/Cloud_BatchJob_In_Java/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}"], capture_output=True, text=True, shell=True)
         
         # Write the main logic file
         if requestContentInJSON["FUT_OPT"] == "F":
@@ -84,7 +86,9 @@ def checkSyntax(app, part_of_code, code, requestid, requestContentInJSON):
             if app.config['env'] == 'local':
                 shutil.copytree(f"{app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment_interfaceOnly", f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly")
             if app.config['env'] == 'cloud':
-                subprocess.run([f"sudo aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True)
+                os.makedirs(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", exist_ok=True)
+                subprocess.run(['sudo', 'chmod', '777', f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True)
+                subprocess.run([f"aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True)
         else:
             if app.config['env'] == 'local':
                 shutil.copy(
@@ -92,7 +96,7 @@ def checkSyntax(app, part_of_code, code, requestid, requestContentInJSON):
                     f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java"
                 )
             if app.config['env'] == 'cloud':
-                subprocess.run([f"sudo aws s3 cp s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly/cloudBatchJobInJava/src/main/java/Main.java {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/Main.java"], capture_output=True, text=True, shell=True)
+                subprocess.run([f"aws s3 cp s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly/cloudBatchJobInJava/src/main/java/Main.java {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/Main.java"], capture_output=True, text=True, shell=True)
 
         # Write the main logic file   
         if requestContentInJSON["FUT_OPT"] == "F":
