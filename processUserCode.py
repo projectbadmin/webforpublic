@@ -9,7 +9,7 @@ def process(app, code_for_onStart, code_for_onProess, code_for_onEnd, requestid,
         if app.config['env'] == 'local':
             shutil.copytree(f"{app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment", f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}")
         if app.config['env'] == 'cloud':
-            subprocess.run([f"aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/Cloud_BatchJob_In_Java/ f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}"], capture_output=True, text=True, shell=True)
+            subprocess.run([f"aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/Cloud_BatchJob_In_Java/{app.config['clone_of_cloudBatchJobTemplate']}{requestid}"], capture_output=True, text=True, shell=True)
         
         # Write the main logic file
         if requestContentInJSON["FUT_OPT"] == "F":
