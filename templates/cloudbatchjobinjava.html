@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/lint.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.css">
-    <link rel="stylesheet" href="../styles/cloudbatchjobinjava.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='cloudbatchjobinjava.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/clike/clike.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/lint.min.js"></script>
@@ -31,8 +31,8 @@
         </div>
         <p style="margin: 50px 0;">
         <div>
-            <label for="code_for_onPrcoess" class="code-label">onProess(FutureDataStructure data){</label>
-            <textarea id="code_for_onPrcoess" name="code_for_onPrcoess"></textarea>
+            <label for="code_for_onProcess" class="code-label">onProess(FutureDataStructure data){</label>
+            <textarea id="code_for_onProcess" name="code_for_onProcess"></textarea>
             <label for="code_for_onStart" class="code-label">}</label>
         </div>
         <p style="margin: 50px 0;">
@@ -41,7 +41,7 @@
             <textarea id="code_for_onEnd" name="code_for_onEnd"></textarea>
             <label for="code_for_onStart" class="code-label">}</label>
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit" id="submitCloudbatchjobinjava" disabled>Submit</button>
     </form>
     <pre id="output" style="width: 100%; height: 50px;">{{ output }}</pre>
     <pre id="errors" style="width: 100%; height: 50px; color: red;">{{ errors }}</pre>
@@ -62,7 +62,7 @@
                 async: true
             }
         });
-        var editor_for_OnProcess = CodeMirror.fromTextArea(document.getElementById('code_for_onPrcoess'), {
+        var editor_for_OnProcess = CodeMirror.fromTextArea(document.getElementById('code_for_onProcess'), {
             mode: 'text/x-java',
             lineNumbers: true,
             gutters: ["CodeMirror-lint-markers"],
@@ -123,6 +123,10 @@
                             }
                         }
                     }
+                    document.getElementById('submitCloudbatchjobinjava').disabled = (annotations.length > 0) || 
+                        !editor_for_OnStart.getValue().trim() || 
+                        !editor_for_OnProcess.getValue().trim() || 
+                        !editor_for_OnEnd.getValue().trim();
                     updateLinting(annotations);
                 })
                 .catch(error => console.error('Error checking syntax:', error));
@@ -159,6 +163,10 @@
                             }
                         }
                     }
+                    document.getElementById('submitCloudbatchjobinjava').disabled = (annotations.length > 0) || 
+                        !editor_for_OnStart.getValue().trim() || 
+                        !editor_for_OnProcess.getValue().trim() || 
+                        !editor_for_OnEnd.getValue().trim();
                     updateLinting(annotations);
                 })
                 .catch(error => console.error('Error checking syntax:', error));
@@ -189,12 +197,16 @@
                                 annotations.push({
                                     message: match[2],
                                     severity: 'error',
-                                    from: CodeMirror.Pos(parseInt(match[1]) - 53, 0),
-                                    to: CodeMirror.Pos(parseInt(match[1]) - 53, 0)
+                                    from: CodeMirror.Pos(parseInt(match[1]) -33, 0),
+                                    to: CodeMirror.Pos(parseInt(match[1]) -33, 0)
                                 });
                             }
                         }
                     }
+                    document.getElementById('submitCloudbatchjobinjava').disabled = (annotations.length > 0) || 
+                        !editor_for_OnStart.getValue().trim() || 
+                        !editor_for_OnProcess.getValue().trim() || 
+                        !editor_for_OnEnd.getValue().trim();
                     updateLinting(annotations);
                 })
                 .catch(error => console.error('Error checking syntax:', error));

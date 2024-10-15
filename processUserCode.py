@@ -3,7 +3,7 @@ import shutil
 import os
 import json
 
-def process(app, code_for_onStart, code_for_onPrcoess, code_for_onEnd, requestid, requestContentInJSON):
+def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid, requestContentInJSON):
     try:
         # Set environment variables
         env = os.environ.copy()
@@ -22,7 +22,7 @@ def process(app, code_for_onStart, code_for_onPrcoess, code_for_onEnd, requestid
                 file_content = file.read()
             updated_content = file_content
             updated_content = updated_content.replace("/*code_for_onStart*/", code_for_onStart)
-            updated_content = updated_content.replace("/*code_for_onPrcoess*/", code_for_onPrcoess)
+            updated_content = updated_content.replace("/*code_for_onProcess*/", code_for_onProcess)
             updated_content = updated_content.replace("/*code_for_onEnd*/", code_for_onEnd)
             with open(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java", 'w') as file:
                 file.write(updated_content)
@@ -92,7 +92,7 @@ def checkSyntax(app, part_of_code, code, requestid, requestContentInJSON):
         else:
             if requestContentInJSON["FUT_OPT"] == "F":
                 shutil.copy(
-                    f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData(Original).java",
+                    f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java.original",
                     f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java"
                 )
 
@@ -104,7 +104,7 @@ def checkSyntax(app, part_of_code, code, requestid, requestContentInJSON):
             if part_of_code == "onStart":
                 updated_content = updated_content.replace("/*code_for_onStart*/", code)
             if part_of_code == "onProcess":
-                updated_content = updated_content.replace("/*code_for_onPrcoess*/", code)
+                updated_content = updated_content.replace("/*code_for_onProcess*/", code)
             if part_of_code == "onEnd":
                 updated_content = updated_content.replace("/*code_for_onEnd*/", code)
             with open(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java", 'w') as file:
@@ -113,13 +113,15 @@ def checkSyntax(app, part_of_code, code, requestid, requestContentInJSON):
             app.logger.info(f"Wrote the main logic file to {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java")
         
         # javac compile all java files inside requestid_interfaceOnly folder
-        result = subprocess.run(f"sudo javac $(find {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java -name '*.java')", capture_output=True, text=True, shell=True)
+        cmd_prefix = 'sudo ' if app.config['env'] == 'cloud' else ''
+        result = subprocess.run(f"{cmd_prefix}javac $(find {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java -name '*.java')", capture_output=True, text=True, shell=True)
         if result.returncode != 0:
             errors = result.stderr
             return errors
         
         # run the Main
-        result = subprocess.run([f"sudo java -classpath {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java Main"], capture_output=True, text=True, shell=True)
+        cmd_prefix = 'sudo ' if app.config['env'] == 'cloud' else ''
+        result = subprocess.run([f"{cmd_prefix}java -classpath {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java Main"], capture_output=True, text=True, shell=True)
         if result.returncode != 0:
             errors = result.stderr
             return errors
