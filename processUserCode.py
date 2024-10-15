@@ -10,7 +10,7 @@ def process(app, code_for_onStart, code_for_onProess, code_for_onEnd, requestid,
             shutil.copytree(f"{app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment", f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}")
         if app.config['env'] == 'cloud':
             os.makedirs(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}", exist_ok=True)
-            subprocess.run(['sudo', 'chmod', '777', f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}"], capture_output=True, text=True, shell=True)
+            subprocess.run(['chmod', '777', f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}"], capture_output=True, text=True, shell=True)
             subprocess.run([f"aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/Cloud_BatchJob_In_Java/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}"], capture_output=True, text=True, shell=True)
         
         # Write the main logic file
@@ -87,9 +87,9 @@ def checkSyntax(app, part_of_code, code, requestid, requestContentInJSON):
                 shutil.copytree(f"{app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment_interfaceOnly", f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly")
             if app.config['env'] == 'cloud':
                 os.makedirs(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly(test)", exist_ok=True)
-                subprocess.run(['sudo', 'chmod', '777', f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly(test)"], capture_output=True, text=True, shell=True)
+                subprocess.run(['chmod', '777', f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly(test)"], capture_output=True, text=True, shell=True)
                 os.makedirs(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", exist_ok=True)
-                subprocess.run(['sudo', 'chmod', '777', f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True)
+                subprocess.run(['chmod', '777', f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True)
                 subprocess.run([f"aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True)
         else:
             if app.config['env'] == 'local':
