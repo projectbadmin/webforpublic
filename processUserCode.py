@@ -5,11 +5,16 @@ import json
 
 def process(app, code_for_onStart, code_for_onProess, code_for_onEnd, requestid, requestContentInJSON):
     try:
+        # Set environment variables
+        env = os.environ.copy()
+        env['AWS_ACCESS_KEY_ID'] = app.config['AWS_ACCESS_KEY_ID']
+        env['AWS_SECRET_ACCESS_KEY'] = app.config['AWS_SECRET_ACCESS_KEY']
+
         # copy the cloudBatchJobTemplate repository
         if app.config['env'] == 'local':
             shutil.copytree(f"{app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment", f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}")
         if app.config['env'] == 'cloud':
-            subprocess.run([f"aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/Cloud_BatchJob_In_Java/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}"], capture_output=True, text=True, shell=True)
+            subprocess.run([f"aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/Cloud_BatchJob_In_Java/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}"], capture_output=True, text=True, shell=True, env=env)
         
         # Write the main logic file
         if requestContentInJSON["FUT_OPT"] == "F":
@@ -39,12 +44,6 @@ def process(app, code_for_onStart, code_for_onProess, code_for_onEnd, requestid,
         app.logger.info(f"Copied {jar_file} to {destination_dir}")
         
         # Run the jar file
-        # Set environment variables
-        env = os.environ.copy()
-        env['AWS_ACCESS_KEY_ID'] = app.config['AWS_ACCESS_KEY_ID']
-        env['AWS_SECRET_ACCESS_KEY'] = app.config['AWS_SECRET_ACCESS_KEY']
-
-        # Run the jar file with the environment variables
         result = subprocess.run(
             ['sudo', 'java', '-jar', f'{destination_dir}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar', requestid, json.dumps(requestContentInJSON)],
             capture_output=True,
@@ -79,12 +78,17 @@ def realTimeUpdateLog(app, requestid):
 
 def checkSyntax(app, part_of_code, code, requestid, requestContentInJSON):
     try:
+        # Set environment variables
+        env = os.environ.copy()
+        env['AWS_ACCESS_KEY_ID'] = app.config['AWS_ACCESS_KEY_ID']
+        env['AWS_SECRET_ACCESS_KEY'] = app.config['AWS_SECRET_ACCESS_KEY']
+
         # copy the cloudBatchJobTemplate repository
         if os.path.exists(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly")==False:
             if app.config['env'] == 'local':
                 shutil.copytree(f"{app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment_interfaceOnly", f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly")
             if app.config['env'] == 'cloud':
-                subprocess.run([f"aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True)
+                subprocess.run([f"aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True, env=env)
         else:
             if app.config['env'] == 'local':
                 shutil.copy(
@@ -92,7 +96,7 @@ def checkSyntax(app, part_of_code, code, requestid, requestContentInJSON):
                     f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java"
                 )
             if app.config['env'] == 'cloud':
-                subprocess.run([f"aws s3 cp s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly/cloudBatchJobInJava/src/main/java/Main.java {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/Main.java"], capture_output=True, text=True, shell=True)
+                subprocess.run([f"aws s3 cp s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly/cloudBatchJobInJava/src/main/java/Main.java {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/Main.java"], capture_output=True, text=True, shell=True, env=env)
 
         # Write the main logic file   
         if requestContentInJSON["FUT_OPT"] == "F":
