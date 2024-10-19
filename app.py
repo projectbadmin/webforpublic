@@ -6,6 +6,8 @@ import json
 from applogging import init_logging
 from processUserCode import process, realTimeUpdateLog, checkSyntax
 
+from cloudbatchjobinjava import check_and_generate_keywords_
+
 app = Flask(__name__)
 
 # initialize logging
@@ -35,6 +37,14 @@ except Exception as e:
 def cloudbatchjobinjava():
     return render_template('cloudbatchjobinjava.html')
 
+@app.route('/cloudbatchjobinjava/check_and_generate_keywords', methods=['POST'])
+def check_and_generate_keywords():
+    data = request.get_json()
+    line = data.get('line')
+    cursor_pos = data.get('cursor_pos')
+    output = check_and_generate_keywords_(line, cursor_pos)
+    return jsonify({'output': output})
+
 @app.route('/cloudbatchjobinjava/submit', methods=['POST'])
 def submitCloudbatchjobinjava():
     requestid = request.form['requestid']
@@ -42,10 +52,8 @@ def submitCloudbatchjobinjava():
     code_for_onStart = request.form['code_for_onStart']
     code_for_onProcess = request.form['code_for_onProcess']
     code_for_onEnd = request.form['code_for_onEnd']
-    
     # process the code
     process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid, requestContentInJSON)
-    
     # return the output
     return render_template('cloudbatchjobinjava.html', output='', requestid=requestid, requestContentInJSON=requestContentInJSON, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd)
 
@@ -54,7 +62,7 @@ def submitCloudbatchjobinjava():
 def get_latest_output():
     data = request.get_json()
     requestid = data['requestid']
-    output = realTimeUpdateLog(app, requestid)
+    output = realTimeUpdateLog(app, request.get_json())
     return jsonify({'output': output})
 
 
