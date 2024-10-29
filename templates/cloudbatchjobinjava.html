@@ -71,7 +71,7 @@
                 async: true
             }
         });
-        editor_for_OnStart.on("keyup", function (cm, event) {check_and_generate_keywords(cm, event);}); 
+        editor_for_OnStart.on("keyup", function (cm, event) {check_and_generate_keywords(cm, event, 'onstart');}); 
 
 
         var editor_for_OnProcess = CodeMirror.fromTextArea(document.getElementById('code_for_onProcess'), {
@@ -89,7 +89,7 @@
                 async: true
             }
         });
-        editor_for_OnProcess.on("keyup", function (cm, event) {check_and_generate_keywords(cm, event);}); 
+        editor_for_OnProcess.on("keyup", function (cm, event) {check_and_generate_keywords(cm, event, 'onprocess');}); 
 
         var editor_for_OnEnd = CodeMirror.fromTextArea(document.getElementById('code_for_onEnd'), {
             mode: 'text/x-java',
@@ -106,7 +106,7 @@
                 async: true
             }
         });
-        editor_for_OnEnd.on("keyup", function (cm, event) {check_and_generate_keywords(cm, event);}); 
+        editor_for_OnEnd.on("keyup", function (cm, event) {check_and_generate_keywords(cm, event, 'onend');}); 
         
         var onstart_annotations = [];
         function checkSyntaxForOnStart(cm, updateLinting, options) {
@@ -257,7 +257,7 @@
         }
         setInterval(fetchLatestOutput, 2000); // Fetch latest output every 2 seconds
 
-        function check_and_generate_keywords(cm, event){
+        function check_and_generate_keywords(cm, event, method) {
             if (event.keyCode != 13) {
                 var cursor = cm.getCursor();
                 var token = cm.getTokenAt(cursor);
@@ -273,6 +273,7 @@
                     body: JSON.stringify({ 
                         'line': line ,
                         'cursor_pos': end,
+                        'method': method
                     })  // Send input as JSON
                 })
                 .then(response => response.json())

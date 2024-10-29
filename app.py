@@ -6,7 +6,7 @@ import json
 from applogging import init_logging
 from processUserCode import process, realTimeUpdateLog, checkSyntax
 
-from cloudbatchjobinjava import check_and_generate_keywords_
+from cloudbatchjobinjava import check_and_generate_keywords_, read_javap_result
 
 app = Flask(__name__)
 
@@ -30,11 +30,13 @@ try:
     app.config['logDirectory_of_cloudBatchJobTemplate'] = config.get(env, 'logDirectory_of_cloudBatchJobTemplate')
     app.config['AWS_ACCESS_KEY_ID'] = config.get(env, 'AWS_ACCESS_KEY_ID')
     app.config['AWS_SECRET_ACCESS_KEY'] = config.get(env, 'AWS_SECRET_ACCESS_KEY')
+    app.config['path_of_interfaceOnly_javap'] = config.get(env, 'path_of_interfaceOnly_javap')
 except Exception as e:
     app.logger.error(e)
 
 @app.route('/cloudbatchjobinjava')
 def cloudbatchjobinjava():
+    read_javap_result(app)
     return render_template('cloudbatchjobinjava.html')
 
 @app.route('/cloudbatchjobinjava/check_and_generate_keywords', methods=['POST'])
@@ -42,7 +44,8 @@ def check_and_generate_keywords():
     data = request.get_json()
     line = data.get('line')
     cursor_pos = data.get('cursor_pos')
-    output = check_and_generate_keywords_(line, cursor_pos)
+    method = data.get('method')
+    output = check_and_generate_keywords_(line, cursor_pos, method)
     return jsonify({'output': output})
 
 @app.route('/cloudbatchjobinjava/submit', methods=['POST'])

@@ -1,23 +1,29 @@
 import re
 
 commonJavaKeyWords = [
-    "System", "out", "println", "String", "Integer", "Double", "Boolean", "ArrayList", "HashMap", "HashSet", "List", "Map", "Set",
-    "public", "private", "protected", "static", "final", "void", "int", "double", "float", "char", "boolean", "long", "short", "byte",
-    "new", "return", "this", "super", "class", "interface", "extends", "implements", "package", "import", "try", "catch", "finally",
-    "throw", "throws", "synchronized", "volatile", "transient", "abstract", "enum", "instanceof", "assert", "break", "case", "continue",
-    "default", "do", "else", "for", "if", "goto", "switch", "while", "native", "strictfp"
+#    "System", "out", "println", "String", "Integer", "Double", "Boolean", "ArrayList", "HashMap", "HashSet", "List", "Map", "Set",
+#    "public", "private", "protected", "static", "final", "void", "int", "double", "float", "char", "boolean", "long", "short", "byte",
+#    "new", "return", "this", "super", "class", "interface", "extends", "implements", "package", "import", "try", "catch", "finally",
+#    "throw", "throws", "synchronized", "volatile", "transient", "abstract", "enum", "instanceof", "assert", "break", "case", "continue",
+#    "default", "do", "else", "for", "if", "goto", "switch", "while", "native", "strictfp"
 ]
-classMethods = {
-    "abc": ["method1", "method2", "method3"]
-};
+classMethodsforOnStart = {}
+classMethodsforOnProcess = {}
+classMethodsforOnEnd = {}
 
-
-def check_and_generate_keywords_(line, cursor_pos):
+def check_and_generate_keywords_(line, cursor_pos, method):
     match = re.search(r'(\w+)\.$', line[:cursor_pos])
     if match:
         class_name = match.group(1)
-        if class_name in classMethods:
-            filtered_list = classMethods[class_name]
+        if method == 'onstart':
+            if class_name in classMethodsforOnStart:
+                filtered_list = classMethodsforOnStart[class_name]
+        elif method == 'onprocess':
+            if class_name in classMethodsforOnProcess:
+                filtered_list = classMethodsforOnProcess[class_name]
+        elif method == 'onend':
+            if class_name in classMethodsforOnEnd:
+                filtered_list = classMethodsforOnEnd[class_name]
         else:
             filtered_list = []
     else:
@@ -26,8 +32,10 @@ def check_and_generate_keywords_(line, cursor_pos):
     return filtered_list
 
 
-def read_javap_result(file_path):
+def read_javap_result(app):
     try:
+        result = {}
+        file_path = app.config['path_of_interfaceOnly_javap']
         tempClassName = ''
         tempClass = []
         with open(file_path, 'r') as file:
@@ -36,6 +44,7 @@ def read_javap_result(file_path):
                 # detect the class
                 if ' class ' in content and ' {' in content:
                     tempClassName = content.replace('public class ', '').replace(' {', '').strip()
+                    tempClassName = tempClassName.split('.')[-1]
                     result[tempClassName] = {}
                     tempClass = result[tempClassName]
                     tempClass['variables'] = set()
@@ -46,15 +55,28 @@ def read_javap_result(file_path):
                     else:  
                         tempMethod = content.replace('public ', '').replace(';', '')
                         tempMethod = tempMethod[:tempMethod.index(')') + 1]
+                        tempMethod = tempMethod.split(' ')[-1]
                         tempClass['methods'].add(tempMethod)
 
-        result.pop('main.logiclibrary.ForFutureData')
-        result.pop('tradelibrary.Order')
-        result.pop('tradelibrary.Profile')
+        result.pop('ForFutureData')
+        result.pop('Order')
+        result.pop('Profile')
         result.pop('Main')
-        result['public final class orderlibirary.Action extends java.lang.Enum<orderlibirary.Action>'].pop('methods')
+        result.pop('Action>')
 
-        print(result)
+        for k, v in result.items():
+            print(f"Class: {k}")
+            print(f"Variables: {v['variables']}")
+            print(f"Methods: {v['methods']}")
+            print() 
+            if v['methods'] is not None:
+                classMethodsforOnStart[k] = list(v['methods']) + list(v['variables'])
+                if(k == 'FutureDataStructure'):
+                    classMethodsforOnProcess['data'] = list(v['methods']) + list(v['variables'])
+                else:
+                    classMethodsforOnProcess[k] = list(v['methods']) + list(v['variables'])
+                classMethodsforOnEnd[k] = list(v['methods']) + list(v['variables'])
+            
     except FileNotFoundError:
         print(f"File not found: {file_path}")
     except Exception as e:
