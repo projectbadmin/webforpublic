@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop Example</title>
+    <style>
+        #buttonGroup {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .draggableButton {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .draggableSubButton {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: move;
+            position: relative;
+        }
+
+        .subButtonMenu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .subButtonMenu button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            cursor: move;
+        }
+
+        .subButtonMenu button:hover {
+            background-color: #2980b9;
+        }
+
+        #dropArea {
+            width: 300px;
+            height: 300px;
+            border: 2px dashed #2ecc71;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #contextMenu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        #contextMenu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #contextMenu ul li {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        #contextMenu ul li:hover {
+            background-color: #eee;
+        }
+
+        #lineCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="buttonGroup">
+        <button id="button1" class="draggableButton">Button 1</button>
+        <button id="button2" class="draggableButton">Button 2</button>
+        <button id="button3" class="draggableButton">Button 3</button>
+    </div>
+    <div id="dropArea">
+        Drop here
+        <canvas id="lineCanvas" width="300" height="300"></canvas>
+    </div>
+    <div id="contextMenu">
+        <ul>
+            <li id="menuOption1">Option 1</li>
+            <li id="menuOption2">Option 2</li>
+            <li id="drawLine">Draw Line</li>
+        </ul>
+    </div>
+    <div id="subButtonMenu" class="subButtonMenu">
+        <button id="subButton1" class="draggableSubButton" draggable="true">Sub Button 1</button>
+        <button id="subButton2" class="draggableSubButton" draggable="true">Sub Button 2</button>
+        <button id="subButton3" class="draggableSubButton" draggable="true">Sub Button 3</button>
+    </div>
+    <div>
+        <textarea id="output" cols="30" rows="10"></textarea>
+    </div>
+
+    <script>
+        const buttons = document.querySelectorAll('.draggableButton');
+        const subButtons = document.querySelectorAll('.subButtonMenu button');
+        const dropArea = document.getElementById('dropArea');
+        const contextMenu = document.getElementById('contextMenu');
+        const subButtonMenu = document.getElementById('subButtonMenu');
+        const lineCanvas = document.getElementById('lineCanvas');
+        const output = document.getElementById('output');
+        const ctx = lineCanvas.getContext('2d');
+        let startElement = null;
+        let isDrawingLine = false;
+        const connections = [];
+
+        buttons.forEach(button => {
+            button.addEventListener('dragstart', (e) => {
+                const clone = button.cloneNode(true);
+                clone.id = 'clone-${Date.now()}';
+                e.dataTransfer.setData('text/plain', clone.id);
+                document.body.appendChild(clone);
+                clone.style.position = 'absolute';
+                clone.style.left = '-9999px'; // Hide the clone initially
+            });
+
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const rect = button.getBoundingClientRect();
+                subButtonMenu.style.left = '${rect.left}px';
+                subButtonMenu.style.top = '${rect.bottom}px';
+                subButtonMenu.style.display = 'block';
+            });
+        });
+
+        subButtons.forEach(subButton => {
+            subButton.addEventListener('dragstart', (e) => {
+                const clone = subButton.cloneNode(true);
+                clone.id = 'clone-${Date.now()}';
+                e.dataTransfer.setData('text/plain', clone.id);
+                document.body.appendChild(clone);
+                clone.style.position = 'absolute';
+                clone.style.left = '-9999px'; // Hide the clone initially
+            });
+        });
+
+        document.addEventListener('click', () => {
+            subButtonMenu.style.display = 'none';
+            contextMenu.style.display = 'none';
+        });
+
+        dropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        dropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text/plain');
+            const button = document.getElementById(id);
+            dropArea.appendChild(button);
+            button.style.left = '${e.offsetX - button.offsetWidth / 2}px';
+            button.style.top = '${e.offsetY - button.offsetHeight / 2}px';
+            enableDragging(button);
+            enableContextMenu(button);
+            redrawLines();
+        });
+
+        function enableDragging(element) {
+            let offsetX, offsetY;
+
+            element.addEventListener('mousedown', (e) => {
+                offsetX = e.clientX - element.getBoundingClientRect().left;
+                offsetY = e.clientY - element.getBoundingClientRect().top;
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            });
+
+            function onMouseMove(e) {
+                let newLeft = e.clientX - offsetX;
+                let newTop = e.clientY - offsetY;
+
+                // Boundary checks
+                const dropAreaRect = dropArea.getBoundingClientRect();
+                const elementRect = element.getBoundingClientRect();
+
+                if (newLeft < dropAreaRect.left) {
+                    newLeft = dropAreaRect.left;
+                } else if (newLeft + elementRect.width > dropAreaRect.right) {
+                    newLeft = dropAreaRect.right - elementRect.width;
+                }
+
+                if (newTop < dropAreaRect.top) {
+                    newTop = dropAreaRect.top;
+                } else if (newTop + elementRect.height > dropAreaRect.bottom) {
+                    newTop = dropAreaRect.bottom - elementRect.height;
+                }
+
+                element.style.left = '${newLeft - dropAreaRect.left}px';
+                element.style.top = '${newTop - dropAreaRect.top}px';
+                redrawLines();
+            }
+
+            function onMouseUp() {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
+        }
+
+        function enableContextMenu(element) {
+            element.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                contextMenu.style.display = 'block';
+                contextMenu.style.left = '${e.pageX}px';
+                contextMenu.style.top = '${e.pageY}px';
+                startElement = element;
+            });
+        }
+
+        contextMenu.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (e.target.id === 'drawLine') {
+                drawLine(startElement);
+            }
+            contextMenu.style.display = 'none';
+        });
+
+        function drawArrowhead(ctx, fromX, fromY, toX, toY) {
+            const headlen = 10; // length of head in pixels
+            const angle = Math.atan2(toY - fromY, toX - fromX);
+            ctx.moveTo(toX, toY);
+            ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
+            ctx.moveTo(toX, toY);
+            ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6));
+        }
+
+        function drawLine(startElement) {
+            const startRect = startElement.getBoundingClientRect();
+            const dropAreaRect = dropArea.getBoundingClientRect();
+            const startX = startRect.left + startRect.width / 2 - dropAreaRect.left;
+            const startY = startRect.top + startRect.height / 2 - dropAreaRect.top;
+            isDrawingLine = true;
+
+            function onMouseMove(e) {
+                if (!isDrawingLine) return;
+                ctx.clearRect(0, 0, lineCanvas.width, lineCanvas.height);
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(e.clientX - dropAreaRect.left, e.clientY - dropAreaRect.top);
+                drawArrowhead(ctx, startX, startY, e.clientX - dropAreaRect.left, e.clientY - dropAreaRect.top);
+                ctx.stroke();
+            }
+
+            function onClick(e) {
+                if (!isDrawingLine) return;
+                const endElement = document.elementFromPoint(e.clientX, e.clientY);
+                if (endElement && endElement.classList.contains('draggableSubButton')) {
+                    const endRect = endElement.getBoundingClientRect();
+                    const endX = endRect.left + endRect.width / 2 - dropAreaRect.left;
+                    const endY = endRect.top + endRect.height / 2 - dropAreaRect.top;
+
+                    connections.push({ startElement, endElement });
+
+                    ctx.clearRect(0, 0, lineCanvas.width, lineCanvas.height);
+                    redrawLines();
+
+                    isDrawingLine = false;
+                    document.removeEventListener('mousemove', onMouseMove);
+                    dropArea.removeEventListener('click', onClick);
+                    document.removeEventListener('contextmenu', onCancel);
+
+                    convertToJson();
+                }
+            }
+
+            function onCancel(e) {
+                e.preventDefault();
+                if (!isDrawingLine) return;
+                isDrawingLine = false;
+                ctx.clearRect(0, 0, lineCanvas.width, lineCanvas.height);
+                document.removeEventListener('mousemove', onMouseMove);
+                dropArea.removeEventListener('click', onClick);
+                document.removeEventListener('contextmenu', onCancel);
+            }
+
+            document.addEventListener('mousemove', onMouseMove);
+            dropArea.addEventListener('click', onClick);
+            document.addEventListener('contextmenu', onCancel);
+        }
+
+        function redrawLines() {
+            ctx.clearRect(0, 0, lineCanvas.width, lineCanvas.height);
+            connections.forEach(connection => {
+                const startRect = connection.startElement.getBoundingClientRect();
+                const endRect = connection.endElement.getBoundingClientRect();
+                const dropAreaRect = dropArea.getBoundingClientRect();
+                const startX = startRect.left + startRect.width / 2 - dropAreaRect.left;
+                const startY = startRect.top + startRect.height / 2 - dropAreaRect.top;
+                const endX = endRect.left + endRect.width / 2 - dropAreaRect.left;
+                const endY = endRect.top + endRect.height / 2 - dropAreaRect.top;
+
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+                drawArrowhead(ctx, startX, startY, endX, endY);
+                ctx.stroke();
+            });
+        }
+
+        //Convert the relationship of objects in JSON format
+        function convertToJson() {
+            const tree = {};
+
+            connections.forEach(connection => {
+                const startId = connection.startElement.id;
+                const endId = connection.endElement.id;
+
+                if (!tree[startId]) {
+                    tree[startId] = { children: [] };
+                }
+
+                if (!tree[endId]) {
+                    tree[endId] = { children: [] };
+                }
+
+                tree[startId].children.push(endId);
+            });
+
+            output.value = JSON.stringify(tree, null, 2);
+        }
+
+    </script>
+</body>
+
+</html>
