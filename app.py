@@ -35,7 +35,7 @@ except Exception as e:
     app.logger.error(e)
 
 @app.route('/cloudbatchjobingui')
-def cloudbatchjobinjava():
+def cloudbatchjobingui():
     read_javap_result(app)
     return render_template('cloudbatchjobingui.html')
 
