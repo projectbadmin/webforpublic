@@ -11,7 +11,7 @@ setup(
     ],
 	entry_points={
         'console_scripts': [
-            'webforpublic=app',  # Replace `app:main` with your entry point
+            'webforpublic=app:main',  # Replace `app:main` with your entry point
         ],
     }
 )
