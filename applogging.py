@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 def init_logging(app):
     # Set up file logging (with rotation)
-    file_handler = RotatingFileHandler('logs/app.log', maxBytes=2000, backupCount=5)
+    file_handler = RotatingFileHandler(f"{app.config['path_of_interfaceOnly_javap']}/app.log", maxBytes=2000, backupCount=5)
     file_handler.setLevel(logging.INFO)
     file_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
     file_handler.setFormatter(file_formatter)

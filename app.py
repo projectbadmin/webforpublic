@@ -28,6 +28,7 @@ try:
     app.config['https_of_cloudBatchJobTemplateDevelopment'] = config.get(env, 'https_of_cloudBatchJobTemplateDevelopment')
     app.config['clone_of_cloudBatchJobTemplate'] = config.get(env, 'clone_of_cloudBatchJobTemplate')
     app.config['logDirectory_of_cloudBatchJobTemplate'] = config.get(env, 'logDirectory_of_cloudBatchJobTemplate')
+    app.config['logDirectory_of_webforpublic'] = config.get(env, 'logDirectory_of_webforpublic')
     app.config['AWS_ACCESS_KEY_ID'] = config.get(env, 'AWS_ACCESS_KEY_ID')
     app.config['AWS_SECRET_ACCESS_KEY'] = config.get(env, 'AWS_SECRET_ACCESS_KEY')
     app.config['path_of_interfaceOnly_javap'] = config.get(env, 'path_of_interfaceOnly_javap')
