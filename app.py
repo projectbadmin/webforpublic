@@ -45,7 +45,8 @@ if not os.path.exists(app.config['logDirectory_of_webforpublic']):
     os.chmod(app.config['logDirectory_of_webforpublic'], 0o777)
 
 # download necessary the file
-subprocess.run([f"aws s3 cp s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly_javap.txt interfaceOnly_javap.txt"], capture_output=True, text=True, shell=True, env=env)
+if app.config['env'] != 'local':
+    subprocess.run([f"aws s3 cp s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly_javap.txt interfaceOnly_javap.txt"], capture_output=True, text=True, shell=True, env=env)
 
 # initialize logging
 init_logging(app)
