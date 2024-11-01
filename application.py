@@ -6,8 +6,7 @@ from cloudbatchjobinjava import check_and_generate_keywords_, read_javap_result
 
 app = create_app()
 if __name__ == '__main__':
-    #app.run(host='0.0.0.0', port=5001, debug=True)
-    app.run()
+    app.run(host='0.0.0.0', port=5001, debug=True)
 
 @app.route('/cloudbatchjobingui')
 def cloudbatchjobingui():
