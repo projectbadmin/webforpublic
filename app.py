@@ -9,7 +9,6 @@ from applogging import init_logging
 from processUserCode import process, realTimeUpdateLog, checkSyntax
 
 from cloudbatchjobinjava import check_and_generate_keywords_, read_javap_result
-import boto3
 
 app = Flask(__name__)
 
