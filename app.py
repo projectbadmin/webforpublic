@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description='Run the Flask app with a specific environment.')
-parser.add_argument('--env', type=str, default='local', help='Environment to run the app in (local, cloud)')
+parser.add_argument('--env', type=str, default='cloud', help='Environment to run the app in (local, cloud)')
 args = parser.parse_args()
 env = args.env
 
