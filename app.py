@@ -1,3 +1,5 @@
+import os
+import subprocess
 from flask import Flask, jsonify, render_template, request
 import configparser
 import argparse
@@ -7,12 +9,13 @@ from applogging import init_logging
 from processUserCode import process, realTimeUpdateLog, checkSyntax
 
 from cloudbatchjobinjava import check_and_generate_keywords_, read_javap_result
+import boto3
 
 app = Flask(__name__)
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description='Run the Flask app with a specific environment.')
-parser.add_argument('--env', type=str, default='cloud', help='Environment to run the app in (local, cloud)')
+parser.add_argument('--env', type=str, default='beanstalkinstance', help='Environment to run the app in (local, cloud)')
 args = parser.parse_args()
 env = args.env
 
@@ -34,6 +37,22 @@ except Exception as e:
 # initialize logging
 init_logging(app)
 app.logger.info('Initialized logging')
+
+# create necessary directory
+if not os.path.exists(app.config['clone_of_cloudBatchJobTemplate']):
+    os.makedirs(app.config['clone_of_cloudBatchJobTemplate'])
+    os.chmod(app.config['clone_of_cloudBatchJobTemplate'], 0o777)
+if not os.path.exists(app.config['logDirectory_of_cloudBatchJobTemplate']):
+    os.makedirs(app.config['logDirectory_of_cloudBatchJobTemplate'])
+    os.chmod(app.config['logDirectory_of_cloudBatchJobTemplate'], 0o777)
+if not os.path.exists(app.config['logDirectory_of_webforpublic']):
+    os.makedirs(app.config['logDirectory_of_webforpublic'])
+    os.chmod(app.config['logDirectory_of_webforpublic'], 0o777)
+
+# download necessary the file
+subprocess.run([f"aws s3 cp s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly_javap.txt interfaceOnly_javap.txt"], capture_output=True, text=True, shell=True, env=env)
+
+
 
 @app.route('/cloudbatchjobingui')
 def cloudbatchjobingui():
