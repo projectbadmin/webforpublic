@@ -10,10 +10,6 @@ from cloudbatchjobinjava import check_and_generate_keywords_, read_javap_result
 
 app = Flask(__name__)
 
-# initialize logging
-init_logging(app)
-app.logger.info('Initialized logging')
-
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description='Run the Flask app with a specific environment.')
 parser.add_argument('--env', type=str, default='local', help='Environment to run the app in (local, cloud)')
@@ -34,6 +30,10 @@ try:
     app.config['path_of_interfaceOnly_javap'] = config.get(env, 'path_of_interfaceOnly_javap')
 except Exception as e:
     app.logger.error(e)
+
+# initialize logging
+init_logging(app)
+app.logger.info('Initialized logging')
 
 @app.route('/cloudbatchjobingui')
 def cloudbatchjobingui():
@@ -105,4 +105,3 @@ def check_syntax_for_onEnd():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)
-    
