@@ -4,13 +4,16 @@ from flask import Flask, jsonify, render_template, request
 import configparser
 import argparse
 import json
-
 from __init__ import create_app
 from applogging import init_logging
 from processUserCode import process, realTimeUpdateLog, checkSyntax
-
 from cloudbatchjobinjava import check_and_generate_keywords_, read_javap_result
+from application import create_app
 
+app = create_app()
+if __name__ == '__main__':
+    #app.run(host='0.0.0.0', port=5001, debug=True)
+    app.run()
 
 @app.route('/cloudbatchjobingui')
 def cloudbatchjobingui():
@@ -78,10 +81,3 @@ def check_syntax_for_onEnd():
     code_for_onEnd = data['code_for_onEnd']
     result = checkSyntax(app, "onEnd", code_for_onEnd, requestid, requestContentInJSON)
     return jsonify({'errors': result})
-
-
-from application import create_app
-application = create_app()
-if __name__ == '__main__':
-    #app.run(host='0.0.0.0', port=5001, debug=True)
-    application.run()
