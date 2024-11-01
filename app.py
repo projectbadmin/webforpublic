@@ -5,6 +5,7 @@ import configparser
 import argparse
 import json
 
+import create_app
 from applogging import init_logging
 from processUserCode import process, realTimeUpdateLog, checkSyntax
 
@@ -125,5 +126,8 @@ def check_syntax_for_onEnd():
     return jsonify({'errors': result})
 
 
+from application import create_app
+application = create_app()
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    #app.run(host='0.0.0.0', port=5001, debug=True)
+    application.run()
