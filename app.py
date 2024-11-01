@@ -33,10 +33,6 @@ try:
 except Exception as e:
     app.logger.error(e)
 
-# initialize logging
-init_logging(app)
-app.logger.info('Initialized logging')
-
 # create necessary directory
 if not os.path.exists(app.config['clone_of_cloudBatchJobTemplate']):
     os.makedirs(app.config['clone_of_cloudBatchJobTemplate'])
@@ -51,6 +47,9 @@ if not os.path.exists(app.config['logDirectory_of_webforpublic']):
 # download necessary the file
 subprocess.run([f"aws s3 cp s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly_javap.txt interfaceOnly_javap.txt"], capture_output=True, text=True, shell=True, env=env)
 
+# initialize logging
+init_logging(app)
+app.logger.info('Initialized logging')
 
 
 @app.route('/cloudbatchjobingui')
