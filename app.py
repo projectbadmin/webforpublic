@@ -1,14 +1,8 @@
-import os
-import subprocess
-from flask import Flask, jsonify, render_template, request
-import configparser
-import argparse
+from flask import  jsonify, render_template, request
 import json
 from __init__ import create_app
-from applogging import init_logging
 from processUserCode import process, realTimeUpdateLog, checkSyntax
 from cloudbatchjobinjava import check_and_generate_keywords_, read_javap_result
-from application import create_app
 
 app = create_app()
 if __name__ == '__main__':
