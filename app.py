@@ -46,7 +46,11 @@ if not os.path.exists(app.config['logDirectory_of_webforpublic']):
 
 # download necessary the file
 if app.config['env'] != 'local':
-    subprocess.run([f"aws s3 cp s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly_javap.txt interfaceOnly_javap.txt"], capture_output=True, text=True, shell=True, env=env)
+    # Set environment variables
+    env = os.environ.copy()
+    env['AWS_ACCESS_KEY_ID'] = app.config['AWS_ACCESS_KEY_ID']
+    env['AWS_SECRET_ACCESS_KEY'] = app.config['AWS_SECRET_ACCESS_KEY']
+    subprocess.run([f"aws s3 cp s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly_javap.txt interfaceOnly_javap.txt"], capture_output=True, text=True, shell=True)
 
 # initialize logging
 init_logging(app)
