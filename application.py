@@ -5,8 +5,6 @@ from processUserCode import process, realTimeUpdateLog, checkSyntax
 from cloudbatchjobinjava import check_and_generate_keywords_, read_javap_result
 
 app = create_app()
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True)
 
 @app.route('/cloudbatchjobingui')
 def cloudbatchjobingui():
@@ -74,3 +72,7 @@ def check_syntax_for_onEnd():
     code_for_onEnd = data['code_for_onEnd']
     result = checkSyntax(app, "onEnd", code_for_onEnd, requestid, requestContentInJSON)
     return jsonify({'errors': result})
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5001, debug=True)
