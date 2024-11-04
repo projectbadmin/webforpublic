@@ -13,7 +13,7 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         # copy the cloudBatchJobTemplate repository
         if app.config['env'] == 'local':
             shutil.copytree(f"{app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment", f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}")
-        if app.config['env'] == 'ec2instance':
+        if app.config['env'] in ['ec2instance', 'beanstalkinstance']:
             subprocess.run([f"aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/Cloud_BatchJob_In_Java/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}"], capture_output=True, text=True, shell=True, env=env)
         
         # Write the main logic file
@@ -30,7 +30,7 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
                     
         # Maven build the project
         project_dir = f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}/cloudBatchJobInJava/"
-        cmd_prefix = 'sudo ' if app.config['env'] == 'ec2instance' else ''
+        cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance', 'beanstalkinstance'] else ''
         subprocess.run([f"{cmd_prefix}mvn clean install package -f {project_dir}pom.xml"], capture_output=True, text=True, shell=True)
         app.logger.info(f"Ran Maven build in {project_dir}")
         
@@ -45,7 +45,7 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         app.logger.info(f"Copied {jar_file} to {destination_dir}")
         
         # Run the jar file
-        cmd_prefix = 'sudo ' if app.config['env'] == 'ec2instance' else ''
+        cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance', 'beanstalkinstance'] else ''
         result = subprocess.run(
             [f"{cmd_prefix}java", '-jar', f'{destination_dir}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar', requestid, json.dumps(requestContentInJSON)],
             capture_output=True,
@@ -89,7 +89,7 @@ def checkSyntax(app, part_of_code, code, requestid, requestContentInJSON):
         if os.path.exists(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly")==False:
             if app.config['env'] == 'local':
                 shutil.copytree(f"{app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment_interfaceOnly", f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly")
-            if app.config['env'] == 'ec2instance':
+            if app.config['env'] in ['ec2instance', 'beanstalkinstance']:
                 subprocess.run([f"aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True, env=env)
         else:
             if requestContentInJSON["FUT_OPT"] == "F":
@@ -115,14 +115,14 @@ def checkSyntax(app, part_of_code, code, requestid, requestContentInJSON):
             app.logger.info(f"Wrote the main logic file to {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java")
         
         # javac compile all java files inside requestid_interfaceOnly folder
-        cmd_prefix = 'sudo ' if app.config['env'] == 'ec2instance' else ''
+        cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance', 'beanstalkinstance'] else ''
         result = subprocess.run(f"{cmd_prefix}javac $(find {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java -name '*.java')", capture_output=True, text=True, shell=True)
         if result.returncode != 0:
             errors = result.stderr
             return errors
         
         # run the Main
-        cmd_prefix = 'sudo ' if app.config['env'] == 'ec2instance' else ''
+        cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance', 'beanstalkinstance'] else ''
         result = subprocess.run([f"{cmd_prefix}java -classpath {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java Main"], capture_output=True, text=True, shell=True)
         if result.returncode != 0:
             errors = result.stderr
