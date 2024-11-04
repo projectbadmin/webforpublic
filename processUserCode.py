@@ -56,12 +56,8 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
             )
             app.logger.info(f"Ran {destination_dir}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar")
         if app.config['env'] in ['ec2instance', 'beanstalkinstance']:
-            # create S3 folder for the requestid
-            subprocess.run([f"aws s3 mb s3://git-projectbcloudbatchjobprogramfile/{requestid}/"], capture_output=True, text=True, shell=True, env=env)
-            app.logger.info(f"Created S3 folder git-projectbcloudbatchjobprogramfile/{requestid} for the requestid")
-            # sync the folder to S3
-            subprocess.run([f"aws s3 sync {app.config['clone_of_cloudBatchJobTemplate']}{requestid}/ s3://git-projectbcloudbatchjobprogramfile/{requestid}/"], capture_output=True, text=True, shell=True, env=env)
-            app.logger.info(f"Synced the folder git-projectbcloudbatchjobprogramfile/{requestid} to S3")
+            # create S3 folder for the requestid            
+            subprocess.run([f"aws s3 cp {app.config['clone_of_cloudBatchJobTemplate']}{requestid}/* s3://git-projectbcloudbatchjobprogramfile/{requestid}/"], capture_output=True, text=True, shell=True, env=env)            # sync the folder to S3
 
     
     except Exception as e:
