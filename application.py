@@ -6,6 +6,10 @@ from cloudbatchjobinjava import check_and_generate_keywords_, read_javap_result
 
 app = create_app()
 
+@app.route('/')
+def index():
+    return "Your Flask App is running!"
+
 @app.route('/cloudbatchjobingui')
 def cloudbatchjobingui():
     read_javap_result(app)
