@@ -1,10 +1,61 @@
-from flask import  jsonify, render_template, request
+import argparse
+import configparser
+import os
+import subprocess
+from flask import  Flask, jsonify, render_template, request
 import json
-from __init__ import create_app
+from applogging import init_logging
 from processUserCode import process, realTimeUpdateLog, checkSyntax
 from cloudbatchjobinjava import check_and_generate_keywords_, read_javap_result
 
-application = create_app()
+application = Flask(__name__)
+
+# Parse command-line arguments
+parser = argparse.ArgumentParser(description='Run the Flask app with a specific environment.')
+parser.add_argument('--env', type=str, default='beanstalkinstance', help='Environment to run the app in (local, cloud)')
+args = parser.parse_args()
+env = args.env
+
+# load the config file
+try:
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    application.config['env'] = env
+    application.config['https_of_cloudBatchJobTemplateDevelopment'] = config.get(env, 'https_of_cloudBatchJobTemplateDevelopment')
+    application.config['clone_of_cloudBatchJobTemplate'] = config.get(env, 'clone_of_cloudBatchJobTemplate')
+    application.config['logDirectory_of_cloudBatchJobTemplate'] = config.get(env, 'logDirectory_of_cloudBatchJobTemplate')
+    application.config['logDirectory_of_webforpublic'] = config.get(env, 'logDirectory_of_webforpublic')
+    application.config['AWS_ACCESS_KEY_ID'] = config.get(env, 'AWS_ACCESS_KEY_ID')
+    application.config['AWS_SECRET_ACCESS_KEY'] = config.get(env, 'AWS_SECRET_ACCESS_KEY')
+    application.config['path_of_interfaceOnly_javap'] = config.get(env, 'path_of_interfaceOnly_javap')
+except Exception as e:
+    application.logger.error(e)
+
+# create necessary directory
+if not os.path.exists(application.config['clone_of_cloudBatchJobTemplate']):
+    os.makedirs(application.config['clone_of_cloudBatchJobTemplate'])
+    os.chmod(application.config['clone_of_cloudBatchJobTemplate'], 0o777)
+if not os.path.exists(application.config['logDirectory_of_cloudBatchJobTemplate']):
+    os.makedirs(application.config['logDirectory_of_cloudBatchJobTemplate'])
+    os.chmod(application.config['logDirectory_of_cloudBatchJobTemplate'], 0o777)
+if not os.path.exists(application.config['logDirectory_of_webforpublic']):
+    os.makedirs(application.config['logDirectory_of_webforpublic'])
+    os.chmod(application.config['logDirectory_of_webforpublic'], 0o777)
+
+# download necessary the file
+if application.config['env'] != 'local':
+    # Set environment variables
+    env = os.environ.copy()
+    env['AWS_ACCESS_KEY_ID'] = application.config['AWS_ACCESS_KEY_ID']
+    env['AWS_SECRET_ACCESS_KEY'] = application.config['AWS_SECRET_ACCESS_KEY']
+    subprocess.run([f"aws s3 cp s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly_javap.txt {application.config['path_of_interfaceOnly_javap']}"], capture_output=True, text=True, shell=True)
+
+# initialize logging
+init_logging(application)
+application.logger.info('Initialized logging')
+
+# Configure your application and register blueprints here
+
 
 @application.route('/')
 def index():
