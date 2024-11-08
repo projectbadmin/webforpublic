@@ -29,18 +29,24 @@ try:
     application.config['AWS_SECRET_ACCESS_KEY'] = config.get(env, 'AWS_SECRET_ACCESS_KEY')
     application.config['path_of_interfaceOnly_javap'] = config.get(env, 'path_of_interfaceOnly_javap')
 except Exception as e:
-    application.logger.error(e)
+    print(e)
 
-# create necessary directory
-if not os.path.exists(application.config['clone_of_cloudBatchJobTemplate']):
-    os.makedirs(application.config['clone_of_cloudBatchJobTemplate'])
-    os.chmod(application.config['clone_of_cloudBatchJobTemplate'], 0o777)
-if not os.path.exists(application.config['logDirectory_of_cloudBatchJobTemplate']):
-    os.makedirs(application.config['logDirectory_of_cloudBatchJobTemplate'])
-    os.chmod(application.config['logDirectory_of_cloudBatchJobTemplate'], 0o777)
-if not os.path.exists(application.config['logDirectory_of_webforpublic']):
-    os.makedirs(application.config['logDirectory_of_webforpublic'])
-    os.chmod(application.config['logDirectory_of_webforpublic'], 0o777)
+# Create necessary directories
+directories = [
+    application.config['clone_of_cloudBatchJobTemplate'],
+    application.config['logDirectory_of_cloudBatchJobTemplate'],
+    application.config['logDirectory_of_webforpublic']
+]
+
+for directory in directories:
+    if not os.path.exists(directory):
+        try:
+            os.makedirs(directory, exist_ok=True)
+            subprocess.run([f"sudo mkdir {directory}"], capture_output=True, text=True, shell=True, env=env)
+            subprocess.run([f"sudo chmod 777 {directory}"], capture_output=True, text=True, shell=True, env=env)
+            print(f"Directory {directory} created with permissions 777.")
+        except Exception as e:
+            print(f"Failed to create directory {directory}: {e}")
 
 # download necessary the file
 if application.config['env'] != 'local':
