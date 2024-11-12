@@ -10,11 +10,11 @@ from cloudbatchjobinjava import check_and_generate_keywords_, read_javap_result
 
 application = Flask(__name__)
 
-# Parse command-line arguments
-parser = argparse.ArgumentParser(description='Run the Flask app with a specific environment.')
-parser.add_argument('--env', type=str, default='beanstalkinstance', help='Environment to run the app in (local, cloud)')
-args = parser.parse_args()
-env = args.env
+## Parse command-line arguments
+#parser = argparse.ArgumentParser(description='Run the Flask app with a specific environment.')
+#parser.add_argument('--env', type=str, help='Environment to run the app in (local, cloud)')
+#args = parser.parse_args()
+env = 'beanstalkinstance'
 
 # load the config file
 try:
@@ -42,9 +42,13 @@ for directory in directories:
     if not os.path.exists(directory):
         try:
             os.makedirs(directory, exist_ok=True)
-            subprocess.run([f"sudo mkdir {directory}"], capture_output=True, text=True, shell=True, env=env)
-            subprocess.run([f"sudo chmod 777 {directory}"], capture_output=True, text=True, shell=True, env=env)
-            print(f"Directory {directory} created with permissions 777.")
+            if env in ['local', 'ec2instance']:
+                subprocess.run([f"sudo mkdir {directory}"], capture_output=True, text=True, shell=True)
+                subprocess.run([f"sudo chmod 777 {directory}"], capture_output=True, text=True, shell=True)
+                print(f"Directory {directory} created with permissions 777.")
+            else:
+                os.makedirs(directory, exist_ok=True)
+                print(f"Directory {directory} created.")
         except Exception as e:
             print(f"Failed to create directory {directory}: {e}")
 
@@ -54,7 +58,7 @@ if application.config['env'] != 'local':
     env = os.environ.copy()
     env['AWS_ACCESS_KEY_ID'] = application.config['AWS_ACCESS_KEY_ID']
     env['AWS_SECRET_ACCESS_KEY'] = application.config['AWS_SECRET_ACCESS_KEY']
-    subprocess.run([f"aws s3 cp s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly_javap.txt {application.config['path_of_interfaceOnly_javap']}"], capture_output=True, text=True, shell=True)
+    subprocess.run([f"aws s3 cp s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly_javap.txt {application.config['path_of_interfaceOnly_javap']}"], capture_output=True, text=True, shell=True, env=env)
 
 # initialize logging
 init_logging(application)
@@ -65,7 +69,19 @@ application.logger.info('Initialized logging')
 
 @application.route('/')
 def index():
-    return "Your Flask application is running!"
+    content = "Your Flask application is running!"
+    config_settings = {
+        'env': application.config['env'],
+        'https_of_cloudBatchJobTemplateDevelopment': application.config['https_of_cloudBatchJobTemplateDevelopment'],
+        'clone_of_cloudBatchJobTemplate': application.config['clone_of_cloudBatchJobTemplate'],
+        'logDirectory_of_cloudBatchJobTemplate': application.config['logDirectory_of_cloudBatchJobTemplate'],
+        'logDirectory_of_webforpublic': application.config['logDirectory_of_webforpublic'],
+        'AWS_ACCESS_KEY_ID': application.config['AWS_ACCESS_KEY_ID'],
+        'AWS_SECRET_ACCESS_KEY': application.config['AWS_SECRET_ACCESS_KEY'],
+        'path_of_interfaceOnly_javap': application.config['path_of_interfaceOnly_javap']
+    }
+    content += f"<pre>{json.dumps(config_settings, indent=4)}</pre>"
+    return content
 
 @application.route('/cloudbatchjobingui')
 def cloudbatchjobingui():
@@ -136,5 +152,5 @@ def check_syntax_for_onEnd():
 
 
 if __name__ == '__main__':
-    application.run(port=5000, debug=True)
+    application.run(port=8000, debug=True)
     #application.run(host='0.0.0.0', port=5001, debug=True)

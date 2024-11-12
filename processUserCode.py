@@ -97,6 +97,7 @@ def checkSyntax(app, part_of_code, code, requestid, requestContentInJSON):
                 shutil.copytree(f"{app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment_interfaceOnly", f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly")
             if app.config['env'] in ['ec2instance', 'beanstalkinstance']:
                 subprocess.run([f"aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True, env=env)
+                subprocess.run([f"sudo chmod -R 777 {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True)
         else:
             if requestContentInJSON["FUT_OPT"] == "F":
                 shutil.copy(
