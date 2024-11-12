@@ -122,14 +122,14 @@ def checkSyntax(app, part_of_code, code, requestid, requestContentInJSON):
             app.logger.info(f"Wrote the main logic file to {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java")
         
         # javac compile all java files inside requestid_interfaceOnly folder
-        cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance', 'beanstalkinstance'] else ''
+        cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance'] else ''
         result = subprocess.run(f"{cmd_prefix}javac $(find {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java -name '*.java')", capture_output=True, text=True, shell=True)
         if result.returncode != 0:
             errors = result.stderr
             return errors
         
         # run the Main
-        cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance', 'beanstalkinstance'] else ''
+        cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance'] else ''
         result = subprocess.run([f"{cmd_prefix}java -classpath {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java Main"], capture_output=True, text=True, shell=True)
         if result.returncode != 0:
             errors = result.stderr
