@@ -72,7 +72,7 @@ application.logger.info('Initialized logging')
 
 @application.route('/')
 def index():
-    content = "Your Flask application is running! test the auto deployment          "
+    content = "Your Flask application is running! test the auto deployment           "
     config_settings = {
         'env': application.config['env'],
         'https_of_cloudBatchJobTemplateDevelopment': application.config['https_of_cloudBatchJobTemplateDevelopment'],
