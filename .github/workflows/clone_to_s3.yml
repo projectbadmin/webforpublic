@@ -3,7 +3,7 @@ name: Clone to AWS S3
 on:
   push:
     branches:
-      - version2_run_job_at_AWS_Batch
+      - version1
 
 jobs:
   deploy:
@@ -22,13 +22,13 @@ jobs:
 
       - name: Sync to S3
         run: |
-          aws s3 sync . s3://git-webforpublic/version2_run_job_at_AWS_Batch/ --exclude ".git/*"
+          aws s3 sync . s3://git-webforpublic/version1/ --exclude ".git/*"
 
       - name: Create zip file
         run: |
-          git archive -o version2_run_job_at_AWS_Batch.zip HEAD
+          git archive -o version1.zip HEAD
 
       - name: Sync to S3
         run: |
-          aws s3 cp version2_run_job_at_AWS_Batch.zip s3://git-webforpublic/
+          aws s3 cp version1.zip s3://git-webforpublic/
 
