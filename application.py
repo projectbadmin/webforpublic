@@ -122,7 +122,7 @@ def submitCloudbatchjobinjava():
 def get_latest_output():
     data = request.get_json()
     requestid = data['requestid']
-    output = realTimeUpdateLog(application, request.get_json())
+    output = realTimeUpdateLog(application, requestid)
     return jsonify({'output': output})
 
 
