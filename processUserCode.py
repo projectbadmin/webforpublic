@@ -71,7 +71,7 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         shutil.rmtree(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
         jar_file_path = os.path.join(app.config['clone_of_cloudBatchJobTemplate'], f'{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar')
         if os.path.exists(jar_file_path):
-            os.remove(jar_file_path)
+            #os.remove(jar_file_path)
             app.logger.info(f"Removed {jar_file_path}")
         
             
