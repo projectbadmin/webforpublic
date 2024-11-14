@@ -3,7 +3,6 @@ import json
 from applogging import init_logging
 from commonFunction import send_post_request
 from initialize import initialize
-from login import login_process
 from processUserCode import process, realTimeUpdateLog, checkSyntax
 from cloudbatchjobinjava import check_and_generate_keywords_, read_javap_result
 
