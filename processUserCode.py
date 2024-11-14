@@ -47,7 +47,7 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
             app.logger.info(f"Copied {jar_file} to {destination_dir}")
 
         # Run the jar file
-        cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance'] else ''
+        cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance', 'beanstalkinstance'] else ''
         result = subprocess.run(
             [f"{cmd_prefix}java", '-jar', f'{app.config['clone_of_cloudBatchJobTemplate']}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar', requestid, json.dumps(requestContentInJSON)],
             capture_output=True,
