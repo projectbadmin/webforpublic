@@ -51,7 +51,7 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         # Run the jar file
         cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance'] else ''
         result = subprocess.run(
-            [f"{cmd_prefix}java", '-jar', f'{app.config['clone_of_cloudBatchJobTemplate']}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar', requestid, json.dumps(requestContentInJSON)],
+            f'{cmd_prefix}java -jar {app.config["clone_of_cloudBatchJobTemplate"]}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar {requestid} {json.dumps(requestContentInJSON)}',
             capture_output=True,
             text=True,
             env=env
