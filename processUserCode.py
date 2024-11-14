@@ -45,20 +45,20 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
                 os.path.join(destination_dir, f'{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar')
             )
             app.logger.info(f"Copied {jar_file} to {destination_dir}")
-            
-            # Run the jar file
-            cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance'] else ''
-            result = subprocess.run(
-                [f"{cmd_prefix}java", '-jar', f'{destination_dir}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar', requestid, json.dumps(requestContentInJSON)],
-                capture_output=True,
-                text=True,
-                env=env
-            )
-            app.logger.info(f"Ran {destination_dir}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar")
         if app.config['env'] in ['ec2instance', 'beanstalkinstance']:
             # create S3 folder for the requestid            
             subprocess.run([f"aws s3 cp {app.config['clone_of_cloudBatchJobTemplate']}{requestid}/cloudBatchJobInJava/src/main/java/main/logiclibrary/ s3://projectbcloudbatchjobprogramfile/{requestid}/ --recursive"], capture_output=True, text=True, shell=True, env=env)            # sync the folder to S3
             subprocess.run([f"aws s3 cp {app.config['clone_of_cloudBatchJobTemplate']}{requestid}/cloudBatchJobInJava/target/cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar s3://projectbcloudbatchjobprogramfile/{requestid}/"], capture_output=True, text=True, shell=True, env=env)            # sync the folder to S3
+
+        # Run the jar file
+        cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance'] else ''
+        result = subprocess.run(
+            [f"{cmd_prefix}java", '-jar', f'{destination_dir}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar', requestid, json.dumps(requestContentInJSON)],
+            capture_output=True,
+            text=True,
+            env=env
+        )
+        app.logger.info(f"Ran {destination_dir}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar")
 
     except Exception as e:
         app.logger.error(e)
