@@ -41,13 +41,12 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         if app.config['env'] == 'local':
             # Copy the with-dependencies.jar file to another directory and rename it
             jar_file = os.path.join(project_dir, 'target', 'cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar')
-            destination_dir = app.config['clone_of_cloudBatchJobTemplate']
-            shutil.copy(jar_file, destination_dir)
+            shutil.copy(jar_file, app.config['clone_of_cloudBatchJobTemplate'])
             os.rename(
-                os.path.join(destination_dir, 'cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar'),
-                os.path.join(destination_dir, f'{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar')
+                os.path.join(app.config['clone_of_cloudBatchJobTemplate'], 'cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar'),
+                os.path.join(app.config['clone_of_cloudBatchJobTemplate'], f'{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar')
             )
-            app.logger.info(f"Copied {jar_file} to {destination_dir}")
+            app.logger.info(f"Copied {jar_file} to {app.config['clone_of_cloudBatchJobTemplate']}")
 
         # Run the jar file
         cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance'] else ''
@@ -57,7 +56,7 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
             text=True,
             env=env
         )
-        app.logger.info(f"Ran {destination_dir}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar")
+        app.logger.info(f"Ran {app.config['clone_of_cloudBatchJobTemplate']}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar")
         
         if app.config['env'] in ['ec2instance', 'beanstalkinstance']:
             # create S3 folder for the requestid            
