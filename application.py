@@ -5,7 +5,7 @@ from commonFunction import check_logged_in_or_not, send_post_request
 from home import get_dataStreamingList, request_newJob
 from initialize import initialize
 from processUserCode import process, realTimeUpdateLog, checkSyntax
-from cloudbatchjobinjava import check_and_generate_keywords_, read_javap_result
+from cloudbatchjobinjava import check_and_generate_keywords_, cloudbatchjobinjava, read_javap_result
 
 application = Flask(__name__)
 initialize(application)
@@ -64,18 +64,6 @@ def logout():
 def cloudbatchjobingui():
     read_javap_result(application)
     return render_template('cloudbatchjobingui.html')
-
-@application.route('/cloudbatchjobinjava', methods=['GET', 'POST'])
-def cloudbatchjobinjava(requestid=None, requestContentInJSON=None):
-    read_javap_result(application)
-    if request.method == 'POST':
-        # If requestContentInJSON is a JSON string, parse it
-        if requestContentInJSON:
-            requestContentInJSON = json.loads(requestContentInJSON)
-
-        return render_template('cloudbatchjobinjava.html', requestid=requestid, requestContentInJSON=json.dumps(requestContentInJSON))
-    else:
-        return render_template('cloudbatchjobinjava.html')
 
 @application.route('/cloudbatchjobinjava/check_and_generate_keywords', methods=['POST'])
 def check_and_generate_keywords():
@@ -153,7 +141,7 @@ def request_new_data_streaming():
     if message == "request successful":
         requestid = response.get('DATA_STREAM_ID', 'No message found')
         requestContentInJSON = response.get('requestContentInJSON', 'No message found')
-        cloudbatchjobinjava(requestid, requestContentInJSON)
+        cloudbatchjobinjava(application, requestid, requestContentInJSON)
     else:
         return "Invalid credentials"
 

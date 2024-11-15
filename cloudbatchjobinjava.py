@@ -1,5 +1,7 @@
 import re
 
+from flask import render_template
+
 commonJavaKeyWords = [
 #    "System", "out", "println", "String", "Integer", "Double", "Boolean", "ArrayList", "HashMap", "HashSet", "List", "Map", "Set",
 #    "public", "private", "protected", "static", "final", "void", "int", "double", "float", "char", "boolean", "long", "short", "byte",
@@ -10,6 +12,14 @@ commonJavaKeyWords = [
 classMethodsforOnStart = {}
 classMethodsforOnProcess = {}
 classMethodsforOnEnd = {}
+
+def cloudbatchjobinjava(application, requestid=None, requestContentInJSON=None):
+    read_javap_result(application)
+    if requestContentInJSON:
+        requestContentInJSON = json.loads(requestContentInJSON)
+        return render_template('cloudbatchjobinjava.html', requestid=requestid, requestContentInJSON=json.dumps(requestContentInJSON))
+    else:
+        return render_template('cloudbatchjobinjava.html')
 
 def check_and_generate_keywords_(line, cursor_pos, method):
     match = re.search(r'(\w+)\.$', line[:cursor_pos])
