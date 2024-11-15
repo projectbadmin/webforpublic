@@ -1,6 +1,7 @@
 import json
 
 from flask import session
+from applogging import write_log
 import git
 import requests
 import time
@@ -28,6 +29,7 @@ def send_post_request(url, body):
         max_retries = 3
         for attempt in range(max_retries):
             response = requests.post(url, headers=headers, data=json.dumps(body))
+            write_log(f"POST request to {url} with body {body} returned status code {response.status_code}")
             if response.status_code != 503:
                 return response.json()
             time.sleep(1)  # Wait for 1 second before retrying
