@@ -145,7 +145,8 @@ def request_new_data_streaming():
     if message == "request successful":
         requestid = response.get('DATA_STREAM_ID', 'No message found')
         requestContentInJSON = response.get('requestContentInJSON', 'No message found')
-        cloudbatchjobinjava(application, requestid, requestContentInJSON)
+        cloudbatchjobinjava_template = cloudbatchjobinjava(application, requestid, requestContentInJSON)
+        return cloudbatchjobinjava_template
     else:
         return "Invalid credentials"
 
