@@ -22,9 +22,9 @@ def send_post_request(url, body):
         userid = session.get('userid', None)
         cookie = session.get('cookie', None)
         if userid:
-            body['userid'] = userid
+            body['USERID'] = userid
         if cookie:
-            body['cookie'] = cookie
+            body['COOKIE'] = cookie
 
         max_retries = 3
         for attempt in range(max_retries):
