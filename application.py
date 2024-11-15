@@ -65,18 +65,21 @@ def cloudbatchjobingui():
     read_javap_result(application)
     return render_template('cloudbatchjobingui.html')
 
-@application.route('/cloudbatchjobinjava')
+@application.route('/cloudbatchjobinjava', methods=['GET', 'POST'])
 def cloudbatchjobinjava():
-    # Retrieve requestid and requestContentInJSON from the request
-    requestid = request.args.get('requestid')
-    requestContentInJSON = request.args.get('requestContentInJSON')
-
-    # If requestContentInJSON is a JSON string, parse it
-    if requestContentInJSON:
-        requestContentInJSON = json.loads(requestContentInJSON)
-
     read_javap_result(application)
-    return render_template('cloudbatchjobinjava.html', requestid=requestid, requestContentInJSON=json.dumps(requestContentInJSON))
+    if request.method == 'POST':
+        # Retrieve requestid and requestContentInJSON from the form data
+        requestid = request.form.get('requestid')
+        requestContentInJSON = request.form.get('requestContentInJSON')
+
+        # If requestContentInJSON is a JSON string, parse it
+        if requestContentInJSON:
+            requestContentInJSON = json.loads(requestContentInJSON)
+
+        return render_template('cloudbatchjobinjava.html', requestid=requestid, requestContentInJSON=json.dumps(requestContentInJSON))
+    else:
+        return render_template('cloudbatchjobinjava.html')
 
 @application.route('/cloudbatchjobinjava/check_and_generate_keywords', methods=['POST'])
 def check_and_generate_keywords():
@@ -154,7 +157,7 @@ def request_new_data_streaming():
     if message == "request successful":
         requestid = response.get('DATA_STREAM_ID', 'No message found')
         requestContentInJSON = response.get('requestContentInJSON', 'No message found')
-        return redirect(url_for('cloudbatchjobinjava', requestid=requestid, requestContentInJSON=json.dumps(requestContentInJSON)))
+        return render_template('cloudbatchjobinjava.html', requestid=requestid, requestContentInJSON=json.dumps(requestContentInJSON))
     else:
         return "Invalid credentials"
 
