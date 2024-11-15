@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Job Management System</h1>
+        <nav>
+            <ul>
+                {% if session.cookie is none %}
+                    <li><a href="/login">Login</a></li>
+                {% else %}
+                    <li><a href="/logout">Logout</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="running-jobs">
+            <h2>Running Jobs</h2>
+            <ul>
+                {% for stream in data_streaming_list %}
+                <li>{{ stream }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+        <section id="request-job">
+            <h2>Request New Job</h2>
+            <form action="/request-job" method="post">
+                <label for="job-name">Job Name:</label>
+                <input type="text" id="job-name" name="job-name" required>
+                <label for="job-details">Job Details:</label>
+                <textarea id="job-details" name="job-details" required></textarea>
+                <button type="submit">Request Job</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Job Management System</p>
+    </footer>
+</body>
+</html>

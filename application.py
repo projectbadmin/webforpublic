@@ -1,7 +1,8 @@
 from flask import  Flask, jsonify, redirect, render_template, request, session, url_for
 import json
 from applogging import init_logging
-from commonFunction import send_post_request
+from commonFunction import check_logged_in_or_not, send_post_request
+from home import get_dataStreamingList
 from initialize import initialize
 from processUserCode import process, realTimeUpdateLog, checkSyntax
 from cloudbatchjobinjava import check_and_generate_keywords_, read_javap_result
@@ -11,6 +12,7 @@ initialize(application)
 
 @application.route('/home')
 def home():
+    data_streaming_list = get_dataStreamingList()
     content = "Your Flask application is running!"
     config_settings = {
         'env': application.config['env'],
@@ -26,22 +28,27 @@ def home():
         'permanent': session.permanent,
         'new': session.new,
         'modified': session.modified,
+        'userid': session.get('userid', 'No userid found'),
         'cookie': session.get('cookie', 'No cookie found')
     }
     content += f"<pre>{json.dumps(session_info, indent=4)}</pre>"
     content += f"<pre>{json.dumps(config_settings, indent=4)}</pre>"
-    return content
+    return render_template('home.html', data_streaming_list=data_streaming_list, content=content)
 
 @application.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        response = send_post_request('https://nk32qyplih.execute-api.ap-south-1.amazonaws.com/Login', {'USERNAME': username, 'PASSWORD': password})
+        response = send_post_request(
+            'https://nk32qyplih.execute-api.ap-south-1.amazonaws.com/Login', 
+            {'USERNAME': username, 'PASSWORD': password}
+        )
         message = response.get('message', 'No message found')
         if message == "Login successful":
             session.permanent = True
-            session['cookie'] = response.get('cookie', 'No cookie found')
+            session['userid'] = response.get('userid', None)
+            session['cookie'] = response.get('cookie', None)
             return redirect(url_for('home'))
         else:
             return "Invalid credentials"
@@ -114,6 +121,13 @@ def check_syntax_for_onEnd():
     result = checkSyntax(application, "onEnd", code_for_onEnd, requestid, requestContentInJSON)
     return jsonify({'errors': result})
 
+
+# Register the function to run before each request
+@application.before_request
+def before_request():
+    logged_in = check_logged_in_or_not()
+    if logged_in == False:
+        return redirect(url_for('login'))
 
 if __name__ == '__main__':
     application.run(port=8000, debug=True)

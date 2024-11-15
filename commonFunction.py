@@ -16,10 +16,13 @@ def send_post_request(url, body):
         'Content-Type': 'application/json'
     }
     try:
-        max_retries = 3
-        retries = 0
-        while retries < max_retries:
-            response = requests.post(url, headers=headers, data=json.dumps(body))
-            return response.json()
+        response = requests.post(url, headers=headers, data=json.dumps(body))
+        return response.json()
     except requests.exceptions.RequestException as e:
         return f"Error making POST request: {str(e)}"
+
+def check_logged_in_or_not():
+    session_cookie = requests.cookies.get('cookie')
+    if session_cookie is None:
+        return False
+    return True
