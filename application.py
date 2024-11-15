@@ -10,7 +10,7 @@ from cloudbatchjobinjava import check_and_generate_keywords_, cloudbatchjobinjav
 application = Flask(__name__)
 initialize(application)
 
-@application.route('/home')
+@application.route('/')
 def index():
     return redirect(url_for('home'))
 
