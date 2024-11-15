@@ -24,6 +24,9 @@ def init_logging(app):
     # Add handlers to app logger
     app.logger.addHandler(file_handler)
     app.logger.addHandler(console_handler)
+
+def write_log(content):
+    logger.info(content)
     
 def log_action(func):
     @wraps(func)
@@ -59,3 +62,4 @@ subprocess.run = log_subprocess_call(subprocess.run)
 subprocess.call = log_subprocess_call(subprocess.call)
 subprocess.check_call = log_subprocess_call(subprocess.check_call)
 subprocess.check_output = log_subprocess_call(subprocess.check_output)
+

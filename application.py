@@ -1,16 +1,22 @@
 from flask import  Flask, jsonify, redirect, render_template, request, session, url_for
 import json
 from applogging import init_logging
-from commonFunction import send_post_request
+from commonFunction import check_logged_in_or_not, send_post_request
+from home import get_dataStreamingList, request_newJob
 from initialize import initialize
 from processUserCode import process, realTimeUpdateLog, checkSyntax
-from cloudbatchjobinjava import check_and_generate_keywords_, read_javap_result
+from cloudbatchjobinjava import check_and_generate_keywords_, cloudbatchjobinjava, read_javap_result
 
 application = Flask(__name__)
 initialize(application)
 
+@application.route('/')
+def index():
+    return redirect(url_for('home'))
+
 @application.route('/home')
 def home():
+    data_streaming_list = get_dataStreamingList()
     content = "Your Flask application is running!"
     config_settings = {
         'env': application.config['env'],
@@ -26,36 +32,42 @@ def home():
         'permanent': session.permanent,
         'new': session.new,
         'modified': session.modified,
+        'userid': session.get('userid', 'No userid found'),
         'cookie': session.get('cookie', 'No cookie found')
     }
     content += f"<pre>{json.dumps(session_info, indent=4)}</pre>"
     content += f"<pre>{json.dumps(config_settings, indent=4)}</pre>"
-    return content
+    return render_template('home.html', data_streaming_list=data_streaming_list, content=content)
 
 @application.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        response = send_post_request('https://nk32qyplih.execute-api.ap-south-1.amazonaws.com/Login', {'USERNAME': username, 'PASSWORD': password})
+        response = send_post_request(
+            'https://nk32qyplih.execute-api.ap-south-1.amazonaws.com/Login', 
+            {'USERNAME': username, 'PASSWORD': password}
+        )
         message = response.get('message', 'No message found')
         if message == "Login successful":
             session.permanent = True
-            session['cookie'] = response.get('cookie', 'No cookie found')
+            session['userid'] = response.get('userid', None)
+            session['cookie'] = response.get('cookie', None)
             return redirect(url_for('home'))
         else:
             return "Invalid credentials"
     return render_template('login.html')
 
+@application.route('/logout', methods=['GET'])
+def logout():
+    send_post_request('https://b22md47un2.execute-api.ap-south-1.amazonaws.com/Logout', {})
+    session.clear()
+    return "Redirecting to login page..."
+
 @application.route('/cloudbatchjobingui')
 def cloudbatchjobingui():
     read_javap_result(application)
     return render_template('cloudbatchjobingui.html')
-
-@application.route('/cloudbatchjobinjava')
-def cloudbatchjobinjava():
-    read_javap_result(application)
-    return render_template('cloudbatchjobinjava.html')
 
 @application.route('/cloudbatchjobinjava/check_and_generate_keywords', methods=['POST'])
 def check_and_generate_keywords():
@@ -114,6 +126,38 @@ def check_syntax_for_onEnd():
     result = checkSyntax(application, "onEnd", code_for_onEnd, requestid, requestContentInJSON)
     return jsonify({'errors': result})
 
+
+@application.route('/home/request-new-data-streaming', methods=['POST'])
+def request_new_data_streaming():
+    datetimeselectiontype = request.form['datetime-selection-type']
+    fromdate = request.form['from-date']
+    todate = request.form['to-date']
+    fromtime = request.form['from-time']
+    totime = request.form['to-time']
+    class_code = request.form['class-code']
+    fut_opt = request.form['fut-opt']
+    expiry_mth = request.form['expiry-mth']
+    strike_prc = request.form['strike-prc']
+    call_put = request.form['call-put']
+    retention_hour = request.form['retention-hour']
+    response = request_newJob(datetimeselectiontype, fromdate, todate, fromtime, totime, class_code, fut_opt, expiry_mth, strike_prc, call_put, retention_hour)
+    message = response.get('message', 'No message found')
+    if message == "request successful":
+        requestid = response.get('DATA_STREAM_ID', 'No message found')
+        requestContentInJSON = response.get('requestContentInJSON', 'No message found')
+        cloudbatchjobinjava_template = cloudbatchjobinjava(application, requestid, requestContentInJSON)
+        return cloudbatchjobinjava_template
+    else:
+        return "Invalid credentials"
+
+# Register the function to run before each request
+@application.before_request
+def before_request():
+    if request.method not in ['GET', 'POST']:
+        return "Method not allowed", 405
+    logged_in = check_logged_in_or_not()
+    if not logged_in and request.endpoint != 'login':
+        return redirect(url_for('login'))
 
 if __name__ == '__main__':
     application.run(port=8000, debug=True)
