@@ -28,6 +28,7 @@ def send_post_request(url, body):
 
         max_retries = 3
         for attempt in range(max_retries):
+            write_log(f"POST request to {url} with body {body} (attempt {attempt + 1}/{max_retries})")
             response = requests.post(url, headers=headers, data=json.dumps(body))
             write_log(f"POST request to {url} with body {body} returned status code {response.status_code}")
             if response.status_code != 503:
