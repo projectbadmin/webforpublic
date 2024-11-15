@@ -18,8 +18,21 @@ def send_post_request(url, body):
         'Content-Type': 'application/json'
     }
     try:
-        response = requests.post(url, headers=headers, data=json.dumps(body))
-        return response.json()
+        userid = session.get('userid', None)
+        cookie = session.get('cookie', None)
+        if userid:
+            body['userid'] = userid
+        if cookie:
+            body['cookie'] = cookie
+
+        max_retries = 3
+        for attempt in range(max_retries):
+            response = requests.post(url, headers=headers, data=json.dumps(body))
+            if response.status_code != 503:
+                return response.json()
+            time.sleep(1)  # Wait for 1 second before retrying
+
+        return f"Error making POST request: received status code 503 after {max_retries} retries"
     except requests.exceptions.RequestException as e:
         return f"Error making POST request: {str(e)}"
 

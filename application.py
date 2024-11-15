@@ -2,7 +2,7 @@ from flask import  Flask, jsonify, redirect, render_template, request, session, 
 import json
 from applogging import init_logging
 from commonFunction import check_logged_in_or_not, send_post_request
-from home import get_dataStreamingList
+from home import get_dataStreamingList, request_newJob
 from initialize import initialize
 from processUserCode import process, realTimeUpdateLog, checkSyntax
 from cloudbatchjobinjava import check_and_generate_keywords_, read_javap_result
@@ -53,6 +53,11 @@ def login():
         else:
             return "Invalid credentials"
     return render_template('login.html')
+
+def logout():
+    send_post_request('https://b22md47un2.execute-api.ap-south-1.amazonaws.com/Logout', {})
+    session.clear()
+    return "Redirecting to login page..."
 
 @application.route('/cloudbatchjobingui')
 def cloudbatchjobingui():
@@ -121,6 +126,28 @@ def check_syntax_for_onEnd():
     result = checkSyntax(application, "onEnd", code_for_onEnd, requestid, requestContentInJSON)
     return jsonify({'errors': result})
 
+
+@application.route('/request-new-data-streaming', methods=['POST'])
+def request_new_data_streaming():
+    datetimeselectiontype = request.form['datetime-selection-type']
+    fromdate = request.form['from-date']
+    todate = request.form['to-date']
+    fromtime = request.form['from-time']
+    totime = request.form['to-time']
+    class_code = request.form['class-code']
+    fut_opt = request.form['fut-opt']
+    expiry_mth = request.form['expiry-mth']
+    strike_prc = request.form['strike-prc']
+    call_put = request.form['call-put']
+    retention_hour = request.form['retention-hour']
+    response = request_newJob(datetimeselectiontype, fromdate, todate, fromtime, totime, class_code, fut_opt, expiry_mth, strike_prc, call_put, retention_hour)
+    message = response.get('message', 'No message found')
+    if message == "request successful":
+        requestid = response.get('DATA_STREAM_ID', 'No message found')
+        requestContentInJSON = response.get('requestContentInJSON', 'No message found')
+        return redirect(url_for('cloudbatchjobinjava', requestid=requestid, requestContentInJSON=json.dumps(requestContentInJSON)))
+    else:
+        return "Invalid credentials"
 
 # Register the function to run before each request
 @application.before_request
