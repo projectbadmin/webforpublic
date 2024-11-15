@@ -67,8 +67,16 @@ def cloudbatchjobingui():
 
 @application.route('/cloudbatchjobinjava')
 def cloudbatchjobinjava():
+    # Retrieve requestid and requestContentInJSON from the request
+    requestid = request.args.get('requestid')
+    requestContentInJSON = request.args.get('requestContentInJSON')
+
+    # If requestContentInJSON is a JSON string, parse it
+    if requestContentInJSON:
+        requestContentInJSON = json.loads(requestContentInJSON)
+
     read_javap_result(application)
-    return render_template('cloudbatchjobinjava.html')
+    return render_template('cloudbatchjobinjava.html', requestid=requestid, requestContentInJSON=json.dumps(requestContentInJSON))
 
 @application.route('/cloudbatchjobinjava/check_and_generate_keywords', methods=['POST'])
 def check_and_generate_keywords():
