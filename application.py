@@ -66,13 +66,9 @@ def cloudbatchjobingui():
     return render_template('cloudbatchjobingui.html')
 
 @application.route('/cloudbatchjobinjava', methods=['GET', 'POST'])
-def cloudbatchjobinjava():
+def cloudbatchjobinjava(requestid=None, requestContentInJSON=None):
     read_javap_result(application)
     if request.method == 'POST':
-        # Retrieve requestid and requestContentInJSON from the form data
-        requestid = request.form.get('requestid')
-        requestContentInJSON = request.form.get('requestContentInJSON')
-
         # If requestContentInJSON is a JSON string, parse it
         if requestContentInJSON:
             requestContentInJSON = json.loads(requestContentInJSON)
@@ -139,7 +135,7 @@ def check_syntax_for_onEnd():
     return jsonify({'errors': result})
 
 
-@application.route('/request-new-data-streaming', methods=['POST'])
+@application.route('/home/request-new-data-streaming', methods=['POST'])
 def request_new_data_streaming():
     datetimeselectiontype = request.form['datetime-selection-type']
     fromdate = request.form['from-date']
@@ -157,7 +153,7 @@ def request_new_data_streaming():
     if message == "request successful":
         requestid = response.get('DATA_STREAM_ID', 'No message found')
         requestContentInJSON = response.get('requestContentInJSON', 'No message found')
-        return render_template('cloudbatchjobinjava.html', requestid=requestid, requestContentInJSON=json.dumps(requestContentInJSON))
+        cloudbatchjobinjava(requestid, requestContentInJSON)
     else:
         return "Invalid credentials"
 
