@@ -11,6 +11,10 @@ application = Flask(__name__)
 initialize(application)
 
 @application.route('/home')
+def index():
+    return redirect(url_for('home'))
+
+@application.route('/home')
 def home():
     data_streaming_list = get_dataStreamingList()
     content = "Your Flask application is running!"
