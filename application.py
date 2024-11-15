@@ -54,6 +54,7 @@ def login():
             return "Invalid credentials"
     return render_template('login.html')
 
+@application.route('/logout', methods=['POST'])
 def logout():
     send_post_request('https://b22md47un2.execute-api.ap-south-1.amazonaws.com/Logout', {})
     session.clear()
