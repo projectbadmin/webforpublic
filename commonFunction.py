@@ -1,4 +1,6 @@
 import json
+
+from flask import session
 import git
 import requests
 import time
@@ -22,7 +24,7 @@ def send_post_request(url, body):
         return f"Error making POST request: {str(e)}"
 
 def check_logged_in_or_not():
-    session_cookie = requests.cookies.get('cookie')
+    session_cookie = session.get('cookie', None)
     if session_cookie is None:
         return False
     return True
