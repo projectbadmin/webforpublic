@@ -18,7 +18,7 @@ def cloudbatchjobinjava(application, requestid=None, requestContentInJSON=None):
     read_javap_result(application)
     if requestContentInJSON:
         requestContentInJSON = json.dump(requestContentInJSON)
-        return render_template('cloudbatchjobinjava.html', requestid=requestid, requestContentInJSON=json.dumps(requestContentInJSON))
+        return render_template('cloudbatchjobinjava.html', requestid=requestid, requestContentInJSON=json.dumps(requestContentInJSON, indent=4))
     else:
         return render_template('cloudbatchjobinjava.html')
 
