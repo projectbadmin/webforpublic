@@ -16,7 +16,7 @@ def index():
 
 @application.route('/home')
 def home():
-    data_streaming_list = get_dataStreamingList()
+    data_streaming_list = get_dataStreamingList("","","")
     content = "Your Flask application is running!"
     config_settings = {
         'env': application.config['env'],
@@ -149,6 +149,15 @@ def request_new_data_streaming():
         return cloudbatchjobinjava_template
     else:
         return "Invalid credentials"
+    
+@application.route('/data-streaming-list/filter', methods=['POST'])
+def filter_streams():
+    data = request.get_json()
+    stream_status = data['stream_status']
+    retention_hour = data['retention_hour']
+    class_code = data['class_code']
+    filtered_list = get_dataStreamingList(stream_status, retention_hour, class_code)
+    return jsonify(filtered_list)
 
 # Register the function to run before each request
 @application.before_request

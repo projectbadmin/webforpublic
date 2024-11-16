@@ -1,0 +1,4 @@
+ /* Ensure the button and image are displayed inline */
+ #filter-button {
+    display: inline-block;
+}

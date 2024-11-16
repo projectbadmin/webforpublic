@@ -1,14 +1,14 @@
-from flask import redirect, session, url_for
+from flask import redirect, request, session, url_for, jsonify
 from commonFunction import send_post_request
 
 
-def get_dataStreamingList():
+def get_dataStreamingList(stream_status, retention_hour, class_code):
     response = send_post_request(
         'https://at05fj659h.execute-api.ap-south-1.amazonaws.com/DataStreamingList', 
         {
-        "STREAM_STATUS": "",
-        "STREAM_REMAINED_RETENTION_HOUR": "",
-        "STREAM_DATA_CLASS_CODE": ""
+        "STREAM_STATUS": stream_status,
+        "STREAM_REMAINED_RETENTION_HOUR": retention_hour,
+        "STREAM_DATA_CLASS_CODE": class_code
         }
     )
     return response
