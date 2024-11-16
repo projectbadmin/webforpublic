@@ -40,8 +40,15 @@ def send_post_request(url, body):
         return f"Error making POST request: {str(e)}"
 
 def check_logged_in_or_not():
-    session_cookie = session.get('cookie', None)
     session_userid = session.get('userid', None)
-    if session_cookie is None or session_userid is None:
+    session_cookie = session.get('cookie', None)
+    if session_userid is None or session_cookie is None:
         return False
-    return True
+    else:
+        response = send_post_request(
+            'https://3iyu8yshel.execute-api.ap-south-1.amazonaws.com/check_valid_login', {}
+        )
+        message = response.get('message', 'No message found')
+        if message == "Login session valid":
+            return True
+    return False
