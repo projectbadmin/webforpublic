@@ -153,11 +153,12 @@ def request_new_data_streaming():
 # Register the function to run before each request
 @application.before_request
 def before_request():
-    if request.method not in ['GET', 'POST']:
-        return "Method not allowed", 405
-    logged_in = check_logged_in_or_not()
-    if not logged_in:
-        return redirect(url_for('login'))
+    if request.endpoint != 'login':
+        if request.method not in ['GET', 'POST']:
+            return "Method not allowed", 405
+        logged_in = check_logged_in_or_not()
+        if not logged_in:
+            return redirect(url_for('login'))
 
 if __name__ == '__main__':
     application.run(port=8000, debug=True)
