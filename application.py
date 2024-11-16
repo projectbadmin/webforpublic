@@ -156,7 +156,7 @@ def before_request():
     if request.method not in ['GET', 'POST']:
         return "Method not allowed", 405
     logged_in = check_logged_in_or_not()
-    if not logged_in and request.endpoint != 'login':
+    if not logged_in:
         return redirect(url_for('login'))
 
 if __name__ == '__main__':

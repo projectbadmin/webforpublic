@@ -41,6 +41,7 @@ def send_post_request(url, body):
 
 def check_logged_in_or_not():
     session_cookie = session.get('cookie', None)
-    if session_cookie is None:
+    session_userid = session.get('userid', None)
+    if session_cookie is None or session_userid is None:
         return False
     return True
