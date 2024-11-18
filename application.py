@@ -94,16 +94,18 @@ def submitCloudbatchjobinjava():
 @application.route('/cloudbatchjobinjava/latest_output', methods=['POST'])
 def get_latest_output():
     data = request.get_json()
-    requestid = data['requestid']
-    output = realTimeUpdateLog(application, requestid)
+    tempPageRequestID = data['tempPageRequestID']
+    output = realTimeUpdateLog(application, tempPageRequestID)
     return jsonify({'output': output})
 
 
 @application.route('/cloudbatchjobinjava/check_syntax_for_onStart', methods=['POST'])
 def check_syntax_for_onStart():
     data = request.get_json()
-    requestid = data['requestid']
-    requestContentInJSON = json.loads(data['requestContentInJSON'])
+    tempPageRequestID = data['tempPageRequestID']
+    tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
+    requestid = tempPageRequestID_value['requestid']
+    requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
     code_for_onStart = data['code_for_onStart']
     result = checkSyntax(application, "onStart", code_for_onStart, requestid, requestContentInJSON)
     return jsonify({'errors': result})
@@ -111,8 +113,10 @@ def check_syntax_for_onStart():
 @application.route('/cloudbatchjobinjava/check_syntax_for_onProcess', methods=['POST'])
 def check_syntax_for_onProcess():
     data = request.get_json()
-    requestid = data['requestid']
-    requestContentInJSON = json.loads(data['requestContentInJSON'])
+    tempPageRequestID = data['tempPageRequestID']
+    tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
+    requestid = tempPageRequestID_value['requestid']
+    requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
     code_for_onProcess = data['code_for_onProcess']
     result = checkSyntax(application, "onProcess", code_for_onProcess, requestid, requestContentInJSON)
     return jsonify({'errors': result})
@@ -120,8 +124,10 @@ def check_syntax_for_onProcess():
 @application.route('/cloudbatchjobinjava/check_syntax_for_onEnd', methods=['POST'])
 def check_syntax_for_onEnd():
     data = request.get_json()
-    requestid = data['requestid']
-    requestContentInJSON = json.loads(data['requestContentInJSON'])
+    tempPageRequestID = data['tempPageRequestID']
+    tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
+    requestid = tempPageRequestID_value['requestid']
+    requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
     code_for_onEnd = data['code_for_onEnd']
     result = checkSyntax(application, "onEnd", code_for_onEnd, requestid, requestContentInJSON)
     return jsonify({'errors': result})

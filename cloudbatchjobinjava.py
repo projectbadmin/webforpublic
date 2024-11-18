@@ -1,7 +1,8 @@
 import json
 import re
+import uuid
 
-from flask import render_template
+from flask import render_template, session
 
 commonJavaKeyWords = [
 #    "System", "out", "println", "String", "Integer", "Double", "Boolean", "ArrayList", "HashMap", "HashSet", "List", "Map", "Set",
@@ -14,9 +15,14 @@ classMethodsforOnStart = {}
 classMethodsforOnProcess = {}
 classMethodsforOnEnd = {}
 
-def cloudbatchjobinjava(application, requestid=None, requestContentInJSON=None):
+def cloudbatchjobinjava(application, requestid, requestContentInJSON):
     read_javap_result(application)
-    return render_template('cloudbatchjobinjava.html', requestid=requestid, requestContentInJSON=json.dumps(requestContentInJSON))
+    tempPageRequestID = str(uuid.uuid4())
+    session[tempPageRequestID] = {
+        'requestid': requestid,
+        'requestContentInJSON': requestContentInJSON
+    }
+    return render_template('cloudbatchjobinjava.html', tempPageRequestID=tempPageRequestID)
 
 def check_and_generate_keywords_(line, cursor_pos, method):
     match = re.search(r'(\w+)\.$', line[:cursor_pos])

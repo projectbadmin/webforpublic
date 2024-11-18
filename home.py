@@ -1,3 +1,4 @@
+import datetime
 from flask import redirect, request, session, url_for, jsonify
 from commonFunction import send_post_request
 
@@ -30,5 +31,8 @@ def request_newJob(datetimeselectiontype, fromdate, todate, fromtime, totime, cl
     response = send_post_request(
         'https://7r1ppr7pe1.execute-api.ap-south-1.amazonaws.com/Prerequisite_for_stepFunction_DataProvider', requestContentInJSON
     )
+    #response = {}
+    #response['message'] = 'request successful'
+    #response['DATA_STREAM_ID'] = 'f04485a5-a5c4-11ef-9553-4387f2d8ee77_' + datetime.datetime.now().strftime('%Y%m%d%H%M%S')
     response['requestContentInJSON'] = requestContentInJSON
     return response

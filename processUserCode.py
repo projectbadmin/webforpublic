@@ -3,6 +3,8 @@ import shutil
 import os
 import json
 
+from flask import session
+
 def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid, requestContentInJSON):
     try:
         # Set environment variables
@@ -76,10 +78,12 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         
             
 
-def realTimeUpdateLog(app, requestid):
+def realTimeUpdateLog(app, tempPageRequestID):
     output = ""
     try:
-        if requestid is not None:
+        if tempPageRequestID is not None:
+            tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
+            requestid = tempPageRequestID_value['requestid']
             log_file_path = os.path.join(app.config['logDirectory_of_cloudBatchJobTemplate'], f"{requestid}.log.0")
             if os.path.exists(log_file_path):
                 with open(log_file_path, 'r') as file:
