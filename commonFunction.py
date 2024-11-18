@@ -26,16 +26,9 @@ def send_post_request(url, body):
         if cookie:
             body['COOKIE'] = cookie
 
-        max_retries = 3
-        for attempt in range(max_retries):
-            write_log(f"POST request to {url} with body {body} (attempt {attempt + 1}/{max_retries})")
-            response = requests.post(url, headers=headers, data=json.dumps(body))
-            write_log(f"POST request to {url} with body {body} returned status code {response.status_code}")
-            if response.status_code != 503:
-                return response.json()
-            time.sleep(1)  # Wait for 1 second before retrying
-
-        return f"Error making POST request: received status code 503 after {max_retries} retries"
+        response = requests.post(url, headers=headers, data=json.dumps(body))
+        write_log(f"POST request to {url} with body {body} returned status code {response.status_code}")
+        return response.json()
     except requests.exceptions.RequestException as e:
         return f"Error making POST request: {str(e)}"
 
