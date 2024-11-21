@@ -88,7 +88,7 @@
                 <img id="filtering-icon" class="loading-icon" src="{{ url_for('static', filename='loading.gif') }}">
             </form>
             <ul id="data-streaming-list">
-                {% if data_streaming_list %}
+                {% if data_streaming_list|length > 0 %}
                     {% for stream in data_streaming_list %}
                     <li><a href="/home/use-data-streaming/{{ stream.ID }}">{{ stream.ID }}</a></li>
                     <li>{{ stream.RETENTION_HOUR }} - {{ stream.REQUEST_CONTENT.CLASS_CODE }} - {{ stream.CREATE_DATETIME}}</li>
