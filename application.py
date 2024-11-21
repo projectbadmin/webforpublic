@@ -41,6 +41,9 @@ def home():
 
 @application.route('/login', methods=['GET','POST'])
 def login():
+    logged_in = check_logged_in_or_not()
+    if logged_in:
+        return redirect(url_for('home'))
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
