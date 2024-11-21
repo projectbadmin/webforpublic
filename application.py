@@ -16,7 +16,7 @@ def index():
 
 @application.route('/home')
 def home():
-    data_streaming_list = get_dataStreamingList("","","")
+    data_streaming_list = get_dataStreamingList("","","","")
     content = "Your Flask application is running!"
     config_settings = {
         'env': application.config['env'],
