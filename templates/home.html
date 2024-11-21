@@ -90,7 +90,8 @@
             <ul id="data-streaming-list">
                 {% if data_streaming_list %}
                     {% for stream in data_streaming_list %}
-                    <li>{{ stream.ID }} - {{ stream.RETENTION_HOUR }} - {{ stream.REQUEST_CONTENT.CLASS_CODE }} - {{ stream.CREATE_DATETIME}}</li>
+                    <li><a href="/home/use-data-streaming/{{ stream.ID }}">{{ stream.ID }}</a></li>
+                    <li>{{ stream.RETENTION_HOUR }} - {{ stream.REQUEST_CONTENT.CLASS_CODE }} - {{ stream.CREATE_DATETIME}}</li>
                     {% endfor %}
                 {% endif %}
             </ul>

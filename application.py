@@ -159,13 +159,29 @@ def request_new_data_streaming():
     else:
         return "Invalid credentials"
     
+
+@application.route('/home/use-data-streaming/<stream_id>')
+def use_data_streaming(stream_id):
+    filtered_list = get_dataStreamingList("", "", "", stream_id)
+    if len(filtered_list) == 0:
+        return "Invalid stream id"
+    status = filtered_list[0].get('STATUS', 'No message found')
+    if status == "ACTIVE":
+        requestid = filtered_list[0].get('ID', 'No message found')
+        requestContentInJSON = filtered_list[0].get('REQUEST_CONTENT', 'No message found')
+        cloudbatchjobinjava_template = cloudbatchjobinjava(application, requestid, requestContentInJSON)
+        return cloudbatchjobinjava_template
+    else:
+        return "Stream obsoleted"
+
+    
 @application.route('/data-streaming-list/filter', methods=['POST'])
 def filter_streams():
     data = request.get_json()
     stream_status = data['stream_status']
     retention_hour = data['retention_hour']
     class_code = data['class_code']
-    filtered_list = get_dataStreamingList(stream_status, retention_hour, class_code)
+    filtered_list = get_dataStreamingList(stream_status, retention_hour, class_code, "")
     return jsonify(filtered_list)
 
 # Register the function to run before each request
