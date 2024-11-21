@@ -65,7 +65,7 @@ def login():
 def logout():
     send_post_request('https://b22md47un2.execute-api.ap-south-1.amazonaws.com/Logout', {})
     session.clear()
-    return "Redirecting to login page..."
+    return redirect(url_for('login'))
 
 @application.route('/cloudbatchjobingui')
 def cloudbatchjobingui():
