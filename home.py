@@ -13,6 +13,8 @@ def get_dataStreamingList(stream_status, retention_hour, class_code, id):
         "ID": id
         }
     )
+    if(response['message'] == 'request fail') :
+        return {}
     return response
 
 def request_newJob(datetimeselectiontype, fromdate, todate, fromtime, totime, class_code, fut_opt, expiry_mth, strike_prc, call_put, retention_hour):    
