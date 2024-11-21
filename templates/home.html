@@ -88,9 +88,10 @@
                 <img id="filtering-icon" class="loading-icon" src="{{ url_for('static', filename='loading.gif') }}">
             </form>
             <ul id="data-streaming-list">
-                {% for stream in data_streaming_list %}
-                <li>{{ stream.ID }} - {{ stream.RETENTION_HOUR }} - {{ stream.REQUEST_CONTENT.CLASS_CODE }} - {{ stream.CREATE_DATETIME}}</li>
-                {% endfor %}
+                {% if data_streaming_list %}
+                    {% for stream in data_streaming_list %}
+                    <li>{{ stream.ID }} - {{ stream.RETENTION_HOUR }} - {{ stream.REQUEST_CONTENT.CLASS_CODE }} - {{ stream.CREATE_DATETIME}}</li>
+                    {% endfor %}
             </ul>
         </section>
         <section id="request-job">
