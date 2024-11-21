@@ -13,7 +13,8 @@ def get_dataStreamingList(stream_status, retention_hour, class_code, id):
         "ID": id
         }
     )
-    if(response['message'] == 'request fail') :
+    message = response.get('message', 'No message found')
+    if(message == 'request fail') :
         return {}
     return response
 
