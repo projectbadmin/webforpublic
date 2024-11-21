@@ -92,6 +92,7 @@
                     {% for stream in data_streaming_list %}
                     <li>{{ stream.ID }} - {{ stream.RETENTION_HOUR }} - {{ stream.REQUEST_CONTENT.CLASS_CODE }} - {{ stream.CREATE_DATETIME}}</li>
                     {% endfor %}
+                {% endif %}
             </ul>
         </section>
         <section id="request-job">
