@@ -30,8 +30,8 @@
             })
             .then(response => response.json())
             .then(data => {
-                const dataStreamingList = document.getElementById('data-streaming-list');
-                dataStreamingList.innerHTML = '';
+                const streaming_items = document.getElementsByName("streaming_item");
+                streaming_items.forEach(item => item.remove());
                 data.forEach(stream => {
                     const li = document.createElement('li');
                     li.textContent = `${stream.ID} - ${stream.RETENTION_HOUR} - ${stream.REQUEST_CONTENT.CLASS_CODE} - ${stream.CREATE_DATETIME}`;
@@ -104,7 +104,7 @@
                 </tr>
                 {% if data_streaming_list|length > 0 %}
                     {% for stream in data_streaming_list %}
-                    <tr>
+                    <tr name="streaming_item">
                         <td>{{ stream.CREATE_DATETIME }}</td>
                         <td>{{ stream.RETENTION_HOUR }}</td>
                         <td>{{ stream.STATUS }}</td>
