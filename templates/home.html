@@ -26,6 +26,7 @@
                 $.ajax({
                     url: '/data-streaming-list/filter',
                     method: 'POST',
+                    contentType: 'application/json',
                     data: JSON.stringify({
                         stream_status: streamStatus,
                         retention_hour: retentionHour,
