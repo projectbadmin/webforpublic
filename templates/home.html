@@ -85,7 +85,7 @@
                 <input type="text" id="class-code" name="class-code">
 
                 <button type="submit" id="filter-button">Filter</button>
-                <img id="filtering-icon" class="loading-icon" src="{{ url_for('static', filename='loading.gif') }}">
+                <img id="filtering-icon" class="icon-button" src="{{ url_for('static', filename='loading.gif') }}">
             </form>
             <table id="data-streaming-table">
                 <tr>
@@ -115,7 +115,7 @@
                         <td>{{ stream.REQUEST_CONTENT.CLASS_CODE }}</td>
                         <td>{{ stream.REQUEST_CONTENT.FUT_OPT }}</td>
                         {% if stream.STATUS=="ACTIVE" %}
-                        <td><button type="button" onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';"><img src="{{ url_for('static', filename='play.gif') }}" alt="Button Image"></button></td>
+                        <td><img class="icon-button" src="{{ url_for('static', filename='play.gif') }}" onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';"></td>
                         {% endif %}
                     </tr>
                     {% endfor %}
@@ -158,7 +158,7 @@
                 <label for="retention-hour">Retention Hour:</label>
                 <input type="number" id="retention-hour" name="retention-hour" value="1" >
                 <button type="submit">Request Job</button>
-                <img id="requesting-new-job-icon" class="loading-icon" src="{{ url_for('static', filename='loading.gif') }}">
+                <img id="requesting-new-job-icon" class="icon-button" src="{{ url_for('static', filename='loading.gif') }}">
             </form>
         </section>
     </main>
