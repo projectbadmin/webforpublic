@@ -1,4 +1,4 @@
-from flask import  Flask, jsonify, redirect, render_template, request, session, url_for
+from flask import  Flask, Response, jsonify, redirect, render_template, request, session, stream_template, url_for
 import json
 from applogging import init_logging
 from commonFunction import check_logged_in_or_not, send_post_request
@@ -162,7 +162,8 @@ def filter_streams():
     retention_hour = data['retention-hour']
     class_code = data['class-code']
     filtered_list = get_dataStreamingList(stream_status, retention_hour, class_code, "")
-    return filtered_list
+    application.update_template_context(data_streaming_list=filtered_list)
+    return Response(stream_template('home.html', data_streaming_list=filtered_list))
 
 # Register the function to run before each request
 @application.before_request
