@@ -28,7 +28,7 @@ def index():
 def home():
     form = FilterForm()
     data_streaming_list = get_dataStreamingList("","","","")
-    return render_template('home.html', form=form, data_streaming_list=data_streaming_list)
+    return render_template('home.html', form=form, data_streaming_list=data_streaming_list, bootstrap=bootstrap)
 
 @application.route('/login', methods=['GET','POST'])
 def login():
