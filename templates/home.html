@@ -7,49 +7,45 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
     <script>
-        function fetchFilteredStreams() {
-            const streamStatus = document.getElementById('stream-status').value;
-            const retentionHour = document.getElementById('retention-hour').value;
-            const classCode = document.getElementById('class-code').value;
+        $(document).ready(function () {
+            // Initialize DataTables
+            $('#data-streaming-table').DataTable();
 
-            // Show the loading icon
-            document.getElementById('filtering-icon').classList.remove('icon-button-hidden');
-            document.getElementById('filtering-icon').classList.add('icon-button-visible');
-            document.getElementById('filter-button').disabled = true;
+            $('#filter-form').on('submit', function (event) {
+                event.preventDefault(); // Prevent the form from submitting the traditional way
 
-            fetch('/data-streaming-list/filter', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: JSON.stringify({
-                    stream_status: streamStatus,
-                    retention_hour: retentionHour,
-                    class_code: classCode
-                })
-            })
-            .then(response => {
-                document.getElementById('data-streaming-container').innerHTML = html;
+                const streamStatus = document.getElementById('stream-status').value;
+                const retentionHour = document.getElementById('retention-hour').value;
+                const classCode = document.getElementById('class-code').value;
 
-                // Reinitialize DataTables
-                $('#data-streaming-table').DataTable().destroy();
-                $('#data-streaming-table').DataTable();
-            })
-            .catch(error => console.error('Error:', error))
-            .finally(() => {
+                // Show the loading icon
+                document.getElementById('filtering-icon').classList.remove('icon-button-hidden');
+                document.getElementById('filtering-icon').classList.add('icon-button-visible');
+                document.getElementById('filter-button').disabled = true;
+
+                $.ajax({
+                    url: '/filter-data-streaming',
+                    method: 'POST',
+                    data: JSON.stringify({
+                        stream_status: streamStatus,
+                        retention_hour: retentionHour,
+                        class_code: classCode
+                    }),
+                    success: function (response) {
+                        $('#data-streaming-container').html(response);
+
+                        // Reinitialize DataTables
+                        $('#data-streaming-table').DataTable().destroy();
+                        $('#data-streaming-table').DataTable();
+                    }
+                });
+
                 // Hide the loading icon
                 document.getElementById('filtering-icon').classList.add('icon-button-hidden');
                 document.getElementById('filtering-icon').classList.remove('icon-button-visible');
                 document.getElementById('filter-button').disabled = false;
             });
-        }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('filter-form').addEventListener('submit', event => {
-                event.preventDefault();
-                fetchFilteredStreams();
-            });
         });
     </script>
 </head>
