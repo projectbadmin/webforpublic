@@ -115,7 +115,6 @@
                         <td>{{ stream.REQUEST_CONTENT.CLASS_CODE }}</td>
                         <td>{{ stream.REQUEST_CONTENT.FUT_OPT }}</td>
                         {% if stream.STATUS=="ACTIVE" %}
-                        <td><img id="filtering-icon" class="loading-icon" src="{{ url_for('static', filename='loading.gif') }}"></td>
                         <td><button type="button" onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';"><img src="{{ url_for('static', filename='play.png') }}" alt="Button Image"></button></td>
                         {% endif %}
                     </tr>
