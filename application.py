@@ -17,27 +17,7 @@ def index():
 @application.route('/home')
 def home():
     data_streaming_list = get_dataStreamingList("","","","")
-    content = "Your Flask application is running!"
-    config_settings = {
-        'env': application.config['env'],
-        'https_of_cloudBatchJobTemplateDevelopment': application.config['https_of_cloudBatchJobTemplateDevelopment'],
-        'clone_of_cloudBatchJobTemplate': application.config['clone_of_cloudBatchJobTemplate'],
-        'logDirectory_of_cloudBatchJobTemplate': application.config['logDirectory_of_cloudBatchJobTemplate'],
-        'logDirectory_of_webforpublic': application.config['logDirectory_of_webforpublic'],
-        'AWS_ACCESS_KEY_ID': application.config['AWS_ACCESS_KEY_ID'],
-        'AWS_SECRET_ACCESS_KEY': application.config['AWS_SECRET_ACCESS_KEY'],
-        'path_of_interfaceOnly_javap': application.config['path_of_interfaceOnly_javap']
-    }
-    session_info = {
-        'permanent': session.permanent,
-        'new': session.new,
-        'modified': session.modified,
-        'userid': session.get('userid', 'No userid found'),
-        'cookie': session.get('cookie', 'No cookie found')
-    }
-    content += f"<pre>{json.dumps(session_info, indent=4)}</pre>"
-    content += f"<pre>{json.dumps(config_settings, indent=4)}</pre>"
-    return render_template('home.html', data_streaming_list=data_streaming_list, content=content)
+    return render_template('home.html', data_streaming_list=data_streaming_list)
 
 @application.route('/login', methods=['GET','POST'])
 def login():
