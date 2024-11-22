@@ -87,6 +87,49 @@
                 <button type="submit" id="filter-button">Filter</button>
                 <img id="filtering-icon" class="loading-icon" src="{{ url_for('static', filename='loading.gif') }}">
             </form>
+            <table id="data-streaming-table">
+                <thead>
+                    <tr>
+                        <th>Create DateTime</th>
+                        <th>Retention Hour</th>
+                        <th>Status</th>
+                        <th>
+                            <tr>
+                                Request Content
+                            </tr>
+                            <tr>
+                                <td>From Date</td>
+                                <td>To Date</td>
+                                <td>From Time</td>
+                                <td>To Time</td>
+                                <td>Class Code</td>
+                                <td>Future/Option</td>
+                            </tr>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if data_streaming_list|length > 0 %}
+                        {% for stream in data_streaming_list %}
+                        <tr>
+                            <td>{{ stream.CREATE_DATETIME }}</td>
+                            <td>{{ stream.RETENTION_HOUR }}</td>
+                            <td>{{ stream.STATUS }}</td>
+                            <td>
+                                <tr>
+                                    <td>{{ stream.REQUEST_CONTENT.FROMDATE }}</td>
+                                    <td>{{ stream.REQUEST_CONTENT.TODATE }}</td>
+                                    <td>{{ stream.REQUEST_CONTENT.FROMTIME }}</td>
+                                    <td>{{ stream.REQUEST_CONTENT.TOTIME }}</td>
+                                    <td>{{ stream.REQUEST_CONTENT.CLASS_CODE }}</td>
+                                    <td>{{ stream.REQUEST_CONTENT.FUT_OPT }}</td>
+                                </tr>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
             <ul id="data-streaming-list">
                 {% if data_streaming_list|length > 0 %}
                     {% for stream in data_streaming_list %}
