@@ -11,7 +11,7 @@
             // Initialize DataTables
             $('#data-streaming-table').DataTable();
 
-            $('#filter-form').on('submit', function (event) {
+            $('#filter-form').submit(function (event) {
                 event.preventDefault(); // Prevent the form from submitting the traditional way
                 // Show the loading icon
                 document.getElementById('filtering-icon').classList.remove('icon-button-hidden');
