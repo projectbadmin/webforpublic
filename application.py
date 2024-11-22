@@ -162,7 +162,7 @@ def filter_streams():
     retention_hour = data['retention-hour']
     class_code = data['class-code']
     filtered_list = get_dataStreamingList(stream_status, retention_hour, class_code, "")
-    return Response(stream_template('home.html', data_streaming_list=filtered_list))
+    return stream_template('home.html', data_streaming_list=filtered_list)
 
 # Register the function to run before each request
 @application.before_request
