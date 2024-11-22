@@ -1,8 +1,16 @@
-.icon-button {
+.icon-button-hidden {
     display: none;
-    margin-left: 10px; /* Adjust the margin as needed */
-    vertical-align: middle; /* Align the icon vertically with the button */
-    width: 20px; /* Set the desired width */
-    height: 20px; /* Set the desired height */
-    display: inline-block; /* Make the button inline */
+}
+
+.icon-button-visible {
+    margin-left: 10px;
+    /* Adjust the margin as needed */
+    vertical-align: middle;
+    /* Align the icon vertically with the button */
+    width: 20px;
+    /* Set the desired width */
+    height: 20px;
+    /* Set the desired height */
+    display: inline-block;
+    /* Make the button inline */
 }
