@@ -13,28 +13,29 @@
             document.getElementById('filtering-icon').classList.remove('icon-button-hidden');
             document.getElementById('filtering-icon').classList.add('icon-button-visible');
             document.getElementById('filter-button').disabled = true;
-
-            $.ajax({
-                url: '/data-streaming-list/filter',
+            fetch('/data-streaming-list/filter', {
                 method: 'POST',
-                data: {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
                     'stream-status': document.getElementById('stream-status').value,
                     'retention-hour': document.getElementById('retention-hour').value,
                     'class-code': document.getElementById('class-code').value
-                },
-                success: function (response) {
-                    $('#data-streaming-container').html(response);
-
-                    // Reinitialize DataTables
-                    $('#data-streaming-table').DataTable().destroy();
-                    $('#data-streaming-table').DataTable();
-                }
+                })
+            })
+            .then(response => {
+                $('#data-streaming-container').html(response);
+                $('#data-streaming-table').DataTable().destroy();
+                $('#data-streaming-table').DataTable();
+            })
+            .catch(error => console.error('Error checking syntax:', error))
+            .finally(() => {
+                // Hide the loading icon
+                document.getElementById('filtering-icon').classList.add('icon-button-hidden');
+                document.getElementById('filtering-icon').classList.remove('icon-button-visible');
+                document.getElementById('filter-button').disabled = false;
             });
-
-            // Hide the loading icon
-            document.getElementById('filtering-icon').classList.add('icon-button-hidden');
-            document.getElementById('filtering-icon').classList.remove('icon-button-visible');
-            document.getElementById('filter-button').disabled = false;
         }
 
     </script>
