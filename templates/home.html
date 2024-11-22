@@ -27,11 +27,11 @@
                     url: '/data-streaming-list/filter',
                     method: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({
+                    data: {
                         stream_status: streamStatus,
                         retention_hour: retentionHour,
                         class_code: classCode
-                    }),
+                    },
                     success: function (response) {
                         $('#data-streaming-container').html(response);
 
