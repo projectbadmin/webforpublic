@@ -157,9 +157,9 @@ def use_data_streaming(stream_id):
     
 @application.route('/data-streaming-list/filter', methods=['POST'])
 def filter_streams():
-    stream_status = request.form['stream_status']
-    retention_hour = request.form['retention_hour']
-    class_code = request.form['class_code']
+    stream_status = request.form['stream-status']
+    retention_hour = request.form['retention-hour']
+    class_code = request.form['class-code']
     filtered_list = get_dataStreamingList(stream_status, retention_hour, class_code, "")
     return filtered_list
 
