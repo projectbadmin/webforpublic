@@ -154,15 +154,6 @@ def use_data_streaming(stream_id):
     else:
         return "Stream obsoleted"
 
-    
-@application.route('/data-streaming-list/filter', methods=['POST'])
-def filter_streams():
-    data = request.get_json()
-    stream_status = data['stream-status']
-    retention_hour = data['retention-hour']
-    class_code = data['class-code']
-    filtered_list = get_dataStreamingList(stream_status, retention_hour, class_code, "")
-    return stream_template('home.html', data_streaming_list=filtered_list)
 
 # Register the function to run before each request
 @application.before_request

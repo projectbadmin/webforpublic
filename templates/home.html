@@ -10,37 +10,9 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
     <script>
-        function filterStreamingList () {
-            // Show the loading icon
-            document.getElementById('filtering-icon').classList.remove('icon-button-hidden');
-            document.getElementById('filtering-icon').classList.add('icon-button-visible');
-            document.getElementById('filter-button').disabled = true;
-            fetch('/data-streaming-list/filter', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    'stream-status': document.getElementById('stream-status').value,
-                    'retention-hour': document.getElementById('retention-hour').value,
-                    'class-code': document.getElementById('class-code').value
-                })
-            })
-            .then(response => {
-                //$('#data-streaming-container').html(response);
-console.log();
-                //$('#data-streaming-table').DataTable().destroy();
-                //$('#data-streaming-table').DataTable();
-            })
-            .catch(error => console.error('Error checking syntax:', error))
-            .finally(() => {
-                // Hide the loading icon
-                document.getElementById('filtering-icon').classList.add('icon-button-hidden');
-                document.getElementById('filtering-icon').classList.remove('icon-button-visible');
-                document.getElementById('filter-button').disabled = false;
-            });
-        }
-
+        $(document).ready(function () {
+            $('#data-streaming-table').DataTable();
+        });
     </script>
 </head>
 <body>
@@ -59,21 +31,6 @@ console.log();
     <main>
         <section id="running-jobs">
             <h2>Jobs List</h2>
-            <label for="stream-status">Stream Status:</label>
-            <select id="stream-status" name="stream-status">
-                <option value="">All</option>
-                <option value="ACTIVE">Active</option>
-                <option value="OBSOLETE">Obsolete</option>
-            </select>
-
-            <label for="retention-hour">Retention Hour:</label>
-            <input type="number" id="retention-hour" name="retention-hour" min="0">
-
-            <label for="class-code">Class Code:</label>
-            <input type="text" id="class-code" name="class-code">
-
-            <button id="filter-button" onclick="filterStreamingList()">Filter</button>
-            <img id="filtering-icon" class="icon-button-hidden" src="{{ url_for('static', filename='loading.gif') }}">
             <div id="data-streaming-container">
                 {% include 'data_streaming_list.html' %}
             </div>
