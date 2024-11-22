@@ -1,4 +1,7 @@
 from flask import  Flask, jsonify, redirect, render_template, request, session, url_for
+from flask_wtf import FlaskForm
+from wtforms import SelectField, IntegerField, StringField, SubmitField
+from flask_bootstrap import Bootstrap
 import json
 from applogging import init_logging
 from commonFunction import check_logged_in_or_not, send_post_request
@@ -7,8 +10,15 @@ from initialize import initialize
 from processUserCode import process, realTimeUpdateLog, checkSyntax
 from cloudbatchjobinjava import check_and_generate_keywords_, cloudbatchjobinjava, read_javap_result
 
+class FilterForm(FlaskForm):
+    stream_status = SelectField('Stream Status', choices=[('', 'All'), ('ACTIVE', 'Active'), ('OBSOLETE', 'Obsolete')])
+    retention_hour = IntegerField('Retention Hour')
+    class_code = StringField('Class Code')
+    submit = SubmitField('Filter')
+
 application = Flask(__name__)
 initialize(application)
+bootstrap = Bootstrap(application)
 
 @application.route('/')
 def index():
@@ -16,8 +26,9 @@ def index():
 
 @application.route('/home')
 def home():
+    form = FilterForm()
     data_streaming_list = get_dataStreamingList("","","","")
-    return render_template('home.html', data_streaming_list=data_streaming_list)
+    return render_template('home.html', form=form, data_streaming_list=data_streaming_list)
 
 @application.route('/login', methods=['GET','POST'])
 def login():

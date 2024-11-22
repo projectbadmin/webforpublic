@@ -88,3 +88,5 @@ websocket-client==1.8.0
 websockets==13.0.1
 Werkzeug==3.0.4
 zipp==3.20.2
+flask-wtf==1.2.2
+flask-bootstrap==3.3.7.1
