@@ -67,7 +67,7 @@
             <label for="class-code">Class Code:</label>
             <input type="text" id="class-code" name="class-code">
 
-            <button onclick="filterStreamingList()">Filter</button>
+            <button id="filter-button" onclick="filterStreamingList()">Filter</button>
             <img id="filtering-icon" class="icon-button-hidden" src="{{ url_for('static', filename='loading.gif') }}">
             <div id="data-streaming-container">
                 {% include 'data_streaming_list.html' %}
