@@ -21,17 +21,18 @@
         <tr name="streaming_item">
             <td>{{ stream.CREATE_DATETIME }}</td>
             <td>{{ stream.RETENTION_HOUR }}</td>
+            {% if stream.STATUS=="ACTIVE" %}
+            <td><img class="icon-button-visible" src="{{ url_for('static', filename='play.gif') }}"
+                    onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';"></td>
+            {% else %}
             <td>{{ stream.STATUS }}</td>
+            {% endif %}
             <td>{{ stream.REQUEST_CONTENT.FROM_DATE }}</td>
             <td>{{ stream.REQUEST_CONTENT.TO_DATE }}</td>
             <td>{{ stream.REQUEST_CONTENT.FROM_TIME }}</td>
             <td>{{ stream.REQUEST_CONTENT.TO_TIME }}</td>
             <td>{{ stream.REQUEST_CONTENT.CLASS_CODE }}</td>
             <td>{{ stream.REQUEST_CONTENT.FUT_OPT }}</td>
-            {% if stream.STATUS=="ACTIVE" %}
-            <td><img class="icon-button-visible" src="{{ url_for('static', filename='play.gif') }}"
-                    onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';"></td>
-            {% endif %}
         </tr>
         {% endfor %}
         {% endif %}

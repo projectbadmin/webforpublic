@@ -30,11 +30,11 @@
                 })
             })
             .then(response => {
-                document.getElementById('data-streaming-container').html(response);
+                document.getElementById('data-streaming-container').innerHTML = html;
 
                 // Reinitialize DataTables
-                document.getElementById('data-streaming-table').DataTable().destroy();
-                document.getElementById('data-streaming-table').DataTable();
+                $('#data-streaming-table').DataTable().destroy();
+                $('#data-streaming-table').DataTable();
             })
             .catch(error => console.error('Error:', error))
             .finally(() => {
