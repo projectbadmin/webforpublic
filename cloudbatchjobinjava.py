@@ -22,7 +22,7 @@ def cloudbatchjobinjava(application, requestid, requestContentInJSON):
         'requestid': requestid,
         'requestContentInJSON': requestContentInJSON
     }
-    return render_template('cloudbatchjobinjava.html', tempPageRequestID=tempPageRequestID)
+    return tempPageRequestID
 
 def check_and_generate_keywords_(line, cursor_pos, method):
     match = re.search(r'(\w+)\.$', line[:cursor_pos])

@@ -52,6 +52,10 @@ def cloudbatchjobingui():
     read_javap_result(application)
     return render_template('cloudbatchjobingui.html')
 
+@application.route('/cloudbatchjobinjava')
+def cloudbatchjobingui():
+    render_template('cloudbatchjobinjava.html')
+
 @application.route('/cloudbatchjobinjava/check_and_generate_keywords', methods=['POST'])
 def check_and_generate_keywords():
     data = request.get_json()
@@ -134,8 +138,8 @@ def request_new_data_streaming():
     if message == "request successful":
         requestid = response.get('DATA_STREAM_ID', 'No message found')
         requestContentInJSON = response.get('requestContentInJSON', 'No message found')
-        cloudbatchjobinjava_template = cloudbatchjobinjava(application, requestid, requestContentInJSON)
-        return cloudbatchjobinjava_template
+        tempPageRequestID = cloudbatchjobinjava(application, requestid, requestContentInJSON)
+        redirect(url_for('cloudbatchjobinjava', tempPageRequestID=tempPageRequestID))
     else:
         return "Invalid credentials"
     
@@ -149,8 +153,8 @@ def use_data_streaming(stream_id):
     if status == "ACTIVE":
         requestid = filtered_list[0].get('ID', 'No message found')
         requestContentInJSON = filtered_list[0].get('REQUEST_CONTENT', 'No message found')
-        cloudbatchjobinjava_template = cloudbatchjobinjava(application, requestid, requestContentInJSON)
-        return cloudbatchjobinjava_template
+        tempPageRequestID = cloudbatchjobinjava(application, requestid, requestContentInJSON)
+        redirect(url_for('cloudbatchjobinjava', tempPageRequestID=tempPageRequestID))
     else:
         return "Stream obsoleted"
 
