@@ -28,9 +28,9 @@
             })
             .then(response => {
                 //$('#data-streaming-container').html(response);
-
-                $('#data-streaming-table').DataTable().destroy();
-                $('#data-streaming-table').DataTable();
+console.log();
+                //$('#data-streaming-table').DataTable().destroy();
+                //$('#data-streaming-table').DataTable();
             })
             .catch(error => console.error('Error checking syntax:', error))
             .finally(() => {
