@@ -29,11 +29,11 @@
                 })
             })
             .then(response => {
-                $('#data-streaming-container').html(response);
+                document.getElementById('data-streaming-container').html(response);
 
                 // Reinitialize DataTables
-                $('#data-streaming-table').DataTable().destroy();
-                $('#data-streaming-table').DataTable();
+                document.getElementById('data-streaming-table').DataTable().destroy();
+                document.getElementById('data-streaming-table').DataTable();
             })
             .catch(error => console.error('Error:', error))
             .finally(() => {
