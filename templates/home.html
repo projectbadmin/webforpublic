@@ -24,7 +24,7 @@
                 document.getElementById('filter-button').disabled = true;
 
                 $.ajax({
-                    url: '/filter-data-streaming',
+                    url: '/data-streaming-list/filter',
                     method: 'POST',
                     data: JSON.stringify({
                         stream_status: streamStatus,

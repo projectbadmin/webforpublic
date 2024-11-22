@@ -162,7 +162,7 @@ def filter_streams():
     retention_hour = data['retention_hour']
     class_code = data['class_code']
     filtered_list = get_dataStreamingList(stream_status, retention_hour, class_code, "")
-    return jsonify(filtered_list)
+    return filtered_list
 
 # Register the function to run before each request
 @application.before_request
