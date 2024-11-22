@@ -88,60 +88,40 @@
                 <img id="filtering-icon" class="loading-icon" src="{{ url_for('static', filename='loading.gif') }}">
             </form>
             <table id="data-streaming-table">
-                <thead>
-                    <tr>
-                        <th>Create DateTime</th>
-                        <th>Retention Hour</th>
-                        <th>Status</th>
-                        <th>
-                            <tr>
-                                Request Content
-                            </tr>
-                            <tr>
-                                <td>From Date</td>
-                                <td>To Date</td>
-                                <td>From Time</td>
-                                <td>To Time</td>
-                                <td>Class Code</td>
-                                <td>Future/Option</td>
-                            </tr>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if data_streaming_list|length > 0 %}
-                        {% for stream in data_streaming_list %}
-                        <tr>
-                            <td>{{ stream.CREATE_DATETIME }}</td>
-                            <td>{{ stream.RETENTION_HOUR }}</td>
-                            <td>{{ stream.STATUS }}</td>
-                            <td>
-                                <tr>
-                                    <td>{{ stream.REQUEST_CONTENT.FROMDATE }}</td>
-                                    <td>{{ stream.REQUEST_CONTENT.TODATE }}</td>
-                                    <td>{{ stream.REQUEST_CONTENT.FROMTIME }}</td>
-                                    <td>{{ stream.REQUEST_CONTENT.TOTIME }}</td>
-                                    <td>{{ stream.REQUEST_CONTENT.CLASS_CODE }}</td>
-                                    <td>{{ stream.REQUEST_CONTENT.FUT_OPT }}</td>
-                                </tr>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    {% endif %}
-                </tbody>
-            </table>
-            <ul id="data-streaming-list">
+                <tr>
+                    <th colspan="1" rowspan="2" scope="colgroup">Create DateTime</th>
+                    <th colspan="1" rowspan="2" scope="colgroup">Retention Hour</th>
+                    <th colspan="1" rowspan="2" scope="colgroup">Status</th>
+                    <th colspan="6" rowspan="1" scope="colgroup">Request Content</th>
+                </tr>
+                <tr>
+                    <th scope="col">From Date</th>
+                    <th scope="col">To Date</th>
+                    <th scope="col">From Time</th>
+                    <th scope="col">To Time</th>
+                    <th scope="col">Class Code</th>
+                    <th scope="col">Future/Option</th>
+                </tr>
                 {% if data_streaming_list|length > 0 %}
                     {% for stream in data_streaming_list %}
-                    {% if stream.STATUS=="ACTIVE" %}
-                        <li><a href="/home/use-data-streaming/{{ stream.ID }}">{{ stream.ID }}</a></li>
-                    {% else %}
-                        <li>{{ stream.ID }}</li>
-                    {% endif %}    
-                    <li>{{ stream.RETENTION_HOUR }} - {{ stream.REQUEST_CONTENT.CLASS_CODE }} - {{ stream.CREATE_DATETIME}}</li>
+                    <tr>
+                        <td>{{ stream.CREATE_DATETIME }}</td>
+                        <td>{{ stream.RETENTION_HOUR }}</td>
+                        <td>{{ stream.STATUS }}</td>
+                        <td>{{ stream.REQUEST_CONTENT.FROM_DATE }}</td>
+                        <td>{{ stream.REQUEST_CONTENT.TO_DATE }}</td>
+                        <td>{{ stream.REQUEST_CONTENT.FROM_TIME }}</td>
+                        <td>{{ stream.REQUEST_CONTENT.TO_TIME }}</td>
+                        <td>{{ stream.REQUEST_CONTENT.CLASS_CODE }}</td>
+                        <td>{{ stream.REQUEST_CONTENT.FUT_OPT }}</td>
+                        {% if stream.STATUS=="ACTIVE" %}
+                        <td><img id="filtering-icon" class="loading-icon" src="{{ url_for('static', filename='loading.gif') }}"></td>
+                        <td><button type="button" onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';"><img src="{{ url_for('static', filename='play.png') }}" alt="Button Image"></button></td>
+                        {% endif %}
+                    </tr>
                     {% endfor %}
                 {% endif %}
-            </ul>
+            </table>
         </section>
         <section id="request-job">
             <h2>Request New Job</h2>
