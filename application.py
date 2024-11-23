@@ -63,8 +63,10 @@ def check_and_generate_keywords():
 
 @application.route('/cloudbatchjobinjava/submit', methods=['POST'])
 def submitCloudbatchjobinjava():
-    requestid = request.form['requestid']
-    requestContentInJSON = json.loads(request.form['requestContentInJSON'])
+    tempPageRequestID = request.form['tempPageRequestID']
+    tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
+    requestid = tempPageRequestID_value['requestid']
+    requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
     code_for_onStart = request.form['code_for_onStart']
     code_for_onProcess = request.form['code_for_onProcess']
     code_for_onEnd = request.form['code_for_onEnd']
@@ -137,7 +139,7 @@ def request_new_data_streaming():
         cloudbatchjobinjava_template = cloudbatchjobinjava(application, requestid, requestContentInJSON)
         return cloudbatchjobinjava_template
     else:
-        return "Invalid credentials"
+        return redirect(url_for('home'))
     
 
 @application.route('/home/use-data-streaming/<stream_id>')
