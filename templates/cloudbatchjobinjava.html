@@ -17,13 +17,7 @@
 <body>
     <h1 class="header">Java Code Editor</h1>
     <form action="/cloudbatchjobinjava/submit" method="post">
-        <div>
-            <input name="requestid" value='{{ requestid }}'/>
-        </div>
-        <p style="margin: 10px 0;"></p>
-        <div>
-            <input name="requestContentInJSON" value='{{ requestContentInJSON }}'/>
-        </div>
+        <param name="tempPageRequestID" value='{{ tempPageRequestID }}'>
         <p style="margin: 50px 0;"></p>
         <div>
             <label for="code_for_onStart" class="code-label">onStart() {</label>
@@ -117,8 +111,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        requestid: document.querySelector('input[name="requestid"]').value,
-                        requestContentInJSON: document.querySelector('input[name="requestContentInJSON"]').value,
+                        tempPageRequestID: document.querySelector('param[name="tempPageRequestID"]').value,
                         code_for_onStart: editor_for_OnStart.getValue()
                     })
                 })
@@ -161,8 +154,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        requestid: document.querySelector('input[name="requestid"]').value,
-                        requestContentInJSON: document.querySelector('input[name="requestContentInJSON"]').value,
+                        tempPageRequestID: document.querySelector('param[name="tempPageRequestID"]').value,
                         code_for_onProcess: editor_for_OnProcess.getValue()
                     })
                 })
@@ -205,8 +197,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        requestid: document.querySelector('input[name="requestid"]').value,
-                        requestContentInJSON: document.querySelector('input[name="requestContentInJSON"]').value,
+                        tempPageRequestID: document.querySelector('param[name="tempPageRequestID"]').value,
                         code_for_onEnd: editor_for_OnEnd.getValue()
                     })
                 })
@@ -241,13 +232,13 @@
         }   
 
         function fetchLatestOutput() {
-            var requestid = document.querySelector('input[name="requestid"]').value;
+            var tempPageRequestID = document.querySelector('param[name="tempPageRequestID"]').value;
             fetch('/cloudbatchjobinjava/latest_output', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ requestid: requestid })
+                body: JSON.stringify({ tempPageRequestID: tempPageRequestID })
             })
             .then(response => response.json())
             .then(data => {

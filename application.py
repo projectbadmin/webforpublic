@@ -1,4 +1,4 @@
-from flask import  Flask, jsonify, redirect, render_template, request, session, url_for
+from flask import  Flask, Response, jsonify, redirect, render_template, request, session, stream_template, url_for
 import json
 from applogging import init_logging
 from commonFunction import check_logged_in_or_not, send_post_request
@@ -16,31 +16,14 @@ def index():
 
 @application.route('/home')
 def home():
-    data_streaming_list = get_dataStreamingList()
-    content = "Your Flask application is running!"
-    config_settings = {
-        'env': application.config['env'],
-        'https_of_cloudBatchJobTemplateDevelopment': application.config['https_of_cloudBatchJobTemplateDevelopment'],
-        'clone_of_cloudBatchJobTemplate': application.config['clone_of_cloudBatchJobTemplate'],
-        'logDirectory_of_cloudBatchJobTemplate': application.config['logDirectory_of_cloudBatchJobTemplate'],
-        'logDirectory_of_webforpublic': application.config['logDirectory_of_webforpublic'],
-        'AWS_ACCESS_KEY_ID': application.config['AWS_ACCESS_KEY_ID'],
-        'AWS_SECRET_ACCESS_KEY': application.config['AWS_SECRET_ACCESS_KEY'],
-        'path_of_interfaceOnly_javap': application.config['path_of_interfaceOnly_javap']
-    }
-    session_info = {
-        'permanent': session.permanent,
-        'new': session.new,
-        'modified': session.modified,
-        'userid': session.get('userid', 'No userid found'),
-        'cookie': session.get('cookie', 'No cookie found')
-    }
-    content += f"<pre>{json.dumps(session_info, indent=4)}</pre>"
-    content += f"<pre>{json.dumps(config_settings, indent=4)}</pre>"
-    return render_template('home.html', data_streaming_list=data_streaming_list, content=content)
+    data_streaming_list = get_dataStreamingList("","","","")
+    return render_template('home.html', data_streaming_list=data_streaming_list)
 
 @application.route('/login', methods=['GET','POST'])
 def login():
+    logged_in = check_logged_in_or_not()
+    if logged_in:
+        return redirect(url_for('home'))
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -62,7 +45,7 @@ def login():
 def logout():
     send_post_request('https://b22md47un2.execute-api.ap-south-1.amazonaws.com/Logout', {})
     session.clear()
-    return "Redirecting to login page..."
+    return redirect(url_for('login'))
 
 @application.route('/cloudbatchjobingui')
 def cloudbatchjobingui():
@@ -94,16 +77,18 @@ def submitCloudbatchjobinjava():
 @application.route('/cloudbatchjobinjava/latest_output', methods=['POST'])
 def get_latest_output():
     data = request.get_json()
-    requestid = data['requestid']
-    output = realTimeUpdateLog(application, requestid)
+    tempPageRequestID = data['tempPageRequestID']
+    output = realTimeUpdateLog(application, tempPageRequestID)
     return jsonify({'output': output})
 
 
 @application.route('/cloudbatchjobinjava/check_syntax_for_onStart', methods=['POST'])
 def check_syntax_for_onStart():
     data = request.get_json()
-    requestid = data['requestid']
-    requestContentInJSON = json.loads(data['requestContentInJSON'])
+    tempPageRequestID = data['tempPageRequestID']
+    tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
+    requestid = tempPageRequestID_value['requestid']
+    requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
     code_for_onStart = data['code_for_onStart']
     result = checkSyntax(application, "onStart", code_for_onStart, requestid, requestContentInJSON)
     return jsonify({'errors': result})
@@ -111,8 +96,10 @@ def check_syntax_for_onStart():
 @application.route('/cloudbatchjobinjava/check_syntax_for_onProcess', methods=['POST'])
 def check_syntax_for_onProcess():
     data = request.get_json()
-    requestid = data['requestid']
-    requestContentInJSON = json.loads(data['requestContentInJSON'])
+    tempPageRequestID = data['tempPageRequestID']
+    tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
+    requestid = tempPageRequestID_value['requestid']
+    requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
     code_for_onProcess = data['code_for_onProcess']
     result = checkSyntax(application, "onProcess", code_for_onProcess, requestid, requestContentInJSON)
     return jsonify({'errors': result})
@@ -120,8 +107,10 @@ def check_syntax_for_onProcess():
 @application.route('/cloudbatchjobinjava/check_syntax_for_onEnd', methods=['POST'])
 def check_syntax_for_onEnd():
     data = request.get_json()
-    requestid = data['requestid']
-    requestContentInJSON = json.loads(data['requestContentInJSON'])
+    tempPageRequestID = data['tempPageRequestID']
+    tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
+    requestid = tempPageRequestID_value['requestid']
+    requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
     code_for_onEnd = data['code_for_onEnd']
     result = checkSyntax(application, "onEnd", code_for_onEnd, requestid, requestContentInJSON)
     return jsonify({'errors': result})
@@ -149,15 +138,32 @@ def request_new_data_streaming():
         return cloudbatchjobinjava_template
     else:
         return "Invalid credentials"
+    
+
+@application.route('/home/use-data-streaming/<stream_id>')
+def use_data_streaming(stream_id):
+    filtered_list = get_dataStreamingList("", "", "", stream_id)
+    if len(filtered_list) == 0:
+        return "Invalid stream id"
+    status = filtered_list[0].get('STATUS', 'No message found')
+    if status == "ACTIVE":
+        requestid = filtered_list[0].get('ID', 'No message found')
+        requestContentInJSON = filtered_list[0].get('REQUEST_CONTENT', 'No message found')
+        cloudbatchjobinjava_template = cloudbatchjobinjava(application, requestid, requestContentInJSON)
+        return cloudbatchjobinjava_template
+    else:
+        return "Stream obsoleted"
+
 
 # Register the function to run before each request
 @application.before_request
 def before_request():
-    if request.method not in ['GET', 'POST']:
-        return "Method not allowed", 405
-    logged_in = check_logged_in_or_not()
-    if not logged_in and request.endpoint != 'login':
-        return redirect(url_for('login'))
+    if request.endpoint != 'login':
+        if request.method not in ['GET', 'POST']:
+            return "Method not allowed", 405
+        logged_in = check_logged_in_or_not()
+        if not logged_in:
+            return redirect(url_for('login'))
 
 if __name__ == '__main__':
     application.run(port=8000, debug=True)
