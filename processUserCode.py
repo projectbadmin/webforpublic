@@ -82,7 +82,7 @@ def realTimeUpdateLog(app, tempPageRequestID):
     output = ""
     try:
         if tempPageRequestID is not None:
-            tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
+            tempPageRequestID_value = session.get(tempPageRequestID, 'No request found')
             requestid = tempPageRequestID_value['requestid']
             log_file_path = os.path.join(app.config['logDirectory_of_cloudBatchJobTemplate'], f"{requestid}.log.0")
             if os.path.exists(log_file_path):
