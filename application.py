@@ -61,10 +61,11 @@ def check_and_generate_keywords():
     output = check_and_generate_keywords_(line, cursor_pos, method)
     return jsonify({'output': output})
 
-@application.route('/cloudbatchjobinjava/submit', methods=['POST'])
-def submitCloudbatchjobinjava():
-    tempPageRequestID = request.form['tempPageRequestID']
+@application.route('/cloudbatchjobinjava/submit/<tempPageRequestID>', methods=['POST'])
+def submitCloudbatchjobinjava(tempPageRequestID):
     tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
+    if(tempPageRequestID_value=='No requestid found'):
+        return render_template('error.html', error_message="No requestid found")
     requestid = tempPageRequestID_value['requestid']
     requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
     code_for_onStart = request.form['code_for_onStart']
@@ -89,6 +90,8 @@ def check_syntax_for_onStart():
     data = request.get_json()
     tempPageRequestID = data['tempPageRequestID']
     tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
+    if(tempPageRequestID_value=='No requestid found'):
+        return render_template('error.html', error_message="No requestid found")
     requestid = tempPageRequestID_value['requestid']
     requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
     code_for_onStart = data['code_for_onStart']
@@ -100,6 +103,8 @@ def check_syntax_for_onProcess():
     data = request.get_json()
     tempPageRequestID = data['tempPageRequestID']
     tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
+    if(tempPageRequestID_value=='No requestid found'):
+        return render_template('error.html', error_message="No requestid found")
     requestid = tempPageRequestID_value['requestid']
     requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
     code_for_onProcess = data['code_for_onProcess']
@@ -111,6 +116,8 @@ def check_syntax_for_onEnd():
     data = request.get_json()
     tempPageRequestID = data['tempPageRequestID']
     tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
+    if(tempPageRequestID_value=='No requestid found'):
+        return render_template('error.html', error_message="No requestid found")
     requestid = tempPageRequestID_value['requestid']
     requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
     code_for_onEnd = data['code_for_onEnd']
