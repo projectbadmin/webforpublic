@@ -63,14 +63,23 @@ def check_and_generate_keywords():
 
 @application.route('/cloudbatchjobinjava/submit/<tempPageRequestID>', methods=['POST'])
 def submitCloudbatchjobinjava(tempPageRequestID):
-    tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
-    if(tempPageRequestID_value=='No requestid found'):
-        return render_template('error.html', error_message="No requestid found")
+    tempPageRequestID_value = session.get(tempPageRequestID, 'No request found')
+    if(tempPageRequestID_value=='No request found'):
+        return render_template('error.html', error_message="No request found")
     requestid = tempPageRequestID_value['requestid']
     requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
     code_for_onStart = request.form['code_for_onStart']
+    result = checkSyntax(application, "onStart", code_for_onStart, requestid, requestContentInJSON)
+    if(result != ""):
+        return render_template('error.html', error_message="Syntax error in onStart section")
     code_for_onProcess = request.form['code_for_onProcess']
+    result = checkSyntax(application, "onProcess", code_for_onProcess, requestid, requestContentInJSON)
+    if(result != ""):
+        return render_template('error.html', error_message="Syntax error in onProcess section")
     code_for_onEnd = request.form['code_for_onEnd']
+    result = checkSyntax(application, "onEnd", code_for_onEnd, requestid, requestContentInJSON)
+    if(result != ""):
+        return render_template('error.html', error_message="Syntax error in onEnd section")
     # process the code
     process(application, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid, requestContentInJSON)
     # return the output
@@ -89,9 +98,9 @@ def get_latest_output():
 def check_syntax_for_onStart():
     data = request.get_json()
     tempPageRequestID = data['tempPageRequestID']
-    tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
-    if(tempPageRequestID_value=='No requestid found'):
-        return render_template('error.html', error_message="No requestid found")
+    tempPageRequestID_value = session.get(tempPageRequestID, 'No request found')
+    if(tempPageRequestID_value=='No request found'):
+        return jsonify({'errors': tempPageRequestID_value})
     requestid = tempPageRequestID_value['requestid']
     requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
     code_for_onStart = data['code_for_onStart']
@@ -102,9 +111,9 @@ def check_syntax_for_onStart():
 def check_syntax_for_onProcess():
     data = request.get_json()
     tempPageRequestID = data['tempPageRequestID']
-    tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
-    if(tempPageRequestID_value=='No requestid found'):
-        return render_template('error.html', error_message="No requestid found")
+    tempPageRequestID_value = session.get(tempPageRequestID, 'No request found')
+    if(tempPageRequestID_value=='No request found'):
+        return jsonify({'errors': tempPageRequestID_value})
     requestid = tempPageRequestID_value['requestid']
     requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
     code_for_onProcess = data['code_for_onProcess']
@@ -115,9 +124,9 @@ def check_syntax_for_onProcess():
 def check_syntax_for_onEnd():
     data = request.get_json()
     tempPageRequestID = data['tempPageRequestID']
-    tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
-    if(tempPageRequestID_value=='No requestid found'):
-        return render_template('error.html', error_message="No requestid found")
+    tempPageRequestID_value = session.get(tempPageRequestID, 'No request found')
+    if(tempPageRequestID_value=='No request found'):
+        return jsonify({'errors': tempPageRequestID_value})
     requestid = tempPageRequestID_value['requestid']
     requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
     code_for_onEnd = data['code_for_onEnd']
