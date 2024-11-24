@@ -4,7 +4,7 @@ from applogging import init_logging
 from commonFunction import check_logged_in_or_not, send_post_request
 from home import get_dataStreamingList, request_newJob
 from initialize import initialize
-from processUserCode import process, realTimeUpdateLog, checkSyntax
+from processUserCode import checkSyntaxBeforeCompile, process, realTimeUpdateLog, checkSyntax
 from cloudbatchjobinjava import check_and_generate_keywords_, cloudbatchjobinjava, read_javap_result
 
 application = Flask(__name__)
@@ -69,17 +69,11 @@ def submitCloudbatchjobinjava(tempPageRequestID):
     requestid = tempPageRequestID_value['requestid']
     requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
     code_for_onStart = request.form['code_for_onStart']
-    result = checkSyntax(application, "onStart", code_for_onStart, requestid, requestContentInJSON)
-    if(result != ""):
-        return render_template('error.html', error_message="Syntax error in onStart section")
     code_for_onProcess = request.form['code_for_onProcess']
-    result = checkSyntax(application, "onProcess", code_for_onProcess, requestid, requestContentInJSON)
-    if(result != ""):
-        return render_template('error.html', error_message="Syntax error in onProcess section")
     code_for_onEnd = request.form['code_for_onEnd']
-    result = checkSyntax(application, "onEnd", code_for_onEnd, requestid, requestContentInJSON)
+    result = checkSyntaxBeforeCompile(application, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid, requestContentInJSON)
     if(result != ""):
-        return render_template('error.html', error_message="Syntax error in onEnd section")
+        return render_template('error.html', error_message=result)
     # process the code
     process(application, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid, requestContentInJSON)
     # return the output

@@ -50,15 +50,15 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
             )
             app.logger.info(f"Copied {jar_file} to {app.config['clone_of_cloudBatchJobTemplate']}")
 
-        ## Run the jar file
-        #cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance'] else ''
-        #result = subprocess.run(
-        #    f'{cmd_prefix}java -jar {app.config["clone_of_cloudBatchJobTemplate"]}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar {requestid} {json.dumps(requestContentInJSON)}',
-        #    capture_output=True,
-        #    text=True,
-        #    env=env
-        #)
-        #app.logger.info(f"Ran {app.config['clone_of_cloudBatchJobTemplate']}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar")
+        # Run the jar file
+        cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance'] else ''
+        result = subprocess.run(
+            f'{cmd_prefix}java -jar {app.config["clone_of_cloudBatchJobTemplate"]}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar {requestid} {json.dumps(requestContentInJSON)}',
+            capture_output=True,
+            text=True,
+            env=env
+        )
+        app.logger.info(f"Ran {app.config['clone_of_cloudBatchJobTemplate']}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar")
         
         if app.config['env'] in ['ec2instance', 'beanstalkinstance']:
             # create S3 folder for the requestid            
@@ -82,7 +82,7 @@ def realTimeUpdateLog(app, tempPageRequestID):
     output = ""
     try:
         if tempPageRequestID is not None:
-            tempPageRequestID_value = session.get(tempPageRequestID, 'No request found')
+            tempPageRequestID_value = session.get(tempPageRequestID, 'No requestid found')
             requestid = tempPageRequestID_value['requestid']
             log_file_path = os.path.join(app.config['logDirectory_of_cloudBatchJobTemplate'], f"{requestid}.log.0")
             if os.path.exists(log_file_path):
@@ -91,6 +91,59 @@ def realTimeUpdateLog(app, tempPageRequestID):
     except Exception as e:
         app.logger.error(e)
     return output
+
+def checkSyntaxBeforeCompile(app, onStartCode, onProcessCode, onEndCode, requestid, requestContentInJSON):
+    try:
+        # Set environment variables
+        env = os.environ.copy()
+        env['AWS_ACCESS_KEY_ID'] = app.config['AWS_ACCESS_KEY_ID']
+        env['AWS_SECRET_ACCESS_KEY'] = app.config['AWS_SECRET_ACCESS_KEY']
+
+        # copy the cloudBatchJobTemplate repository
+        if os.path.exists(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly")==False:
+            if app.config['env'] == 'local':
+                shutil.copytree(f"{app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment_interfaceOnly", f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly")
+            if app.config['env'] in ['ec2instance', 'beanstalkinstance']:
+                subprocess.run([f"aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True, env=env)
+                subprocess.run([f"sudo chmod -R 777 {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True)
+        else:
+            if requestContentInJSON["FUT_OPT"] == "F":
+                shutil.copy(
+                    f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java.original",
+                    f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java"
+                )
+
+        # Write the main logic file   
+        if requestContentInJSON["FUT_OPT"] == "F":
+            with open(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java", 'r') as file:
+                    file_content = file.read()
+            updated_content = file_content
+            updated_content = updated_content.replace("/*code_for_onStart*/", onStartCode)
+            updated_content = updated_content.replace("/*code_for_onProcess*/", onProcessCode)
+            updated_content = updated_content.replace("/*code_for_onEnd*/", onEndCode)
+            with open(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java", 'w') as file:
+                file.write(updated_content)
+            file.close()
+            app.logger.info(f"Wrote the main logic file to {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java")
+        
+        # javac compile all java files inside requestid_interfaceOnly folder
+        cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance'] else ''
+        result = subprocess.run(f"{cmd_prefix}javac $(find {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java -name '*.java')", capture_output=True, text=True, shell=True)
+        if result.returncode != 0:
+            errors = result.stderr
+            return errors
+        
+        # run the Main
+        cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance'] else ''
+        result = subprocess.run([f"{cmd_prefix}java -classpath {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java Main"], capture_output=True, text=True, shell=True)
+        if result.returncode != 0:
+            errors = result.stderr
+            return errors
+
+        return ""
+    except Exception as e:
+        app.logger.error(e)
+        shutil.rmtree(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
 
 def checkSyntax(app, part_of_code, code, requestid, requestContentInJSON):
     try:
