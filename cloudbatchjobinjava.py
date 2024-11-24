@@ -24,7 +24,7 @@ def cloudbatchjobinjava(application, requestid, requestContentInJSON):
         'requestid': requestid,
         'requestContentInJSON': requestContentInJSON
     }
-    shutil.rmtree(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
+    shutil.rmtree(f"{application.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
     return render_template('cloudbatchjobinjava.html', tempPageRequestID=tempPageRequestID)
 
 def check_and_generate_keywords_(line, cursor_pos, method):
