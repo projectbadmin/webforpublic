@@ -99,19 +99,15 @@ def checkSyntaxBeforeCompile(app, onStartCode, onProcessCode, onEndCode, request
         env['AWS_ACCESS_KEY_ID'] = app.config['AWS_ACCESS_KEY_ID']
         env['AWS_SECRET_ACCESS_KEY'] = app.config['AWS_SECRET_ACCESS_KEY']
 
+        # delete the interfaceOnly directory first
+        shutil.rmtree(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
+        
         # copy the cloudBatchJobTemplate repository
-        if os.path.exists(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly")==False:
-            if app.config['env'] == 'local':
-                shutil.copytree(f"{app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment_interfaceOnly", f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly")
-            if app.config['env'] in ['ec2instance', 'beanstalkinstance']:
-                subprocess.run([f"aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True, env=env)
-                subprocess.run([f"sudo chmod -R 777 {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True)
-        else:
-            if requestContentInJSON["FUT_OPT"] == "F":
-                shutil.copy(
-                    f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java.original",
-                    f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly/cloudBatchJobInJava/src/main/java/main/logiclibrary/ForFutureData.java"
-                )
+        if app.config['env'] == 'local':
+            shutil.copytree(f"{app.config['clone_of_cloudBatchJobTemplate']}cloudBatchJobTemplateDevelopment_interfaceOnly", f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly")
+        if app.config['env'] in ['ec2instance', 'beanstalkinstance']:
+            subprocess.run([f"aws s3 sync s3://git-cloudbatchjobtemplatedevelopment/interfaceOnly/ {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True, env=env)
+            subprocess.run([f"sudo chmod -R 777 {app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly"], capture_output=True, text=True, shell=True)
 
         # Write the main logic file   
         if requestContentInJSON["FUT_OPT"] == "F":
