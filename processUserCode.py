@@ -50,15 +50,15 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
             )
             app.logger.info(f"Copied {jar_file} to {app.config['clone_of_cloudBatchJobTemplate']}")
 
-        # Run the jar file
-        cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance'] else ''
-        result = subprocess.run(
-            f'{cmd_prefix}java -jar {app.config["clone_of_cloudBatchJobTemplate"]}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar {requestid} {json.dumps(requestContentInJSON)}',
-            capture_output=True,
-            text=True,
-            env=env
-        )
-        app.logger.info(f"Ran {app.config['clone_of_cloudBatchJobTemplate']}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar")
+        ## Run the jar file
+        #cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance'] else ''
+        #result = subprocess.run(
+        #    f'{cmd_prefix}java -jar {app.config["clone_of_cloudBatchJobTemplate"]}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar {requestid} {json.dumps(requestContentInJSON)}',
+        #    capture_output=True,
+        #    text=True,
+        #    env=env
+        #)
+        #app.logger.info(f"Ran {app.config['clone_of_cloudBatchJobTemplate']}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar")
         
         if app.config['env'] in ['ec2instance', 'beanstalkinstance']:
             # create S3 folder for the requestid            
