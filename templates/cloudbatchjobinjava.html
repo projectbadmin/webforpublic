@@ -38,7 +38,6 @@
         </div>
         <button type="submit" id="submitCloudbatchjobinjava" disabled>Submit</button>
     </form>
-    <pre id="output" style="width: 100%; height: 50px;">{{ output }}</pre>
 
     <script>
         function customAutocomplete(cm, filteredList, start, end, cursorline) {
@@ -230,23 +229,6 @@
                 .catch(error => console.error('Error checking syntax:', error));
             }
         }   
-
-        function fetchLatestOutput() {
-            var tempPageRequestID = document.querySelector('param[name="tempPageRequestID"]').value;
-            fetch('/cloudbatchjobinjava/latest_output', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ tempPageRequestID: tempPageRequestID })
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('output').textContent = data.output;
-            })
-            .catch(error => console.error('Error fetching latest output:', error));
-        }
-        setInterval(fetchLatestOutput, 2000); // Fetch latest output every 2 seconds
 
         function check_and_generate_keywords(cm, event, method) {
             if (event.keyCode != 13) {
