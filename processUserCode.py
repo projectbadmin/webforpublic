@@ -67,13 +67,14 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         command_for_BatchJob += "yum -y install java && "
         command_for_BatchJob += "yum -y install awscli && "
         command_for_BatchJob += f"aws s3 cp s3://projectbcloudbatchjobprogramfile/{requestid}/cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar && "
-        command_for_BatchJob += f'java -jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar AWSBatch {requestid} {requestContentInJSON} && '
+        temp_request_content_in_json = json.dumps(requestContentInJSON)
+        command_for_BatchJob += f'java -jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar AWSBatch {requestid} {temp_request_content_in_json} && '
         command_for_BatchJob += f"aws s3 cp {requestid}.log s3://projectbcloudbatchjoboutputfile/{requestid}/{requestid}.log"
         command_for_BatchJob_Array = []
         command_for_BatchJob_Array.append("sh")
         command_for_BatchJob_Array.append("-c")
         command_for_BatchJob_Array.append(command_for_BatchJob)
-        print(command_for_BatchJob_Array)
+        print('command_for_BatchJob:'+command_for_BatchJob_Array)
         subprocess.run([
             'aws', 'batch', 'submit-job',
             '--job-name', job_name,
