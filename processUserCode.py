@@ -78,8 +78,8 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
             '--job-name', job_name,
             '--job-queue', job_queue_name,
             '--job-definition', job_definition_name,
+            '--command', command_for_BatchJob_Array,
             '--container-overrides', json.dumps({
-            'command': command_for_BatchJob_Array,
             'environment': [
                 {'name': 'AWS_ACCESS_KEY_ID', 'value': app.config['AWS_ACCESS_KEY_ID']},
                 {'name': 'AWS_SECRET_ACCESS_KEY', 'value': app.config['AWS_SECRET_ACCESS_KEY']}
