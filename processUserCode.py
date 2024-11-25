@@ -50,21 +50,40 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
             )
             app.logger.info(f"Copied {jar_file} to {app.config['clone_of_cloudBatchJobTemplate']}")
 
-        ## Run the jar file
-        #cmd_prefix = 'sudo ' if app.config['env'] in ['ec2instance'] else ''
-        #result = subprocess.run(
-        #    f'{cmd_prefix}java -jar {app.config["clone_of_cloudBatchJobTemplate"]}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar {requestid} {json.dumps(requestContentInJSON)}',
-        #    capture_output=True,
-        #    text=True,
-        #    env=env
-        #)
-        #app.logger.info(f"Ran {app.config['clone_of_cloudBatchJobTemplate']}{requestid}-0.0.1-SNAPSHOT-jar-with-dependencies.jar")
-        
+        # Copy the job to S3
         if app.config['env'] in ['ec2instance', 'beanstalkinstance']:
             # create S3 folder for the requestid            
             subprocess.run([f"aws s3 cp {app.config['clone_of_cloudBatchJobTemplate']}{requestid}/cloudBatchJobInJava/src/main/java/main/logiclibrary/ s3://projectbcloudbatchjobprogramfile/{requestid}/ --recursive"], capture_output=True, text=True, shell=True, env=env)            # sync the folder to S3
             subprocess.run([f"aws s3 cp {app.config['clone_of_cloudBatchJobTemplate']}{requestid}/cloudBatchJobInJava/target/cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar s3://projectbcloudbatchjobprogramfile/{requestid}/"], capture_output=True, text=True, shell=True, env=env)            # sync the folder to S3
 
+        ## Run the jar file in AWS Batch
+        # Use existing job definition and submit a new job with a new command
+        job_definition_name = app.config['projectbcloudbatchjobprogramfile-job-defintion']
+        job_queue_name = app.config['projectbcloudbatchjobprogramfile-fargate-job-queue']
+        job_name = f"{requestid}-job"
+
+        # Submit the job with a new command
+        command_for_BatchJob = ""
+        command_for_BatchJob += "yum -y install java && "
+        command_for_BatchJob += "yum -y install awscli && "
+        command_for_BatchJob += f"aws s3 cp s3://projectbcloudbatchjobprogramfile/{requestid}/cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar && "
+        command_for_BatchJob += f"java -jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar AWSBatch {requestid} {json.dumps(requestContentInJSON)} && "
+        command_for_BatchJob += f"aws s3 cp {requestid}.log s3://projectbcloudbatchjoboutputfile/{requestid}/{requestid}.log"
+        subprocess.run([
+            'aws', 'batch', 'submit-job',
+            '--job-name', job_name,
+            '--job-queue', job_queue_name,
+            '--job-definition', job_definition_name,
+            '--container-overrides', json.dumps({
+            'command': [command_for_BatchJob],
+            'environment': [
+                {'name': 'AWS_ACCESS_KEY_ID', 'value': app.config['AWS_ACCESS_KEY_ID']},
+                {'name': 'AWS_SECRET_ACCESS_KEY', 'value': app.config['AWS_SECRET_ACCESS_KEY']}
+            ]
+            })
+        ], capture_output=True, text=True, shell=True, env=env)
+
+        app.logger.info(f"Submitted Batch job {job_name} to queue {job_queue_name} with existing job definition {job_definition_name}")
 
     except Exception as e:
         app.logger.error(e)
