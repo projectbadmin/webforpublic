@@ -73,6 +73,7 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         command_for_call_aws_batch = ""
         command_for_call_aws_batch += 'aws batch submit-job --job-name '+job_name+' --job-definition '+job_definition_name+' '
         command_for_call_aws_batch += '--job-queue '+job_queue_name+' '
+        command_for_call_aws_batch += '--region ap-south-1 '
         command_for_call_aws_batch += '--container-overrides \'{'
         command_for_call_aws_batch += '    "command": ["sh", "-c", "'+command_for_BatchJob+'"], '
         command_for_call_aws_batch += '    "environment": [ '
