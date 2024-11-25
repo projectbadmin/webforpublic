@@ -70,19 +70,7 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         command_for_BatchJob += f'java -jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar AWSBatch {requestid} {requestContentInJSON["FUT_OPT"]} {requestContentInJSON["FROMDATE"]} {requestContentInJSON["FROMTIME"]} && '
         command_for_BatchJob += f"aws s3 cp {requestid}.log s3://projectbcloudbatchjoboutputfile/{requestid}/{requestid}.log"
         subprocess.run([
-            'aws', 'batch', 'submit-job',
-            '--job-name', job_name,
-            '--job-queue', job_queue_name,
-            '--job-definition', job_definition_name,
-            '--container-overrides', json.dumps({
-            'command': [
-                'sh', '-c', command_for_BatchJob
-            ],
-            'environment': [
-                {'name': 'AWS_ACCESS_KEY_ID', 'value': app.config['AWS_ACCESS_KEY_ID']},
-                {'name': 'AWS_SECRET_ACCESS_KEY', 'value': app.config['AWS_SECRET_ACCESS_KEY']}
-            ]
-            })
+            f'aws batch submit-job --job-name {job_name} --job-queue {job_queue_name} --job-definition {job_definition_name} --container-overrides {json.dumps({'command': ['sh', '-c', command_for_BatchJob],'environment': [{'name': 'AWS_ACCESS_KEY_ID', 'value': app.config['AWS_ACCESS_KEY_ID']},{'name': 'AWS_SECRET_ACCESS_KEY', 'value': app.config['AWS_SECRET_ACCESS_KEY']}]})} '
         ], capture_output=True, text=True, shell=True, env=env)
 
         app.logger.info(f"Submitted Batch job {job_name} to queue {job_queue_name} with existing job definition {job_definition_name}")
