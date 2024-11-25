@@ -63,15 +63,21 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         job_name = f"{requestid}-job"
 
         # Submit the job with a new command
-        command_for_BatchJob = f'["sh","-c","yum -y install java && yum -y install awscli && aws s3 cp s3://projectbcloudbatchjobprogramfile/{requestid}/cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar && java -jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar AWSBatch {requestid} {requestContentInJSON["FUT_OPT"]} {requestContentInJSON["FROMDATE"]} {requestContentInJSON["FROMTIME"]} && aws s3 cp {requestid}.log s3://projectbcloudbatchjoboutputfile/{requestid}/{requestid}.log"]'
-
+        command_for_BatchJob = ""
+        command_for_BatchJob += "yum -y install java && "
+        command_for_BatchJob += "yum -y install awscli && "
+        command_for_BatchJob += f"aws s3 cp s3://projectbcloudbatchjobprogramfile/{requestid}/cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar && "
+        command_for_BatchJob += f'java -jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar AWSBatch {requestid} {requestContentInJSON["FUT_OPT"]} {requestContentInJSON["FROMDATE"]} {requestContentInJSON["FROMTIME"]} && '
+        command_for_BatchJob += f"aws s3 cp {requestid}.log s3://projectbcloudbatchjoboutputfile/{requestid}/{requestid}.log"
         subprocess.run([
             'aws', 'batch', 'submit-job',
             '--job-name', job_name,
             '--job-queue', job_queue_name,
             '--job-definition', job_definition_name,
-            '--command', command_for_BatchJob,
             '--container-overrides', json.dumps({
+            'command': [
+                'sh', '-c', command_for_BatchJob
+            ],
             'environment': [
                 {'name': 'AWS_ACCESS_KEY_ID', 'value': app.config['AWS_ACCESS_KEY_ID']},
                 {'name': 'AWS_SECRET_ACCESS_KEY', 'value': app.config['AWS_SECRET_ACCESS_KEY']}
