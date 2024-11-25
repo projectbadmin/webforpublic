@@ -57,17 +57,23 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
             subprocess.run([f"aws s3 cp {app.config['clone_of_cloudBatchJobTemplate']}{requestid}/cloudBatchJobInJava/target/cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar s3://projectbcloudbatchjobprogramfile/{requestid}/"], capture_output=True, text=True, shell=True, env=env)            # sync the folder to S3
 
         ## Run the jar file in AWS Batch
+        # Use existing job definition and submit a new job with a new command
+        job_definition_name = 'projectbcloudbatchjobprogramfile-job-defintion'
+        job_queue_name = 'projectbcloudbatchjobprogramfile-fargate-job-queue'
+        job_name = f"{requestid}-job"
+
+        # Submit the job with a new command
         command_for_BatchJob = ""
         command_for_BatchJob += "yum -y install java && "
-        command_for_BatchJob += "yum -y install awscli && "
+        command_for_BatchJob += "yum -y install awscliv2 && "
         command_for_BatchJob += f"aws s3 cp s3://projectbcloudbatchjobprogramfile/{requestid}/cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar && "
         command_for_BatchJob += f"java -jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar AWSBatch {requestid} {json.dumps(requestContentInJSON)} && "
         command_for_BatchJob += f"aws s3 cp {requestid}.log s3://projectbcloudbatchjoboutputfile/{requestid}/{requestid}.log"
         subprocess.run([
             'aws', 'batch', 'submit-job',
-            '--job-name', f"{requestid}-job",
-            '--job-queue', 'projectbcloudbatchjobprogramfile-fargate-job-queue',
-            '--job-definition', 'projectbcloudbatchjobprogramfile-job-defintion',
+            '--job-name', job_name,
+            '--job-queue', job_queue_name,
+            '--job-definition', job_definition_name,
             '--container-overrides', json.dumps({
             'command': [command_for_BatchJob],
             'environment': [
