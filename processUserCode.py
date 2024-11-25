@@ -63,7 +63,7 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         job_name = f"{requestid}-job"
 
         # Submit the job with a new command
-        command_for_BatchJob = "'sh','-c',"
+        command_for_BatchJob = ""
         command_for_BatchJob += "yum -y install java && "
         command_for_BatchJob += "yum -y install awscli && "
         command_for_BatchJob += f"aws s3 cp s3://projectbcloudbatchjobprogramfile/{requestid}/cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar && "
@@ -77,7 +77,7 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
             '--job-queue', job_queue_name,
             '--job-definition', job_definition_name,
             '--container-overrides', json.dumps({
-            'command': [command_for_BatchJob],
+            'command': ["sh", "-c", command_for_BatchJob],
             'environment': [
                 {'name': 'AWS_ACCESS_KEY_ID', 'value': app.config['AWS_ACCESS_KEY_ID']},
                 {'name': 'AWS_SECRET_ACCESS_KEY', 'value': app.config['AWS_SECRET_ACCESS_KEY']}
