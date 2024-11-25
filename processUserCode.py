@@ -70,6 +70,8 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         temp_request_content_in_json = json.dumps(requestContentInJSON)
         command_for_BatchJob += f'java -jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar AWSBatch {requestid} {temp_request_content_in_json} && '
         command_for_BatchJob += f"aws s3 cp {requestid}.log s3://projectbcloudbatchjoboutputfile/{requestid}/{requestid}.log"
+        command_for_BatchJob = command_for_BatchJob.replace("\\\"", "'").replace("{", '\\"{').replace("}", '}\\"')
+        app.logger.info(command_for_BatchJob)
         subprocess.run([
             'aws', 'batch', 'submit-job',
             '--job-name', job_name,
