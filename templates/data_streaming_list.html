@@ -33,6 +33,17 @@
             <td>{{ stream.REQUEST_CONTENT.TO_TIME }}</td>
             <td>{{ stream.REQUEST_CONTENT.CLASS_CODE }}</td>
             <td>{{ stream.REQUEST_CONTENT.FUT_OPT }}</td>
+            <tbody>
+                {% for cloudbatchjob in stream.CLOUDBATCHJOBLIST %}
+                <tr name="cloubbatchjob_item">
+                    <td colspan="3"></td>
+                    <td colspan="6">
+                        <!-- Sub-row content goes here -->
+                        <p>Additional details for stream ID: {{ cloudbatchjob.ID }}</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </tr>
         {% endfor %}
         {% endif %}

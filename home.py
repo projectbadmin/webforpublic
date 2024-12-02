@@ -4,7 +4,7 @@ from commonFunction import send_post_request
 
 
 def get_dataStreamingList(stream_status, retention_hour, class_code, id):
-    response = send_post_request(
+    dataStreamList = send_post_request(
         'https://at05fj659h.execute-api.ap-south-1.amazonaws.com/DataStreamingList', 
         {
         "STREAM_STATUS": stream_status,
@@ -13,9 +13,19 @@ def get_dataStreamingList(stream_status, retention_hour, class_code, id):
         "ID": id
         }
     )
-    if 'message' in response and response.get('message', 'No message found')=='request fail':
+    if 'message' in dataStreamList and dataStreamList.get('message', 'No message found')=='request fail':
         return {}
-    return response
+    
+    cloudBatchJobList = send_post_request(
+        'https://friwpvbini.execute-api.ap-south-1.amazonaws.com/Get_CloudBatchJob',{}   
+    )
+    
+    for dataStream in dataStreamList:
+        for cloudBatchJob in cloudBatchJobList:
+            if dataStream['ID'] == cloudBatchJob['DATA_STREAM_ID']:
+                dataStream['CLOUDBATCHJOBLIST']=(cloudBatchJob)
+    
+    return dataStreamList
 
 def request_newJob(datetimeselectiontype, fromdate, todate, fromtime, totime, class_code, fut_opt, expiry_mth, strike_prc, call_put, retention_hour):    
     requestContentInJSON = {
