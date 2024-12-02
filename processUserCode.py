@@ -5,6 +5,8 @@ import json
 
 from flask import session
 
+from commonFunction import send_post_request
+
 def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid, requestContentInJSON):
     try:
         # Set environment variables
@@ -79,8 +81,17 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         command_for_call_aws_batch += '    "environment": [ '
         command_for_call_aws_batch += '    {"name": "AWS_ACCESS_KEY_ID", "value": "'+app.config['AWS_ACCESS_KEY_ID']+'"}, '
         command_for_call_aws_batch += '    {"name": "AWS_SECRET_ACCESS_KEY", "value": "'+app.config['AWS_SECRET_ACCESS_KEY']+'"}]}\' '
-
+        
         subprocess.run([command_for_call_aws_batch], capture_output=True, text=True, shell=True, env=env)
+        
+        requestContentInJSON = {
+            "CLOUD_BATCHJOB_ID": job_name,
+            "DATA_STREAM_ID": requestid
+        }
+        response = send_post_request(
+            'https://vslvilrd63.execute-api.ap-south-1.amazonaws.com/Create_Cloud_BatchJob', requestContentInJSON
+        )
+        response['requestContentInJSON'] = requestContentInJSON
 
         app.logger.info(f"Submitted Batch job {job_name} to queue {job_queue_name} with existing job definition {job_definition_name}")
 
