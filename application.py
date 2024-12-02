@@ -77,7 +77,7 @@ def submitCloudbatchjobinjava(tempPageRequestID):
     # process the code
     process(application, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid, requestContentInJSON)
     # return the output
-    return render_template('cloudbatchjobinjava.html', output='', requestid=requestid, requestContentInJSON=requestContentInJSON, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd)
+    return redirect(url_for('home'))
 
 
 @application.route('/cloudbatchjobinjava/latest_output', methods=['POST'])
