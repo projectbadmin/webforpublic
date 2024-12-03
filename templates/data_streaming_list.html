@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
 </head>
 
 <body>
@@ -51,12 +53,11 @@
     <!-- Modal -->
     {% if data_streaming_list|length > 0 %}
     {% for stream in data_streaming_list %}
-    {% for cloudbatchjob in stream.CLOUDBATCHJOBLIST %}
-    <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal fade" id="{{ stream.ID }}_cloudbatchjob" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="detailsModalLabel">Stream Details</h5>
+                    <h5 class="modal-title" id="detailsModalLabel">Cloud Batch Job List</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -65,6 +66,24 @@
                     <!-- Modal content will be populated here -->
                     <div id="modal-content">
                         <p>Additional details for stream ID: {{ cloudbatchjob.ID }}</p>
+                        <table id="data-streaming-table" class="display">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Createion DateTime</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if stream.CLOUDBATCHJOBLIST|length > 0 %}
+                                {% for cloudbatchjob in stream.CLOUDBATCHJOBLIST %}
+                                <tr name="cloudbatchjob_item" data-stream-id="{{ cloudbatchjob.ID }}">
+                                    <td>{{ cloudbatchjob.ID }}</td>
+                                    <td>{{ cloudbatchjob.CREATE_DATETIME }}</td>
+                                </tr>
+                                {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -73,7 +92,6 @@
             </div>
         </div>
     </div>
-    {% endfor %}
     {% endfor %}
     {% endif %}
 
@@ -87,7 +105,7 @@
                     const selectedStream = stream.find(s => s.ID === streamId);
 
                     if (selectedStream) {
-                        $('#detailsModal').modal('show');
+                        $('#{{ stream.ID }}_cloudbatchjob').modal('show');
                     }
                 });
             });
