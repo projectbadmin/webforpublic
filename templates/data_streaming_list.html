@@ -104,7 +104,7 @@
                     const selectedStream = stream.find(s => s.ID === streamId);
 
                     if (selectedStream) {
-                        $('#{{ stream.ID }}_cloudbatchjob').modal('show');
+                        $('#'+ streamId +'_cloudbatchjob').modal('show');
                     }
                 });
             });
