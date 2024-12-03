@@ -9,6 +9,21 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    <style>
+        .modal-dialog-longer {
+            max-width: 50%;
+            /* Adjust the width as needed */
+            height: 80vh;
+            /* Adjust the height as needed */
+        }
+    
+        .modal-body-longer {
+            height: calc(100% - 120px);
+            /* Adjust the height to fit within the modal */
+            overflow-y: auto;
+            /* Enable vertical scrolling */
+        }
+    </style>
 </head>
 
 <body>
@@ -53,8 +68,9 @@
     <!-- Modal -->
     {% if data_streaming_list|length > 0 %}
     {% for stream in data_streaming_list %}
-    <div class="modal fade" id="{{ stream.ID }}_cloudbatchjob" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="{{ stream.ID }}_cloudbatchjob" tabindex="-1" role="dialog"
+        aria-labelledby="detailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-longer" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="detailsModalLabel">Cloud Batch Job List</h5>
@@ -62,7 +78,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body modal-body-longer">
                     <!-- Modal content will be populated here -->
                     <div id="modal-content">
                         <table id="data-streaming-table" class="display">
