@@ -3,14 +3,44 @@
 }
 
 .icon-button-visible {
-    margin-left: 10px;
-    /* Adjust the margin as needed */
-    vertical-align: middle;
-    /* Align the icon vertically with the button */
-    width: 20px;
-    /* Set the desired width */
-    height: 20px;
-    /* Set the desired height */
     display: inline-block;
-    /* Make the button inline */
+}
+
+
+/* Reset margin and padding */
+body,
+html {
+    margin: 0;
+    padding: 0;
+}
+
+/* Styles for image container */
+.image-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Styles for button overlay */
+.button-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Styles for buttons */
+.button-overlay button {
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #157f87f7;
+    color: #fff;
+    border-radius: 5px;
+}
+
+/* Hover effect for buttons */
+.button-overlay button:hover {
+    background-color: #1badb8f7;
 }

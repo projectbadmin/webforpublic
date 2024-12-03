@@ -13,7 +13,7 @@
         .modal-dialog-longer {
             max-width: 50%;
             /* Adjust the width as needed */
-            height: 80vh;
+            height: 50%;
             /* Adjust the height as needed */
         }
     
@@ -75,9 +75,9 @@
                 </div>
                 <div class="modal-body modal-body-longer">
                     <!-- Modal content will be populated here -->
-                    <div id="modal-content">
-                        {% if stream.STATUS == "ACTIVE" %}
-                        <td><img class="icon-button-visible" src="{{ url_for('static', filename='play.gif') }}" onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';"></td>
+                    <div id="modal-content" class="d-flex justify-content-center align-items-center">
+                        {% if stream.STATUS == "ACTIVE" %}                        
+                        <td><div class="icon-button-visible button-overlay"><button onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';">Add</button></div></td>
                         {% endif %}
                         <table id="data-streaming-table" class="display">
                             <thead>
@@ -92,6 +92,12 @@
                                 <tr name="cloudbatchjob_item" data-stream-id="{{ cloudbatchjob.ID }}">
                                     <td>{{ cloudbatchjob.ID }}</td>
                                     <td>{{ cloudbatchjob.CREATE_DATETIME }}</td>
+                                    <td>
+                                        <div class="icon-button-visible button-overlay"><button onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';">Edit</button></div>
+                                    </td>
+                                    <td>
+                                        <div class="icon-button-visible button-overlay"><button onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';">View</button></div>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                                 {% endif %}
