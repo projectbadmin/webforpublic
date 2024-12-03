@@ -168,7 +168,7 @@ def use_data_streaming(stream_id):
     
 
 @application.route('/home/use-data-streaming/<stream_id>/<cloudbatchjob_id>')
-def use_data_streaming(stream_id, cloudbatchjob_id):
+def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
     filtered_list = get_dataStreamingList("", "", "", stream_id)
     if len(filtered_list) == 0:
         return "Invalid stream id"
