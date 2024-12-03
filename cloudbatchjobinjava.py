@@ -1,4 +1,5 @@
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -25,7 +26,59 @@ def cloudbatchjobinjava(application, requestid, requestContentInJSON):
         'requestContentInJSON': requestContentInJSON
     }
     shutil.rmtree(f"{application.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
-    return render_template('cloudbatchjobinjava.html', tempPageRequestID=tempPageRequestID)
+    return render_template('cloudbatchjobinjava.html', tempPageRequestID=tempPageRequestID, code_for_onStart="", code_for_onProcess="", code_for_onEnd="")
+
+
+def cloudbatchjobinjava(application, requestid, requestContentInJSON, cloudbatchjob_id):
+    read_javap_result(application)
+    tempPageRequestID = cloudbatchjob_id
+    session[tempPageRequestID] = {
+        'requestid': requestid,
+        'requestContentInJSON': requestContentInJSON
+    }
+    shutil.rmtree(f"{application.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
+
+    # get the code for onStart, onProcess, onEnd
+    env = os.environ.copy()
+    env['AWS_ACCESS_KEY_ID'] = application.config['AWS_ACCESS_KEY_ID']
+    env['AWS_SECRET_ACCESS_KEY'] = application.config['AWS_SECRET_ACCESS_KEY']
+    tempProgramFilePath = ""
+    if(requestContentInJSON['FUT_OPT']=="F"):
+        tempProgramFilePath = f"{application.config['temp_download_of_cloudBatchJobProgram_for_edit']}{cloudbatchjob_id}.java"
+        subprocess.run([f"aws s3 cp  s3://projectbcloudbatchjobprogramfile/{cloudbatchjob_id}/ForFutureData.java {tempProgramFilePath}"], capture_output=True, text=True, shell=True, env=env) 
+    else:
+        tempProgramFilePath = f"{application.config['temp_download_of_cloudBatchJobProgram_for_edit']}{cloudbatchjob_id}.java"
+        subprocess.run([f"aws s3 cp  s3://projectbcloudbatchjobprogramfile/{cloudbatchjob_id}/ForFutureData.java {tempProgramFilePath}"], capture_output=True, text=True, shell=True, env=env) 
+    
+    code_for_onStart = []
+    code_for_onProcess = []
+    code_for_onEnd = []
+    with open(f"{tempProgramFilePath}", 'r') as file:
+        lines = file.readlines()
+        inside_method = None
+        for line in lines:
+            if 'void onStart(' in line:
+                inside_method = 'onStart'
+            elif 'void onProcess(' in line:
+                inside_method = 'onProcess'
+            elif 'void onEnd(' in line:
+                inside_method = 'onEnd'
+            elif inside_method and '}' in line:
+                inside_method = None
+            elif inside_method:
+                if inside_method == 'onStart':
+                    code_for_onStart.append(line.strip())
+                elif inside_method == 'onProcess':
+                    code_for_onProcess.append(line.strip())
+                elif inside_method == 'onEnd':
+                    code_for_onEnd.append(line.strip())
+
+    code_for_onStart = '\n'.join(code_for_onStart)
+    code_for_onProcess = '\n'.join(code_for_onProcess)
+    code_for_onEnd = '\n'.join(code_for_onEnd)
+
+    return render_template('cloudbatchjobinjava.html', tempPageRequestID=tempPageRequestID, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd)
+
 
 def check_and_generate_keywords_(line, cursor_pos, method):
     match = re.search(r'(\w+)\.$', line[:cursor_pos])

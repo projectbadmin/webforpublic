@@ -74,11 +74,13 @@
                     </button>
                 </div>
                 <div class="modal-body modal-body-longer">
+                    {% if stream.STATUS == "ACTIVE" %}
+                    <td>
+                        <div class="icon-button-visible button-overlay"><button onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';">Add</button></div>
+                    </td>
+                    {% endif %}
                     <!-- Modal content will be populated here -->
                     <div id="modal-content" class="d-flex justify-content-center align-items-center">
-                        {% if stream.STATUS == "ACTIVE" %}                        
-                        <td><div class="icon-button-visible button-overlay"><button onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';">Add</button></div></td>
-                        {% endif %}
                         <table id="data-streaming-table" class="display">
                             <thead>
                                 <tr>
