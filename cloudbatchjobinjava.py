@@ -29,7 +29,7 @@ def cloudbatchjobinjava(application, requestid, requestContentInJSON):
     return render_template('cloudbatchjobinjava.html', tempPageRequestID=tempPageRequestID, code_for_onStart="", code_for_onProcess="", code_for_onEnd="")
 
 
-def cloudbatchjobinjava(application, requestid, requestContentInJSON, cloudbatchjob_id):
+def cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id):
     read_javap_result(application)
     tempPageRequestID = cloudbatchjob_id
     session[tempPageRequestID] = {
