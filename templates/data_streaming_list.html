@@ -47,22 +47,41 @@
                 <td>{{ stream.REQUEST_CONTENT.TO_TIME }}</td>
                 <td>{{ stream.REQUEST_CONTENT.CLASS_CODE }}</td>
                 <td>{{ stream.REQUEST_CONTENT.FUT_OPT }}</td>
-                <tbody name="cloubbatchjob_list" class="hidden" data-stream-id="{{ stream.ID }}">
-                    {% for cloudbatchjob in stream.CLOUDBATCHJOBLIST %}
-                    <tr name="cloubbatchjob_item">
-                        <td colspan="2"></td>
-                        <td colspan="7">
-                            <!-- Sub-row content goes here -->
-                            <p>Additional details for stream ID: {{ cloudbatchjob.ID }}</p>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
             </tr>
         {% endfor %}
         {% endif %}
         </tbody>
     </table>
+
+    <!-- Modal -->
+    {% if data_streaming_list|length > 0 %}
+    {% for stream in data_streaming_list %}
+    {% for cloudbatchjob in stream.CLOUDBATCHJOBLIST %}
+    <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsModalLabel">Stream Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Modal content will be populated here -->
+                    <div id="modal-content">
+                        <p>Additional details for stream ID: {{ cloudbatchjob.ID }}</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% endfor %}
+    {% endif %}
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -70,9 +89,11 @@
             streamingItems.forEach(item => {
                 item.addEventListener('click', function () {
                     const streamId = this.getAttribute('data-stream-id');
-                    const cloubbatchjobList = document.querySelector(`tbody[name="cloubbatchjob_list"][data-stream-id="${streamId}"]`);
-                    if (cloubbatchjobList) {
-                        cloubbatchjobList.classList.toggle('hidden');
+                    const stream = {{ data_streaming_list| tojson }};
+                    const selectedStream = stream.find(s => s.ID === streamId);
+
+                    if (selectedStream) {
+                        $('#detailsModal').modal('show');
                     }
                 });
             });
