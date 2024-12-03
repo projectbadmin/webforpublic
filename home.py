@@ -16,14 +16,19 @@ def get_dataStreamingList(stream_status, retention_hour, class_code, id):
     if 'message' in dataStreamList and dataStreamList.get('message', 'No message found')=='request fail':
         return {}
     
+    for dataStream in dataStreamList:
+        dataStream['CLOUDBATCHJOBLIST'] = []
+    
     cloudBatchJobList = send_post_request(
         'https://friwpvbini.execute-api.ap-south-1.amazonaws.com/Get_CloudBatchJob',{}   
     )
+    if 'message' in cloudBatchJobList and cloudBatchJobList.get('message', 'No message found')=='request fail':
+        return {}
     
     for dataStream in dataStreamList:
         for cloudBatchJob in cloudBatchJobList:
             if dataStream['ID'] == cloudBatchJob['DATA_STREAM_ID']:
-                dataStream['CLOUDBATCHJOBLIST']=(cloudBatchJob)
+                dataStream['CLOUDBATCHJOBLIST'].append(cloudBatchJob)
     
     return dataStreamList
 
