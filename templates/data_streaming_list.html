@@ -47,12 +47,7 @@
             <tr name="streaming_item" data-stream-id="{{ stream.ID }}" onclick="showCloudBatchJobList('{{stream.ID}}')">
                 <td>{{ stream.CREATE_DATETIME }}</td>
                 <td>{{ stream.RETENTION_HOUR }}</td>
-                {% if stream.STATUS == "ACTIVE" %}
-                <td><img class="icon-button-visible" src="{{ url_for('static', filename='play.gif') }}"
-                        onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';"></td>
-                {% else %}
                 <td>{{ stream.STATUS }}</td>
-                {% endif %}
                 <td>{{ stream.REQUEST_CONTENT.FROM_DATE }}</td>
                 <td>{{ stream.REQUEST_CONTENT.TO_DATE }}</td>
                 <td>{{ stream.REQUEST_CONTENT.FROM_TIME }}</td>
@@ -81,6 +76,9 @@
                 <div class="modal-body modal-body-longer">
                     <!-- Modal content will be populated here -->
                     <div id="modal-content">
+                        {% if stream.STATUS == "ACTIVE" %}
+                        <td><img class="icon-button-visible" src="{{ url_for('static', filename='play.gif') }}" onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';"></td>
+                        {% endif %}
                         <table id="data-streaming-table" class="display">
                             <thead>
                                 <tr>
