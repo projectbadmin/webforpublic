@@ -100,9 +100,7 @@
             streamingItems.forEach(item => {
                 item.addEventListener('click', function () {
                     const streamId = this.getAttribute('data-stream-id');
-                    if (selectedStream) {
-                        $('#'+ streamId +'_cloudbatchjob').modal('show');
-                    }
+                    $('#' + streamId + '_cloudbatchjob').modal('show');
                 });
             });
         });
