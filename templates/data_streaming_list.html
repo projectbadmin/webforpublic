@@ -36,10 +36,10 @@
             <tbody>
                 {% for cloudbatchjob in stream.CLOUDBATCHJOBLIST %}
                 <tr name="cloubbatchjob_item">
-                    <td colspan="3"></td>
-                    <td colspan="6">
+                    <td colspan="2"></td>
+                    <td colspan="7">
                         <!-- Sub-row content goes here -->
-                        <p>Additional details for stream ID: {{ cloudbatchjob.ID }}</p>
+                        <p>Additional details for stream ID: {{ cloudbatchjob }}</p>
                     </td>
                 </tr>
                 {% endfor %}
