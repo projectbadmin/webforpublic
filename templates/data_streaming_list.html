@@ -29,7 +29,7 @@
         <tbody>
             {% if data_streaming_list|length > 0 %}
             {% for stream in data_streaming_list %}
-            <tr name="streaming_item" data-stream-id="{{ stream.ID }}" onclick="showCloudBatchJobList({{stream.ID}})">
+            <tr name="streaming_item" data-stream-id="{{ stream.ID }}" onclick="showCloudBatchJobList('{{stream.ID}}')">
                 <td>{{ stream.CREATE_DATETIME }}</td>
                 <td>{{ stream.RETENTION_HOUR }}</td>
                 {% if stream.STATUS == "ACTIVE" %}
