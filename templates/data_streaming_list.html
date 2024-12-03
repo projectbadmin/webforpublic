@@ -1,51 +1,83 @@
-<table id="data-streaming-table" class="display">
-    <thead>
-        <tr>
-            <th colspan="1" rowspan="2" scope="colgroup">Create DateTime</th>
-            <th colspan="1" rowspan="2" scope="colgroup">Retention Hour</th>
-            <th colspan="1" rowspan="2" scope="colgroup">Status</th>
-            <th colspan="6" rowspan="1" scope="colgroup">Request Content</th>
-        </tr>
-        <tr>
-            <th scope="col">From Date</th>
-            <th scope="col">To Date</th>
-            <th scope="col">From Time</th>
-            <th scope="col">To Time</th>
-            <th scope="col">Class Code</th>
-            <th scope="col">Future/Option</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% if data_streaming_list|length > 0 %}
-        {% for stream in data_streaming_list %}
-        <tr name="streaming_item">
-            <td>{{ stream.CREATE_DATETIME }}</td>
-            <td>{{ stream.RETENTION_HOUR }}</td>
-            {% if stream.STATUS=="ACTIVE" %}
-            <td><img class="icon-button-visible" src="{{ url_for('static', filename='play.gif') }}"
-                    onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';"></td>
-            {% else %}
-            <td>{{ stream.STATUS }}</td>
-            {% endif %}
-            <td>{{ stream.REQUEST_CONTENT.FROM_DATE }}</td>
-            <td>{{ stream.REQUEST_CONTENT.TO_DATE }}</td>
-            <td>{{ stream.REQUEST_CONTENT.FROM_TIME }}</td>
-            <td>{{ stream.REQUEST_CONTENT.TO_TIME }}</td>
-            <td>{{ stream.REQUEST_CONTENT.CLASS_CODE }}</td>
-            <td>{{ stream.REQUEST_CONTENT.FUT_OPT }}</td>
-            <tbody>
-                {% for cloudbatchjob in stream.CLOUDBATCHJOBLIST %}
-                <tr name="cloubbatchjob_item">
-                    <td colspan="2"></td>
-                    <td colspan="7">
-                        <!-- Sub-row content goes here -->
-                        <p>Additional details for stream ID: {{ cloudbatchjob.ID }}</p>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </tr>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    <title>Data Streaming List</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <table id="data-streaming-table" class="display">
+        <thead>
+            <tr>
+                <th>Create DateTime</th>
+                <th>Retention Hour</th>
+                <th>Status</th>
+                <th>From Date</th>
+                <th>To Date</th>
+                <th>From Time</th>
+                <th>To Time</th>
+                <th>Class Code</th>
+                <th>Future/Option</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if data_streaming_list|length > 0 %}
+            {% for stream in data_streaming_list %}
+            <tr name="streaming_item" data-stream-id="{{ stream.ID }}">
+                <td>{{ stream.CREATE_DATETIME }}</td>
+                <td>{{ stream.RETENTION_HOUR }}</td>
+                {% if stream.STATUS == "ACTIVE" %}
+                <td><img class="icon-button-visible" src="{{ url_for('static', filename='play.gif') }}"
+                        onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';"></td>
+                {% else %}
+                <td>{{ stream.STATUS }}</td>
+                {% endif %}
+                <td>{{ stream.REQUEST_CONTENT.FROM_DATE }}</td>
+                <td>{{ stream.REQUEST_CONTENT.TO_DATE }}</td>
+                <td>{{ stream.REQUEST_CONTENT.FROM_TIME }}</td>
+                <td>{{ stream.REQUEST_CONTENT.TO_TIME }}</td>
+                <td>{{ stream.REQUEST_CONTENT.CLASS_CODE }}</td>
+                <td>{{ stream.REQUEST_CONTENT.FUT_OPT }}</td>
+                <tbody name="cloubbatchjob_list" class="hidden" data-stream-id="{{ stream.ID }}">
+                    {% for cloudbatchjob in stream.CLOUDBATCHJOBLIST %}
+                    <tr name="cloubbatchjob_item">
+                        <td colspan="2"></td>
+                        <td colspan="7">
+                            <!-- Sub-row content goes here -->
+                            <p>Additional details for stream ID: {{ cloudbatchjob.ID }}</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </tr>
         {% endfor %}
         {% endif %}
-    </tbody>
-</table>
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const streamingItems = document.querySelectorAll('tr[name="streaming_item"]');
+            streamingItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const streamId = this.getAttribute('data-stream-id');
+                    const cloubbatchjobList = document.querySelector(`tbody[name="cloubbatchjob_list"][data-stream-id="${streamId}"]`);
+                    if (cloubbatchjobList) {
+                        cloubbatchjobList.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
