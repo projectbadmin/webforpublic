@@ -95,10 +95,10 @@
                                     <td>{{ cloudbatchjob.ID }}</td>
                                     <td>{{ cloudbatchjob.CREATE_DATETIME }}</td>
                                     <td>
-                                        <div class="icon-button-visible button-overlay"><button onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';">Edit</button></div>
+                                        <div class="button-overlay"><button onclick="location.href='/home/use-data-streaming/{{ stream.ID }}/{{ cloudbatchjob.ID }}';">Edit</button></div>
                                     </td>
                                     <td>
-                                        <div class="icon-button-visible button-overlay"><button onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';">View</button></div>
+                                        <div class="button-overlay"><button onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';">View</button></div>
                                     </td>
                                 </tr>
                                 {% endfor %}

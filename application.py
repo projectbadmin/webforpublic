@@ -5,7 +5,7 @@ from commonFunction import check_logged_in_or_not, send_post_request
 from home import get_dataStreamingList, request_newJob
 from initialize import initialize
 from processUserCode import checkSyntaxBeforeCompile, process, realTimeUpdateLog, checkSyntax
-from cloudbatchjobinjava import check_and_generate_keywords_, cloudbatchjobinjava, read_javap_result
+from cloudbatchjobinjava import check_and_generate_keywords_, cloudbatchjobinjava, cloudbatchjobinjava_edit_program_file, read_javap_result
 
 application = Flask(__name__)
 initialize(application)
@@ -176,7 +176,7 @@ def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
     if status == "ACTIVE":
         requestid = filtered_list[0].get('ID', 'No message found')
         requestContentInJSON = filtered_list[0].get('REQUEST_CONTENT', 'No message found')
-        cloudbatchjobinjava_template = cloudbatchjobinjava(application, requestid, requestContentInJSON, cloudbatchjob_id)
+        cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id)
         return cloudbatchjobinjava_template
     else:
         return "Stream obsoleted"
