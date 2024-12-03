@@ -100,9 +100,6 @@
             streamingItems.forEach(item => {
                 item.addEventListener('click', function () {
                     const streamId = this.getAttribute('data-stream-id');
-                    const stream = {{ data_streaming_list| tojson }};
-                    const selectedStream = stream.find(s => s.ID === streamId);
-
                     if (selectedStream) {
                         $('#'+ streamId +'_cloudbatchjob').modal('show');
                     }
