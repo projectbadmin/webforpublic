@@ -173,13 +173,10 @@ def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
     if len(filtered_list) == 0:
         return "Invalid stream id"
     status = filtered_list[0].get('STATUS', 'No message found')
-    if status == "ACTIVE":
-        requestid = filtered_list[0].get('ID', 'No message found')
-        requestContentInJSON = filtered_list[0].get('REQUEST_CONTENT', 'No message found')
-        cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id)
-        return cloudbatchjobinjava_template
-    else:
-        return "Stream obsoleted"
+    requestid = filtered_list[0].get('ID', 'No message found')
+    requestContentInJSON = filtered_list[0].get('REQUEST_CONTENT', 'No message found')
+    cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id)
+    return cloudbatchjobinjava_template
 
 
 # Register the function to run before each request
