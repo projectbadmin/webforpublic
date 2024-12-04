@@ -57,14 +57,12 @@ def cloudbatchjobinjava_edit_program_file(application, requestid, requestContent
         lines = file.readlines()
         inside_method = None
         for line in lines:
-            if 'void onStart(' in line:
+            if 'public void onStart()' in line:
                 inside_method = 'onStart'
-            elif 'void onProcess(' in line:
+            elif 'public void onProess(' in line:
                 inside_method = 'onProcess'
-            elif 'void onEnd(' in line:
+            elif 'public void onEnd()' in line:
                 inside_method = 'onEnd'
-            elif inside_method and '}' in line:
-                inside_method = None
             elif inside_method:
                 if inside_method == 'onStart':
                     code_for_onStart.append(line.strip())
