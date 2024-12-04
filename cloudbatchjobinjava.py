@@ -45,10 +45,10 @@ def cloudbatchjobinjava_edit_program_file(application, requestid, requestContent
     tempProgramFilePath = ""
     if(requestContentInJSON['FUT_OPT']=="F"):
         tempProgramFilePath = f"{application.config['temp_download_of_cloudBatchJobProgram_for_edit']}{cloudbatchjob_id}.java"
-        subprocess.run([f"aws s3 cp  s3://projectbcloudbatchjobprogramfile/{cloudbatchjob_id}/ForFutureData.java {tempProgramFilePath}"], capture_output=True, text=True, shell=True, env=env) 
+        subprocess.run([f"aws s3 cp s3://projectbcloudbatchjobprogramfile/{cloudbatchjob_id}/ForFutureData.java {tempProgramFilePath}"], capture_output=True, text=True, shell=True, env=env) 
     else:
         tempProgramFilePath = f"{application.config['temp_download_of_cloudBatchJobProgram_for_edit']}{cloudbatchjob_id}.java"
-        subprocess.run([f"aws s3 cp  s3://projectbcloudbatchjobprogramfile/{cloudbatchjob_id}/ForFutureData.java {tempProgramFilePath}"], capture_output=True, text=True, shell=True, env=env) 
+        subprocess.run([f"aws s3 cp s3://projectbcloudbatchjobprogramfile/{cloudbatchjob_id}/ForFutureData.java {tempProgramFilePath}"], capture_output=True, text=True, shell=True, env=env) 
     
     code_for_onStart = []
     code_for_onProcess = []
@@ -76,6 +76,8 @@ def cloudbatchjobinjava_edit_program_file(application, requestid, requestContent
     code_for_onStart = '\n'.join(code_for_onStart)
     code_for_onProcess = '\n'.join(code_for_onProcess)
     code_for_onEnd = '\n'.join(code_for_onEnd)
+
+    os.remove(tempProgramFilePath)
 
     return render_template('cloudbatchjobinjava.html', tempPageRequestID=tempPageRequestID, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd)
 

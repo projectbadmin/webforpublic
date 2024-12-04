@@ -62,7 +62,7 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         # Use existing job definition and submit a new job with a new command
         job_definition_name = 'projectbcloudbatchjobprogramfile-job-defintion'
         job_queue_name = 'projectbcloudbatchjobprogramfile-fargate-job-queue'
-        job_name = f"{requestid}-job"
+        job_name = f"{requestid}"
 
         # Submit the job with a new command
         command_for_BatchJob = ""
