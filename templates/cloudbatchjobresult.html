@@ -1,40 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code Editor</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/lint.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/clike/clike.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/lint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/anyword-hint.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}">
-</head>
-<body>
-    <param id="cloudbatchjob_id" name="cloudbatchjob_id" value='{{ cloudbatchjob_id }}'>
-    <div class="button-overlay"><button onclick="location.href='/home';">Back</button></div>
-    <pre id="result" style="width: 100%; height: 50px;"></pre>
-
-    <script>
-        fetch('/home/view-cloudbatchjob-result/fetch', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ 
-                cloudbatchjob_id: document.querySelector('param[name="cloudbatchjob_id"]').value
-            })  // Send input as JSON
-        })
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('result').innerHTML = data;
-        })
-        .catch(error => console.error('Error:', error));
-    </script>
-</body>
 {% extends "base.html" %}
-</html>
+
+{% block title %}Cloud Batch Job Result{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/lint.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/lint.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/anyword-hint.min.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}">
+
+<param id="cloudbatchjob_id" name="cloudbatchjob_id" value='{{ cloudbatchjob_id }}'>
+<div class="button-overlay"><button onclick="location.href='/home';">Back</button></div>
+<pre id="result" style="width: 100%; height: 50px;"></pre>
+
+<script>
+    fetch('/home/view-cloudbatchjob-result/fetch', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+            cloudbatchjob_id: document.querySelector('param[name="cloudbatchjob_id"]').value
+        })  // Send input as JSON
+    })
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById('result').innerHTML = data;
+    })
+    .catch(error => console.error('Error:', error));
+</script>
+{% endblock %}
