@@ -13,6 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/anyword-hint.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='cloudbatchjobinjava.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}">
 </head>
 <body>
     <h1 class="header">Java Code Editor</h1>
@@ -36,7 +37,7 @@
             <textarea id="code_for_onEnd" name="code_for_onEnd">{{ code_for_onEnd }}</textarea>
             <label for="code_for_onStart" class="code-label">}</label>
         </div>
-        <button type="submit" id="submitCloudbatchjobinjava" disabled>Submit</button>
+        <div class="button-overlay"><button type="submit" id="submitCloudbatchjobinjava" disabled>Submit</button></div>
     </form>
 
     <script>

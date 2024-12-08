@@ -68,7 +68,7 @@
                 
                 <label for="retention-hour">Retention Hour:</label>
                 <input type="number" id="retention-hour" name="retention-hour" value="1" >
-                <button type="submit">Request Job</button>
+                <div class="button-overlay"><button type="submit">Request Job</button></div>
                 <img id="requesting-new-job-icon" class="icon-button-hidden" src="{{ url_for('static', filename='loading.gif') }}">
             </form>
         </section>

@@ -1,5 +1,10 @@
-
-<h2>An Error Occurred</h2>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>An Error Occurred</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}">
+</head>
+<div class="button-overlay"><button onclick="location.href='/home';">Back</button></div>
 <p>{{error_message}}</p>
 <p>Sorry, an error occurred while processing your request. Please contact the admin for assistance.</p>
 <p>Email: admin@example.com</p>
