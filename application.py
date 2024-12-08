@@ -1,6 +1,7 @@
 from flask import  Flask, Response, jsonify, redirect, render_template, request, session, stream_template, url_for
 import json
 from applogging import init_logging
+from cloudbatchjobresult import fetch_result
 from commonFunction import check_logged_in_or_not, send_post_request
 from home import get_dataStreamingList, request_newJob
 from initialize import initialize
@@ -177,6 +178,19 @@ def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
     requestContentInJSON = filtered_list[0].get('REQUEST_CONTENT', 'No message found')
     cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id)
     return cloudbatchjobinjava_template
+
+
+@application.route('/home/view-cloudbatchjob-result/<cloudbatchjob_id>')
+def view_cloudbatchjob_result(cloudbatchjob_id):
+    return render_template('cloudbatchjobresult.html', cloudbatchjob_id=cloudbatchjob_id)
+
+
+@application.route('/home/view-cloudbatchjob-result/fetch')
+def fetch_cloudbatchjob_result():
+    data = request.get_json()
+    cloudbatchjob_id = data['cloudbatchjob_id']
+    result = fetch_result(application, cloudbatchjob_id)
+    return jsonify({'result': result})
 
 
 # Register the function to run before each request

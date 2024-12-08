@@ -23,6 +23,7 @@ def initialize(application):
         application.config['https_of_cloudBatchJobTemplateDevelopment'] = config.get(env, 'https_of_cloudBatchJobTemplateDevelopment')
         application.config['clone_of_cloudBatchJobTemplate'] = config.get(env, 'clone_of_cloudBatchJobTemplate')
         application.config['temp_download_of_cloudBatchJobProgram_for_edit'] = config.get(env, 'temp_download_of_cloudBatchJobProgram_for_edit')
+        application.config['temp_download_of_cloudBatchJobProgram_for_view_result'] = config.get(env, 'temp_download_of_cloudBatchJobProgram_for_view_result')
         application.config['logDirectory_of_cloudBatchJobTemplate'] = config.get(env, 'logDirectory_of_cloudBatchJobTemplate')
         application.config['logDirectory_of_webforpublic'] = config.get(env, 'logDirectory_of_webforpublic')
         application.config['AWS_ACCESS_KEY_ID'] = config.get(env, 'AWS_ACCESS_KEY_ID')
