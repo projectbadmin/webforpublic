@@ -54,6 +54,3 @@ def request_newJob(datetimeselectiontype, fromdate, todate, fromtime, totime, cl
     #response['DATA_STREAM_ID'] = 'f04485a5-a5c4-11ef-9553-4387f2d8ee77_' + datetime.datetime.now().strftime('%Y%m%d%H%M%S')
     response['requestContentInJSON'] = requestContentInJSON
     return response
-
-def view_cloudbatchjob_result(application, cloudbatchjob_id);
-    
