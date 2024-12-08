@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}">
 </head>
 <body>
+    <div class="button-overlay"><button onclick="location.href='/home';">Back</button></div>
     <h1 class="header">Java Code Editor</h1>
     <form action="/cloudbatchjobinjava/submit/{{tempPageRequestID}}" method="post">
         <param id="tempPageRequestID" name="tempPageRequestID" value='{{ tempPageRequestID }}'>
