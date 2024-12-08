@@ -190,7 +190,7 @@ def fetch_cloudbatchjob_result():
     data = request.get_json()
     cloudbatchjob_id = data['cloudbatchjob_id']
     result = fetch_result(application, cloudbatchjob_id)
-    return jsonify({'result': result})
+    return result
 
 
 # Register the function to run before each request
