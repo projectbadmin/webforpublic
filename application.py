@@ -185,7 +185,7 @@ def view_cloudbatchjob_result(cloudbatchjob_id):
     return render_template('cloudbatchjobresult.html', cloudbatchjob_id=cloudbatchjob_id)
 
 
-@application.route('/home/view-cloudbatchjob-result/fetch')
+@application.route('/home/view-cloudbatchjob-result/fetch', methods=['POST'])
 def fetch_cloudbatchjob_result():
     data = request.get_json()
     cloudbatchjob_id = data['cloudbatchjob_id']
