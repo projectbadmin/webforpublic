@@ -71,7 +71,7 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         command_for_BatchJob += "yum -y install awscli && "
         command_for_BatchJob += f"aws s3 cp s3://projectbcloudbatchjobprogramfile/{requestid}/cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar && "
         command_for_BatchJob += f'java -jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar AWSBatch {job_name} {requestid} {requestContentInJSON["FUT_OPT"]} {requestContentInJSON["FROMDATE"]} {requestContentInJSON["FROMTIME"]} && '
-        command_for_BatchJob += f"aws s3 cp {requestid}.log s3://projectbcloudbatchjoboutputfile/{requestid}/{requestid}.log"
+        command_for_BatchJob += f"aws s3 cp {job_name}.log s3://projectbcloudbatchjoboutputfile/{requestid}/{job_name}.log"
 
         command_for_call_aws_batch = ""
         command_for_call_aws_batch += 'aws batch submit-job --job-name '+job_name+' --job-definition '+job_definition_name+' '
