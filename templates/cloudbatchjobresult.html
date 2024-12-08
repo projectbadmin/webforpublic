@@ -27,7 +27,7 @@
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ 
-                stream_id: document.querySelector('param[name="stream_id"]').value
+                stream_id: document.querySelector('param[name="stream_id"]').value,
                 cloudbatchjob_id: document.querySelector('param[name="cloudbatchjob_id"]').value
             })  // Send input as JSON
         })
