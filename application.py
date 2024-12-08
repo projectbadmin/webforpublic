@@ -180,16 +180,17 @@ def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
     return cloudbatchjobinjava_template
 
 
-@application.route('/home/view-cloudbatchjob-result/<cloudbatchjob_id>')
-def view_cloudbatchjob_result(cloudbatchjob_id):
-    return render_template('cloudbatchjobresult.html', cloudbatchjob_id=cloudbatchjob_id)
+@application.route('/home/view-cloudbatchjob-result/<stream_id>/<cloudbatchjob_id>')
+def view_cloudbatchjob_result(stream_id, cloudbatchjob_id):
+    return render_template('cloudbatchjobresult.html', stream_id=stream_id, cloudbatchjob_id=cloudbatchjob_id)
 
 
 @application.route('/home/view-cloudbatchjob-result/fetch', methods=['POST'])
 def fetch_cloudbatchjob_result():
     data = request.get_json()
+    stream_id = data['stream_id']
     cloudbatchjob_id = data['cloudbatchjob_id']
-    result = fetch_result(application, cloudbatchjob_id)
+    result = fetch_result(application, stream_id, cloudbatchjob_id)
     return result
 
 
