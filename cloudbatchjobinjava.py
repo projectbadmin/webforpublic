@@ -57,13 +57,17 @@ def cloudbatchjobinjava_edit_program_file(application, requestid, requestContent
         lines = file.readlines()
         inside_method = None
         for line in lines:
-            if 'public void onStart()' in line:
+            if f"onStart method start here - seceret - {application.config['SECRET_KEY']}" in line:
                 inside_method = 'onStart'
-            elif 'public void onProess(' in line:
+            elif f"onProcess method start here - seceret - {application.config['SECRET_KEY']}" in line:
                 inside_method = 'onProcess'
-            elif 'public void onEnd()' in line:
+            elif f"onEnd method start here - seceret - {application.config['SECRET_KEY']}" in line:
                 inside_method = 'onEnd'
-            elif inside_method and '}' in line:
+            elif inside_method == 'onStart' and f"onStart method end here - seceret - {application.config['SECRET_KEY']}" in line:
+                inside_method = None
+            elif inside_method == 'onProcess' and f"onProcess method end here - seceret - {application.config['SECRET_KEY']}" in line:
+                inside_method = None
+            elif inside_method == 'onEnd' and f"onEnd method end here - seceret - {application.config['SECRET_KEY']}" in line:
                 inside_method = None
             elif inside_method:
                 if inside_method == 'onStart':
