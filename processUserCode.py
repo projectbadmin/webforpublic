@@ -68,9 +68,6 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
 
         # Prepare script for Batch job running
         command_for_BatchJobScript = ""
-        command_for_BatchJobScript += "yum -y install java \n"
-        command_for_BatchJobScript += "yum -y install awscli \n"
-        command_for_BatchJobScript += "yum -y install cronie \n"
         command_for_BatchJobScript += f"aws s3 cp s3://projectbcloudbatchjobprogramfile/{requestid}/{job_name}/cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar \n"
         command_for_BatchJobScript += f'java -jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar AWSBatch {job_name} {requestid} {requestContentInJSON["FUT_OPT"]} {requestContentInJSON["FROMDATE"]} {requestContentInJSON["FROMTIME"]} \n'
         command_for_BatchJobScript += f'touch {job_name}.log \n'
@@ -89,6 +86,9 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
 
         # Submit the job to AWS Batch
         command_for_BatchJob = ""
+        command_for_BatchJob += "yum -y install java &&"
+        command_for_BatchJob += "yum -y install awscli &&"
+        command_for_BatchJob += "yum -y install cronie &&"
         command_for_BatchJob += f"aws s3 cp s3://projectbcloudbatchjobprogramfile/{requestid}/{job_name}/run_batch_job_{job_name}.sh . && "
         command_for_BatchJob += f"chmod +x run_batch_job_{job_name}.sh && "
         command_for_BatchJob += f"./run_batch_job_{job_name}.sh"      
