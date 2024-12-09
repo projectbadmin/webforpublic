@@ -68,12 +68,12 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
 
         # Prepare script for Batch job running
         command_for_BatchJobScript = ""
-        command_for_BatchJobScript += f"aws s3 cp s3://projectbcloudbatchjobprogramfile/{requestid}/{job_name}/cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar \n"
-        command_for_BatchJobScript += f'java -jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar AWSBatch {job_name} {requestid} {requestContentInJSON["FUT_OPT"]} {requestContentInJSON["FROMDATE"]} {requestContentInJSON["FROMTIME"]} \n'
         command_for_BatchJobScript += f'touch {job_name}.log \n'
         command_for_BatchJobScript += f'aws s3 cp {job_name}.log s3://projectbcloudbatchjoboutputfile/{requestid}/{job_name}.log \n'
         command_for_BatchJobScript += f'(echo "* * * * * aws s3 cp {job_name}.log s3://projectbcloudbatchjoboutputfile/{requestid}/{job_name}.log") | crontab -\n'
-        command_for_BatchJobScript += f'systemctl start crond'
+        command_for_BatchJobScript += f'systemctl start crond \n'
+        command_for_BatchJobScript += f"aws s3 cp s3://projectbcloudbatchjobprogramfile/{requestid}/{job_name}/cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar \n"
+        command_for_BatchJobScript += f'java -jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar AWSBatch {job_name} {requestid} {requestContentInJSON["FUT_OPT"]} {requestContentInJSON["FROMDATE"]} {requestContentInJSON["FROMTIME"]} \n'
         script_content = f"""#!/bin/bash
         {command_for_BatchJobScript}
         """
