@@ -91,12 +91,12 @@
                                 {% if stream.CLOUDBATCHJOBLIST|length > 0 %}
                                 {% for cloudbatchjob in stream.CLOUDBATCHJOBLIST %}
                                 <tr name="cloudbatchjob_item" data-stream-id="{{ cloudbatchjob.ID }}">
-                                    <td>{{ cloudbatchjob.ID }}</td>
-                                    <td>{{ cloudbatchjob.CREATE_DATETIME }}</td>
-                                    <td>
+                                    <td style="width: 60%; border-color:#fff;">{{ cloudbatchjob.ID }}</td>
+                                    <td style="width: 20%; border-color:#fff;">{{ cloudbatchjob.CREATE_DATETIME }}</td>
+                                    <td style="width: 10%; border-color:#fff;">
                                         <div class="button-overlay"><button onclick="location.href='/home/use-data-streaming/{{ stream.ID }}/{{ cloudbatchjob.ID }}';">Edit</button></div>
                                     </td>
-                                    <td>
+                                    <td style="width: 10%; border-color:#fff;">
                                         <div class="button-overlay"><button onclick="location.href='/home/view-cloudbatchjob-result/{{ stream.ID }}/{{ cloudbatchjob.ID }}';">View</button></div>
                                     </td>
                                 </tr>
