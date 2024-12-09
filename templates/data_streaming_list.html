@@ -81,8 +81,8 @@
                         <table id="data-streaming-table" class="display" style="width:90%">
                             <thead>
                                 <tr>
-                                    <th style="width: 60%; border-color:#fff;">ID</th>
-                                    <th style="width: 20%; border-color:#fff;">Createion DateTime</th>
+                                    <th style="width: 60%; border-color:#fff; text-align: center;">ID</th>
+                                    <th style="width: 20%; border-color:#fff; text-align: center;">Createion DateTime</th>
                                     <th style="width: 10%; border-color:#fff;"></th>
                                     <th style="width: 10%; border-color:#fff;"></th>
                                 </tr>
@@ -91,12 +91,12 @@
                                 {% if stream.CLOUDBATCHJOBLIST|length > 0 %}
                                 {% for cloudbatchjob in stream.CLOUDBATCHJOBLIST %}
                                 <tr name="cloudbatchjob_item" data-stream-id="{{ cloudbatchjob.ID }}">
-                                    <td style="width: 60%; border-color:#fff;">{{ cloudbatchjob.ID }}</td>
-                                    <td style="width: 20%; border-color:#fff;">{{ cloudbatchjob.CREATE_DATETIME }}</td>
-                                    <td style="width: 10%; border-color:#fff;">
+                                    <td style="width: 60%; border-color:#fff; text-align: center;">{{ cloudbatchjob.ID }}</td>
+                                    <td style="width: 20%; border-color:#fff; text-align: center;">{{ cloudbatchjob.CREATE_DATETIME }}</td>
+                                    <td style="width: 10%; border-color:#fff; text-align: center;">
                                         <div class="button-overlay"><button onclick="location.href='/home/use-data-streaming/{{ stream.ID }}/{{ cloudbatchjob.ID }}';">Edit</button></div>
                                     </td>
-                                    <td style="width: 10%; border-color:#fff;">
+                                    <td style="width: 10%; border-color:#fff; text-align: center;">
                                         <div class="button-overlay"><button onclick="location.href='/home/view-cloudbatchjob-result/{{ stream.ID }}/{{ cloudbatchjob.ID }}';">View</button></div>
                                     </td>
                                 </tr>
