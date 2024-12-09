@@ -75,14 +75,14 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         command_for_BatchJob += f'java -jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar AWSBatch {job_name} {requestid} {requestContentInJSON["FUT_OPT"]} {requestContentInJSON["FROMDATE"]} {requestContentInJSON["FROMTIME"]} && '
         command_for_BatchJob += f'touch {job_name}.log && '
         command_for_BatchJob += f'aws s3 cp {job_name}.log s3://projectbcloudbatchjoboutputfile/{requestid}/{job_name}.log && '
-        command_for_BatchJob += f'(echo "* * * * * aws s3 cp {job_name}.log s3://projectbcloudbatchjoboutputfile/{requestid}/{job_name}.log") | crontab - | systemctl start crond'
+        command_for_BatchJob += f'(echo \"* * * * * aws s3 cp {job_name}.log s3://projectbcloudbatchjoboutputfile/{requestid}/{job_name}.log\") | crontab - | systemctl start crond'
 
         command_for_call_aws_batch = ""
         command_for_call_aws_batch += 'aws batch submit-job --job-name '+job_name+' --job-definition '+job_definition_name+' '
         command_for_call_aws_batch += '--job-queue '+job_queue_name+' '
         command_for_call_aws_batch += '--region ap-south-1 '
         command_for_call_aws_batch += '--container-overrides \'{'
-        command_for_call_aws_batch += "    'command': ['sh', '-c', '"+command_for_BatchJob+"'], "
+        command_for_call_aws_batch += '    "command": ["sh", "-c", "'+command_for_BatchJob+'"], '
         command_for_call_aws_batch += '    "environment": [ '
         command_for_call_aws_batch += '    {"name": "AWS_ACCESS_KEY_ID", "value": "'+app.config['AWS_ACCESS_KEY_ID']+'"}, '
         command_for_call_aws_batch += '    {"name": "AWS_SECRET_ACCESS_KEY", "value": "'+app.config['AWS_SECRET_ACCESS_KEY']+'"}]}\' '
