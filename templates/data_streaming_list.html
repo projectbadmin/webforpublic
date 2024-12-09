@@ -70,25 +70,21 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="detailsModalLabel">Cloud Batch Job List</h5>
-                    <div class="button-overlay">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
                 </div>
                 <div class="modal-body modal-body-longer">
-                    {% if stream.STATUS == "ACTIVE" %}
                     <td>
-                        <div class="icon-button-visible button-overlay"><button onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';">Add</button></div>
+                        <div class="icon-button-visible button-overlay"><button
+                                onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';">Add</button></div>
                     </td>
-                    {% endif %}
                     <!-- Modal content will be populated here -->
-                    <div id="modal-content" class="d-flex justify-content-center align-items-center">
-                        <table id="data-streaming-table" class="display">
+                    <div id="modal-content" class=" justify-content-center align-items-center">
+                        <table id="data-streaming-table" class="display" style="width:90%">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Createion DateTime</th>
+                                    <th style="width: 60%; border-color:#fff;">ID</th>
+                                    <th style="width: 20%; border-color:#fff;">Createion DateTime</th>
+                                    <th style="width: 10%; border-color:#fff;"></th>
+                                    <th style="width: 10%; border-color:#fff;"></th>
                                 </tr>
                             </thead>
                             <tbody>

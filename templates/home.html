@@ -14,17 +14,13 @@
     </script>
 </head>
 <body>
+    {% if session.cookie is none %}
+    <div class="button-overlay"><button onclick="location.href='/login';">Login</button></div>
+    {% else %}
+    <div class="button-overlay"><button onclick="location.href='/logout';">Logout</button></div>
+    {% endif %}
     <header>
         <h1>Welcome to the Job Management System</h1>
-        <nav>
-            <ul>
-                {% if session.cookie is none %}
-                    <li><a href="/login">Login</a></li>
-                {% else %}
-                    <li><a href="/logout">Logout</a></li>
-                {% endif %}
-            </ul>
-        </nav>
     </header>
     <main>
         <section id="running-jobs">
