@@ -36,6 +36,15 @@ html {
     border-radius: 5px;
 }
 
+/* Disabled button styles */
+.button-overlay button:disabled {
+    padding: 10px 20px;
+        margin: 5px;
+        background-color: #9e9e9ef7;
+        color: #fff;
+        border-radius: 5px;
+}
+
 /* Hover effect for buttons */
 .button-overlay button:hover {
     background-color: #1badb8f7;
