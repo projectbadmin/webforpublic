@@ -72,7 +72,8 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         command_for_BatchJobScript += f'java -jar cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar AWSBatch {job_name} {requestid} {requestContentInJSON["FUT_OPT"]} {requestContentInJSON["FROMDATE"]} {requestContentInJSON["FROMTIME"]} \n'
         command_for_BatchJobScript += f'touch {job_name}.log \n'
         command_for_BatchJobScript += f'aws s3 cp {job_name}.log s3://projectbcloudbatchjoboutputfile/{requestid}/{job_name}.log \n'
-        command_for_BatchJobScript += f'(echo "* * * * * aws s3 cp {job_name}.log s3://projectbcloudbatchjoboutputfile/{requestid}/{job_name}.log") | crontab - | systemctl start crond'
+        command_for_BatchJobScript += f'(echo "* * * * * aws s3 cp {job_name}.log s3://projectbcloudbatchjoboutputfile/{requestid}/{job_name}.log") | crontab -\n'
+        command_for_BatchJobScript += f'systemctl start crond'
         script_content = f"""#!/bin/bash
         {command_for_BatchJobScript}
         """
@@ -88,6 +89,7 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         command_for_BatchJob = ""
         command_for_BatchJob += "yum -y install java &&"
         command_for_BatchJob += "yum -y install awscli &&"
+        command_for_BatchJob += "yum -y install systemd &&"
         command_for_BatchJob += "yum -y install cronie &&"
         command_for_BatchJob += f"aws s3 cp s3://projectbcloudbatchjobprogramfile/{requestid}/{job_name}/run_batch_job_{job_name}.sh . && "
         command_for_BatchJob += f"chmod +x run_batch_job_{job_name}.sh && "
