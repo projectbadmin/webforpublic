@@ -1,11 +1,25 @@
 .CodeMirror {
     width: 1000px;
-    height: 100px;
-    font-family: 'Courier New', Courier, monospace;
+    height: 90vh;
+    border: 1px solid #ccc;
+    font-family: 'Fira Code', monospace;
     font-size: 14px;
     background-color: #ffffff;
     color: #2e2e2e;
     resize: none;
+}
+
+.CodeMirror-gutters {
+    background: #1e1e1e;
+    border-right: 1px solid #444;
+}
+
+.CodeMirror-linenumber {
+    color: #888;
+}
+
+.CodeMirror-cursor {
+    border-left: 1px solid #ffffff;
 }
 
 .code-label {
