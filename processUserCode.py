@@ -40,7 +40,7 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         app.logger.info(f"Ran Maven build in {project_dir}")
 
         # grant full access to the jat file
-        subprocess.run([f"sudo chmod 777 {app.config['project_dir']}target/cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar"], capture_output=True, text=True, shell=True)
+        subprocess.run([f"sudo chmod 777 {project_dir}target/cloudBatchJobInJava-0.0.1-SNAPSHOT-jar-with-dependencies.jar"], capture_output=True, text=True, shell=True)
 
         # Run the jar file
         if app.config['env'] == 'local':
