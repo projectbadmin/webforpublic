@@ -211,19 +211,16 @@ def use_data_streaming_and_save(tempPageRequestID):
         session['CloudBatchJobLocalDraft'] = []
 
     # check if the cloudbatchjob is in draft    
-    original_position_cloudbatchjob_in_draft = -1
+    new_temp_session_value = []
     for i in range(len(session['CloudBatchJobLocalDraft'])):
-        if session['CloudBatchJobLocalDraft'][i]['ID'] == tempPageRequestID:
-            session['CloudBatchJobLocalDraft'][i] = temp_session_value
-            original_value_cloudbatchjob_in_draft = i
-            break
-    if original_position_cloudbatchjob_in_draft != -1:
-        session['CloudBatchJobLocalDraft'][original_position_cloudbatchjob_in_draft] = temp_session_value 
-        return "Already exist, Saved successfully"
+        if session['CloudBatchJobLocalDraft'][i]['ID'] != tempPageRequestID:
+            new_temp_session_value.append(session['CloudBatchJobLocalDraft'][i])
     
+    new_temp_session_value.append(temp_session_value)
+
+    session['CloudBatchJobLocalDraft'] = new_temp_session_value
     
-    session['CloudBatchJobLocalDraft'].append(temp_session_value)
-    return "New create, Saved successfully"
+    return "Saved successfully"
     
 
 @application.route('/home/view-cloudbatchjob-result/<stream_id>/<cloudbatchjob_id>')
