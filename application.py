@@ -212,9 +212,9 @@ def use_data_streaming_and_save(tempPageRequestID):
     for key in session.get('CloudBatchJobLocalDraft'):
         if key['ID'] == tempPageRequestID:
             key = temp_session_value
-            return "Saved successfully"
+            return "Already exist, Saved successfully"
     session['CloudBatchJobLocalDraft'].append(temp_session_value)
-    return "Saved successfully"
+    return "New create, Saved successfully"
     
 
 @application.route('/home/view-cloudbatchjob-result/<stream_id>/<cloudbatchjob_id>')
