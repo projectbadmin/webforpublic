@@ -193,10 +193,8 @@ def use_data_streaming_and_save(tempPageRequestID):
     code_for_onStart = request.form['code_for_onStart']
     code_for_onProcess = request.form['code_for_onProcess']
     code_for_onEnd = request.form['code_for_onEnd']
-    if session.get('CloudBatchJobLocalDraft', None) is None:
-        session['CloudBatchJobLocalDraft'] = []
-    session['CloudBatchJobLocalDraft'].append(
-    {
+
+    temp_session_value =  {
         'requestid': requestid,
         'job_alias': job_alias,
         'requestContentInJSON': requestContentInJSON,
@@ -208,8 +206,15 @@ def use_data_streaming_and_save(tempPageRequestID):
         'STATUS': 'DRAFT',
         'ID': tempPageRequestID
     }
-    )
-    return "saved locally"
+
+    if session.get('CloudBatchJobLocalDraft', None) is None:
+        session['CloudBatchJobLocalDraft'] = []
+    for key in session.get('CloudBatchJobLocalDraft'):
+        if key['ID'] == tempPageRequestID:
+            key = temp_session_value
+            return "Saved successfully"
+    session['CloudBatchJobLocalDraft'].append(temp_session_value)
+    return "Saved successfully"
     
 
 @application.route('/home/view-cloudbatchjob-result/<stream_id>/<cloudbatchjob_id>')
