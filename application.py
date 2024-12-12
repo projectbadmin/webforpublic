@@ -205,6 +205,7 @@ def use_data_streaming_and_save(tempPageRequestID):
         'STATUS': 'DRAFT',
         'ID': tempPageRequestID
     }
+    return "saved locally"
     
 
 @application.route('/home/view-cloudbatchjob-result/<stream_id>/<cloudbatchjob_id>')
