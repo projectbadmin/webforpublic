@@ -176,7 +176,8 @@ def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
     if len(cloudbatchjoblist) > 0:
         alias = cloudbatchjoblist[0].get('ALIAS', 'No message found')
     else:
-        alias = 'No message found'
+        cloudbatchjob_in_session = session.get(cloudbatchjob_id, 'No cloudbatchjob_id found')
+        alias = cloudbatchjob_in_session.get('ALIAS', 'No message found')
     cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias)
     return cloudbatchjobinjava_template
 
@@ -199,6 +200,10 @@ def use_data_streaming_and_save(tempPageRequestID):
         'code_for_onStart': code_for_onStart,
         'code_for_onProcess': code_for_onProcess,
         'code_for_onEnd': code_for_onEnd,
+        'status': 'DRAFT',
+        'ALIAS': job_alias,
+        'STATUS': 'DRAFT',
+        'ID': tempPageRequestID
     }
     
 

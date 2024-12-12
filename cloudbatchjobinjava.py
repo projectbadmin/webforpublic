@@ -32,11 +32,24 @@ def cloudbatchjobinjava(application, requestid, requestContentInJSON):
 def cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias):
     read_javap_result(application)
     tempPageRequestID = cloudbatchjob_id
-    session[tempPageRequestID] = {
-        'requestid': requestid,
-        'requestContentInJSON': requestContentInJSON
-    }
+    cloudbatchjob_in_draft = False 
+    if tempPageRequestID in session:
+        cloudbatchjob_in_draft = True
+    else:
+        session[tempPageRequestID] = {
+            'requestid': requestid,
+            'requestContentInJSON': requestContentInJSON
+        }
+
     shutil.rmtree(f"{application.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
+
+    # use session value dirrectly
+    if cloudbatchjob_in_draft:
+        code_for_onStart = session[tempPageRequestID]['code_for_onStart']
+        code_for_onProcess = session[tempPageRequestID]['code_for_onProcess']
+        code_for_onEnd = session[tempPageRequestID]['code_for_onEnd']
+        return render_template('cloudbatchjobinjava.html', newReq=False, tempPageRequestID=tempPageRequestID, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd, alias=alias)
+
 
     # get the code for onStart, onProcess, onEnd
     env = os.environ.copy()

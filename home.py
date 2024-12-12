@@ -24,12 +24,25 @@ def get_dataStreamingList(stream_status, retention_hour, class_code, id, cloudba
             "ID": cloudbatchjob_id
         }   
     )
+
+    cloudBatchJobListInSession = []
+    for key in session.keys():
+        if session[key].get('status') == 'DRAFT':
+            cloudBatchJobListInSession.append(session[key])
+
     if 'message' in cloudBatchJobList and cloudBatchJobList.get('message', 'No message found')=='request fail':
         return {}
     
+    # set the cloudBatchJobList from DB to the corresponding dataStream
     for dataStream in dataStreamList:
         for cloudBatchJob in cloudBatchJobList:
             if dataStream['ID'] == cloudBatchJob['DATA_STREAM_ID']:
+                dataStream['CLOUDBATCHJOBLIST'].append(cloudBatchJob)
+
+    # set the cloudBatchJobList from section to the corresponding dataStream
+    for dataStream in dataStreamList:
+        for cloudBatchJob in cloudBatchJobListInSession:
+            if dataStream['ID'] == cloudBatchJob['requestid']:
                 dataStream['CLOUDBATCHJOBLIST'].append(cloudBatchJob)
     
     return dataStreamList

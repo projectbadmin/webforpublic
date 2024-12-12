@@ -149,6 +149,7 @@
                 })
                 .catch(error => console.error('Error checking syntax:', error));
             }
+            saveAsDraft();
         }
 
         var onprocess_annotations = [];
@@ -192,6 +193,7 @@
                 })
                 .catch(error => console.error('Error checking syntax:', error));
             }
+            saveAsDraft();
         }
 
         var onend_annotations = [];
@@ -235,6 +237,7 @@
                 })
                 .catch(error => console.error('Error checking syntax:', error));
             }
+            saveAsDraft();
         }   
 
         function check_and_generate_keywords(cm, event, method) {
@@ -262,6 +265,15 @@
                 })
                 .catch(error => console.error('Error:', error));
             }
+        }
+
+        
+        function saveAsDraft(){
+            var formData = new FormData(this);
+            fetch('/home/use-data-streaming/save/'+ document.querySelector('param[name="tempPageRequestID"]').value, {
+                method: 'POST',
+                body: formData
+            })
         }
     </script>
 </body>
