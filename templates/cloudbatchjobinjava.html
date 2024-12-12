@@ -22,6 +22,10 @@
         <param id="tempPageRequestID" name="tempPageRequestID" value='{{ tempPageRequestID }}'>
         <p style="margin: 50px 0;"></p>
         <div>
+            <label for="code_for_onStart" class="code-label">Job alias: </label>
+            <input type="text" id="job_alias" name="job_alias" value="{{ alias }}">
+        </div>
+        <div>
             <label for="code_for_onStart" class="code-label">onStart() {</label>
             <textarea id="code_for_onStart" name="code_for_onStart">{{ code_for_onStart }}</textarea>
             <label for="code_for_onStart" class="code-label">}</label>

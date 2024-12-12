@@ -3,7 +3,7 @@ from flask import redirect, request, session, url_for, jsonify
 from commonFunction import send_post_request
 
 
-def get_dataStreamingList(stream_status, retention_hour, class_code, id):
+def get_dataStreamingList(stream_status, retention_hour, class_code, id, cloudbatchjob_id):
     dataStreamList = send_post_request(
         'https://at05fj659h.execute-api.ap-south-1.amazonaws.com/DataStreamingList', 
         {
@@ -20,7 +20,9 @@ def get_dataStreamingList(stream_status, retention_hour, class_code, id):
         dataStream['CLOUDBATCHJOBLIST'] = []
     
     cloudBatchJobList = send_post_request(
-        'https://friwpvbini.execute-api.ap-south-1.amazonaws.com/Get_CloudBatchJob',{}   
+        'https://friwpvbini.execute-api.ap-south-1.amazonaws.com/Get_CloudBatchJob',{
+            "ID": cloudbatchjob_id
+        }   
     )
     if 'message' in cloudBatchJobList and cloudBatchJobList.get('message', 'No message found')=='request fail':
         return {}

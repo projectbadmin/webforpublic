@@ -8,7 +8,7 @@ from flask import session
 
 from commonFunction import send_post_request
 
-def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid, requestContentInJSON):
+def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid, requestContentInJSON, job_alias):
     try:
         # Set environment variables
         env = os.environ.copy()
@@ -89,7 +89,8 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         
         requestContentInJSON = {
             "CLOUD_BATCHJOB_ID": job_name,
-            "DATA_STREAM_ID": requestid
+            "DATA_STREAM_ID": requestid,
+            "JOB_ALIAS": job_alias
         }
         response = send_post_request(
             'https://vslvilrd63.execute-api.ap-south-1.amazonaws.com/Create_Cloud_BatchJob', requestContentInJSON
