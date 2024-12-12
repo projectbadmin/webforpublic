@@ -32,10 +32,14 @@ def cloudbatchjobinjava(application, requestid, requestContentInJSON):
 def cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias):
     read_javap_result(application)
     tempPageRequestID = cloudbatchjob_id
+    
+    # check if the cloudbatchjob is in draft
     cloudbatchjob_in_draft = False 
+    cloudbatchjob_in_draft_value = []
     for key in session.get('CloudBatchJobLocalDraft'):
         if key['ID'] == cloudbatchjob_id:
             cloudbatchjob_in_draft = True
+            cloudbatchjob_in_draft_value = key
             break
     
     if not cloudbatchjob_in_draft:
@@ -48,9 +52,9 @@ def cloudbatchjobinjava_edit_program_file(application, requestid, requestContent
 
     # use session value dirrectly
     if cloudbatchjob_in_draft:
-        code_for_onStart = session.get(tempPageRequestID)['code_for_onStart']
-        code_for_onProcess = session.get(tempPageRequestID)['code_for_onProcess']
-        code_for_onEnd = session.get(tempPageRequestID)['code_for_onEnd']
+        code_for_onStart = cloudbatchjob_in_draft_value['code_for_onStart']
+        code_for_onProcess = cloudbatchjob_in_draft_value['code_for_onProcess']
+        code_for_onEnd = cloudbatchjob_in_draft_value['code_for_onEnd']
         return render_template('cloudbatchjobinjava.html', newReq=False, tempPageRequestID=tempPageRequestID, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd, alias=alias)
 
 
