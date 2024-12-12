@@ -193,7 +193,10 @@ def use_data_streaming_and_save(tempPageRequestID):
     code_for_onStart = request.form['code_for_onStart']
     code_for_onProcess = request.form['code_for_onProcess']
     code_for_onEnd = request.form['code_for_onEnd']
-    session[tempPageRequestID] = {
+    if session.get('CloudBatchJobLocalDraft', None) is None:
+        session['CloudBatchJobLocalDraft'] = []
+    session['CloudBatchJobLocalDraft'].append(
+    {
         'requestid': requestid,
         'job_alias': job_alias,
         'requestContentInJSON': requestContentInJSON,
@@ -205,6 +208,7 @@ def use_data_streaming_and_save(tempPageRequestID):
         'STATUS': 'DRAFT',
         'ID': tempPageRequestID
     }
+    )
     return "saved locally"
     
 
