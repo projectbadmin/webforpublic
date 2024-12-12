@@ -27,8 +27,10 @@ def get_dataStreamingList(stream_status, retention_hour, class_code, id, cloudba
 
     cloudBatchJobListInSession = []
     for key in session.keys():
-        if 'status' in session[key] and session[key].get('status') == 'DRAFT':
-            cloudBatchJobListInSession.append(session[key])
+        if isinstance(session[key], list):
+            for item in session[key]:
+                if item.get('status') == 'DRAFT':
+                    cloudBatchJobListInSession.append(item)
 
     if 'message' in cloudBatchJobList and cloudBatchJobList.get('message', 'No message found')=='request fail':
         return {}
