@@ -33,9 +33,12 @@ def cloudbatchjobinjava_edit_program_file(application, requestid, requestContent
     read_javap_result(application)
     tempPageRequestID = cloudbatchjob_id
     cloudbatchjob_in_draft = False 
-    if tempPageRequestID in session:
-        cloudbatchjob_in_draft = True
-    else:
+    for key in session.get('CloudBatchJobLocalDraft'):
+        if key['ID'] == cloudbatchjob_id:
+            cloudbatchjob_in_draft = True
+            break
+    
+    if not cloudbatchjob_in_draft:
         session[tempPageRequestID] = {
             'requestid': requestid,
             'requestContentInJSON': requestContentInJSON
