@@ -180,16 +180,27 @@ def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
     cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias)
     return cloudbatchjobinjava_template
 
-@application.route('/home/use-data-streaming/<stream_id>/save', methods=['POST'])
-def use_data_streaming_and_save(stream_id):
-    filtered_list = get_dataStreamingList("", "", "", stream_id, "")
-    if len(filtered_list) == 0:
-        return "Invalid stream id"
-    requestid = filtered_list[0].get('ID', 'No message found')
-    requestContentInJSON = filtered_list[0].get('REQUEST_CONTENT', 'No message found')
-    cloudbatchjobinjava_template = cloudbatchjobinjava(application, requestid, requestContentInJSON)
-    return cloudbatchjobinjava_template
 
+@application.route('/home/use-data-streaming/save/<tempPageRequestID>', methods=['POST'])
+def use_data_streaming_and_save(tempPageRequestID):
+    tempPageRequestID_value = session.get(tempPageRequestID, 'No request found')
+    if(tempPageRequestID_value=='No request found'):
+        return render_template('error.html', error_message="No request found")
+    requestid = tempPageRequestID_value['requestid']
+    job_alias = request.form['job_alias']
+    requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
+    code_for_onStart = request.form['code_for_onStart']
+    code_for_onProcess = request.form['code_for_onProcess']
+    code_for_onEnd = request.form['code_for_onEnd']
+    session[tempPageRequestID] = {
+        'requestid': requestid,
+        'job_alias': job_alias,
+        'requestContentInJSON': requestContentInJSON,
+        'code_for_onStart': code_for_onStart,
+        'code_for_onProcess': code_for_onProcess,
+        'code_for_onEnd': code_for_onEnd,
+    }
+    
 
 @application.route('/home/view-cloudbatchjob-result/<stream_id>/<cloudbatchjob_id>')
 def view_cloudbatchjob_result(stream_id, cloudbatchjob_id):
@@ -213,6 +224,7 @@ def before_request():
             return "Method not allowed", 405
         logged_in = check_logged_in_or_not()
         if not logged_in:
+            session.clear()
             return redirect(url_for('login'))
 
 if __name__ == '__main__':

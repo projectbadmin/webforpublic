@@ -90,7 +90,8 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         requestContentInJSON = {
             "CLOUD_BATCHJOB_ID": job_name,
             "DATA_STREAM_ID": requestid,
-            "JOB_ALIAS": job_alias
+            "JOB_ALIAS": job_alias,
+            "STATUS": "SUBMITTED"
         }
         response = send_post_request(
             'https://vslvilrd63.execute-api.ap-south-1.amazonaws.com/Create_Cloud_BatchJob', requestContentInJSON
