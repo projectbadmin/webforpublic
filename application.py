@@ -209,10 +209,19 @@ def use_data_streaming_and_save(tempPageRequestID):
 
     if session.get('CloudBatchJobLocalDraft', None) is None:
         session['CloudBatchJobLocalDraft'] = []
-    for key in session.get('CloudBatchJobLocalDraft'):
-        if key['ID'] == tempPageRequestID:
-            key = temp_session_value
-            return "Already exist, Saved successfully"
+
+    # check if the cloudbatchjob is in draft    
+    original_position_cloudbatchjob_in_draft = -1
+    for i in range(len(session['CloudBatchJobLocalDraft'])):
+        if session['CloudBatchJobLocalDraft'][i]['ID'] == tempPageRequestID:
+            session['CloudBatchJobLocalDraft'][i] = temp_session_value
+            original_value_cloudbatchjob_in_draft = i
+            break
+    if original_position_cloudbatchjob_in_draft != -1:
+        session['CloudBatchJobLocalDraft'][original_position_cloudbatchjob_in_draft] = temp_session_value 
+        return "Already exist, Saved successfully"
+    
+    
     session['CloudBatchJobLocalDraft'].append(temp_session_value)
     return "New create, Saved successfully"
     
