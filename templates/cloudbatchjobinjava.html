@@ -269,7 +269,11 @@
 
         
         function saveAsDraft(){
-            var formData = new FormData(main);
+            let formData = new FormData();
+            formData.append('job_alias', document.getElementById('job_alias').value);
+            formData.append('code_for_onStart', editor_for_OnStart.getValue());
+            formData.append('code_for_onProcess', editor_for_OnProcess.getValue());
+            formData.append('code_for_onEnd', editor_for_OnEnd.getValue());
             fetch('/home/use-data-streaming/save/'+ document.querySelector('param[name="tempPageRequestID"]').value, {
                 method: 'POST',
                 body: formData
