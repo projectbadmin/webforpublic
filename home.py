@@ -25,7 +25,7 @@ def get_dataStreamingList(stream_status, retention_hour, class_code, id, cloudba
         }   
     )
 
-    cloudBatchJobListInSession = session['CloudBatchJobLocalDraft']
+    cloudBatchJobListInSession = session.get('CloudBatchJobLocalDraft')
 
     if 'message' in cloudBatchJobList and cloudBatchJobList.get('message', 'No message found')=='request fail':
         return {}
