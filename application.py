@@ -170,11 +170,24 @@ def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
     filtered_list = get_dataStreamingList("", "", "", stream_id, cloudbatchjob_id)
     if len(filtered_list) == 0:
         return "Invalid stream id"
-    status = filtered_list[0].get('STATUS', 'No message found')
     requestid = filtered_list[0].get('ID', 'No message found')
-    alias = filtered_list[0].get('ALIAS', 'No message found')
     requestContentInJSON = filtered_list[0].get('REQUEST_CONTENT', 'No message found')
+    cloudbatchjoblist = filtered_list[0].get('CLOUDBATCHJOBLIST')
+    if len(cloudbatchjoblist) > 0:
+        alias = cloudbatchjoblist[0].get('ALIAS', 'No message found')
+    else:
+        alias = 'No message found'
     cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias)
+    return cloudbatchjobinjava_template
+
+@application.route('/home/use-data-streaming/<stream_id>/save', methods=['POST'])
+def use_data_streaming_and_save(stream_id):
+    filtered_list = get_dataStreamingList("", "", "", stream_id, "")
+    if len(filtered_list) == 0:
+        return "Invalid stream id"
+    requestid = filtered_list[0].get('ID', 'No message found')
+    requestContentInJSON = filtered_list[0].get('REQUEST_CONTENT', 'No message found')
+    cloudbatchjobinjava_template = cloudbatchjobinjava(application, requestid, requestContentInJSON)
     return cloudbatchjobinjava_template
 
 
