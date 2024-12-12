@@ -148,8 +148,8 @@
                     updateLinting(onstart_annotations);
                 })
                 .catch(error => console.error('Error checking syntax:', error));
+                saveAsDraft();
             }
-            saveAsDraft();
         }
 
         var onprocess_annotations = [];
@@ -192,8 +192,8 @@
                     updateLinting(onprocess_annotations);
                 })
                 .catch(error => console.error('Error checking syntax:', error));
+                saveAsDraft();
             }
-            saveAsDraft();
         }
 
         var onend_annotations = [];
@@ -236,8 +236,8 @@
                     updateLinting(onend_annotations);
                 })
                 .catch(error => console.error('Error checking syntax:', error));
+                saveAsDraft();
             }
-            saveAsDraft();
         }   
 
         function check_and_generate_keywords(cm, event, method) {
