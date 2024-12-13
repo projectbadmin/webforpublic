@@ -112,6 +112,8 @@ def cloneToNewRequest(application, requestid, requestContentInJSON, code_for_onS
         'STATUS': 'DRAFT',
         'ID': tempPageRequestID
     }
+    if 'CloudBatchJobLocalDraft' not in session:
+        session['CloudBatchJobLocalDraft'] = []
     temp_CloudBatchJobLocalDraft = session['CloudBatchJobLocalDraft']
     temp_CloudBatchJobLocalDraft.append(temp_session_value)
     session['CloudBatchJobLocalDraft'] = temp_CloudBatchJobLocalDraft
