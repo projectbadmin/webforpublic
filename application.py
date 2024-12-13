@@ -242,9 +242,10 @@ def use_data_streaming_clone(stream_id):
         if session['CloudBatchJobLocalDraft'][i]['ID'] == clone_from:
             requestContentInJSON = session['CloudBatchJobLocalDraft'][i]['requestContentInJSON']
             break
-
-    clone_template = cloneToNewRequest(application, stream_id, requestContentInJSON, code_for_onStart, code_for_onProcess, code_for_onEnd, job_alias)
-    return clone_template
+    
+    # clone the request
+    clone_tempPageRequestID = cloneToNewRequest(application, stream_id, requestContentInJSON, code_for_onStart, code_for_onProcess, code_for_onEnd, job_alias)
+    return redirect(url_for(f'/home/use-data-streaming/{stream_id}/{clone_tempPageRequestID}'))
 
     
 

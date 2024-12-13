@@ -115,7 +115,23 @@ def cloneToNewRequest(application, requestid, requestContentInJSON, code_for_onS
         'requestContentInJSON': requestContentInJSON
     }
     shutil.rmtree(f"{application.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
-    return render_template('cloudbatchjobinjava.html', newReq=True, requestid=requestid, tempPageRequestID=tempPageRequestID, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd, alias=alias)
+    
+    temp_session_value =  {
+        'requestid': requestid,
+        'job_alias': alias,
+        'requestContentInJSON': requestContentInJSON,
+        'code_for_onStart': code_for_onStart,
+        'code_for_onProcess': code_for_onProcess,
+        'code_for_onEnd': code_for_onEnd,
+        'status': 'DRAFT',
+        'ALIAS': alias,
+        'STATUS': 'DRAFT',
+        'ID': tempPageRequestID
+    }
+
+    session['CloudBatchJobLocalDraft'].append(temp_session_value)
+
+    return tempPageRequestID
 
 
 def check_and_generate_keywords_(line, cursor_pos, method):
