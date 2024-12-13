@@ -111,6 +111,7 @@
         var onstart_annotations = [];
         function checkSyntaxForOnStart(cm, updateLinting, options) {
             if(editor_for_OnStart!=null){
+                saveAsDraft();
                 fetch('/cloudbatchjobinjava/check_syntax_for_onStart', {
                     method: 'POST',
                     headers: {
@@ -148,13 +149,13 @@
                     updateLinting(onstart_annotations);
                 })
                 .catch(error => console.error('Error checking syntax:', error));
-                saveAsDraft();
             }
         }
 
         var onprocess_annotations = [];
         function checkSyntaxForOnProcess(cm, updateLinting, options) {
             if(editor_for_OnProcess!=null){
+                saveAsDraft();
                 fetch('/cloudbatchjobinjava/check_syntax_for_onProcess', {
                     method: 'POST',
                     headers: {
@@ -192,13 +193,13 @@
                     updateLinting(onprocess_annotations);
                 })
                 .catch(error => console.error('Error checking syntax:', error));
-                saveAsDraft();
             }
         }
 
         var onend_annotations = [];
         function checkSyntaxForOnEnd(cm, updateLinting, options) {
             if(editor_for_OnEnd!=null){
+                saveAsDraft();
                 fetch('/cloudbatchjobinjava/check_syntax_for_onEnd', {
                     method: 'POST',
                     headers: {
@@ -236,7 +237,6 @@
                     updateLinting(onend_annotations);
                 })
                 .catch(error => console.error('Error checking syntax:', error));
-                saveAsDraft();
             }
         }   
 
