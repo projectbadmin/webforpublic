@@ -157,32 +157,43 @@ def request_new_data_streaming():
 
 @application.route('/home/use-data-streaming/<stream_id>')
 def use_data_streaming(stream_id):
-    filtered_list = get_dataStreamingList("", "", "", stream_id, "")
-    if len(filtered_list) == 0:
-        return "Invalid stream id"
-    requestid = filtered_list[0].get('ID', 'No message found')
-    requestContentInJSON = filtered_list[0].get('REQUEST_CONTENT', 'No message found')
-    cloudbatchjobinjava_template = cloudbatchjobinjava(application, requestid, requestContentInJSON)
-    return cloudbatchjobinjava_template
+    for i in range(len(session['CloudBatchJobSubmitted'])):
+        if session['CloudBatchJobSubmitted'][i]['ID'] == stream_id:
+            requestid = session['CloudBatchJobSubmitted'][i]['ID']
+            requestContentInJSON = session['CloudBatchJobSubmitted'][i]['REQUEST_CONTENT']
+            cloudbatchjobinjava_template = cloudbatchjobinjava(application, requestid, requestContentInJSON)
+            return cloudbatchjobinjava_template
     
 
 @application.route('/home/use-data-streaming/<stream_id>/<cloudbatchjob_id>')
 def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
-    filtered_list = get_dataStreamingList("", "", "", stream_id, cloudbatchjob_id)
-    if len(filtered_list) == 0:
-        return "Invalid stream id"
-    requestid = filtered_list[0].get('ID', 'No message found')
-    requestContentInJSON = filtered_list[0].get('REQUEST_CONTENT', 'No message found')
-    cloudbatchjoblist = filtered_list[0].get('CLOUDBATCHJOBLIST')
-    if len(cloudbatchjoblist) > 0:
-        alias = cloudbatchjoblist[0].get('ALIAS', 'No message found')
-        status = cloudbatchjoblist[0].get('STATUS', 'No message found')
-    else:
-        cloudbatchjob_in_session = session.get(cloudbatchjob_id, 'No cloudbatchjob_id found')
-        alias = cloudbatchjob_in_session.get('ALIAS', 'No message found')
-        status = cloudbatchjob_in_session.get('STATUS', 'No message found')
-    cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias, status)
-    return cloudbatchjobinjava_template
+    temp_check = False
+    for i in range(len(session['CloudBatchJobSubmitted'])):
+        if session['CloudBatchJobSubmitted'][i]['ID'] == stream_id:
+            requestid = session['CloudBatchJobSubmitted'][i]['ID']
+            requestContentInJSON = session['CloudBatchJobSubmitted'][i]['REQUEST_CONTENT']
+            if len(session['CloudBatchJobSubmitted'][i]['CLOUDBATCHJOBLIST']):
+                for j in range(len(session['CloudBatchJobSubmitted'][i]['CLOUDBATCHJOBLIST'])):
+                    if session['CloudBatchJobSubmitted'][i]['CLOUDBATCHJOBLIST'][j]['ID'] == cloudbatchjob_id:
+                        alias = session['CloudBatchJobSubmitted'][i]['CLOUDBATCHJOBLIST'][j]['ALIAS']
+                        status = session['CloudBatchJobSubmitted'][i]['CLOUDBATCHJOBLIST'][j]['STATUS']
+                        temp_check = True
+                        cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias, status)
+                        return cloudbatchjobinjava_template
+    
+    if not temp_check:
+        if session.get('CloudBatchJobLocalDraft', None) is not None:
+            for i in range(len(session['CloudBatchJobLocalDraft'])):
+                if session['CloudBatchJobLocalDraft'][i]['ID'] == cloudbatchjob_id:
+                    requestid = session['CloudBatchJobLocalDraft'][i]['requestid']
+                    requestContentInJSON = session['CloudBatchJobLocalDraft'][i]['requestContentInJSON']
+                    alias = session['CloudBatchJobLocalDraft'][i]['job_alias']
+                    status = session['CloudBatchJobLocalDraft'][i]['status']
+                    cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias, status)
+                    return cloudbatchjobinjava_template
+
+    if not temp_check:
+        return render_template('error.html', error_message="Cloub Batch Job not found")
 
 
 @application.route('/home/use-data-streaming/save/<tempPageRequestID>', methods=['POST'])
@@ -238,10 +249,9 @@ def use_data_streaming_clone(stream_id):
 
     # get the requestContentInJSON
     requestContentInJSON = {}
-    for i in range(len(session['CloudBatchJobLocalDraft'])):
-        if session['CloudBatchJobLocalDraft'][i]['ID'] == clone_from:
-            requestContentInJSON = session['CloudBatchJobLocalDraft'][i]['requestContentInJSON']
-            break
+    for i in range(len(session['CloudBatchJobSubmitted'])):
+        if session['CloudBatchJobSubmitted'][i]['ID'] == stream_id:
+            requestContentInJSON = session['CloudBatchJobSubmitted'][i]['REQUEST_CONTENT']
     
     # clone the request
     clone_tempPageRequestID = cloneToNewRequest(application, stream_id, requestContentInJSON, code_for_onStart, code_for_onProcess, code_for_onEnd, job_alias)

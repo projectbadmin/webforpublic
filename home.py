@@ -35,6 +35,7 @@ def get_dataStreamingList(stream_status, retention_hour, class_code, id, cloudba
         for cloudBatchJob in cloudBatchJobList:
             if dataStream['ID'] == cloudBatchJob['DATA_STREAM_ID']:
                 dataStream['CLOUDBATCHJOBLIST'].append(cloudBatchJob)
+    session['CloudBatchJobSubmitted'] = dataStreamList
 
     # set the cloudBatchJobList from section to the corresponding dataStream
     if cloudBatchJobListInSession is not None:

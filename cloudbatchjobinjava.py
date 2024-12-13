@@ -21,10 +21,6 @@ classMethodsforOnEnd = {}
 def cloudbatchjobinjava(application, requestid, requestContentInJSON):
     read_javap_result(application)
     tempPageRequestID = str(uuid.uuid4())
-    session[tempPageRequestID] = {
-        'requestid': requestid,
-        'requestContentInJSON': requestContentInJSON
-    }
     shutil.rmtree(f"{application.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
     return render_template('cloudbatchjobinjava.html', newReq=True, requestid=requestid, tempPageRequestID=tempPageRequestID, code_for_onStart="", code_for_onProcess="", code_for_onEnd="", alias="", status="NEW")
 
@@ -43,15 +39,9 @@ def cloudbatchjobinjava_edit_program_file(application, requestid, requestContent
                 cloudbatchjob_in_draft_value = key
                 break
     
-    if not cloudbatchjob_in_draft:
-        session[tempPageRequestID] = {
-            'requestid': requestid,
-            'requestContentInJSON': requestContentInJSON
-        }
-
     shutil.rmtree(f"{application.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
 
-    # use session value dirrectly
+    # use session value directly
     if cloudbatchjob_in_draft:
         code_for_onStart = cloudbatchjob_in_draft_value['code_for_onStart']
         code_for_onProcess = cloudbatchjob_in_draft_value['code_for_onProcess']
@@ -110,11 +100,6 @@ def cloudbatchjobinjava_edit_program_file(application, requestid, requestContent
 def cloneToNewRequest(application, requestid, requestContentInJSON, code_for_onStart, code_for_onProcess, code_for_onEnd, job_alias):
     read_javap_result(application)
     tempPageRequestID = str(uuid.uuid4())
-    session[tempPageRequestID] = {
-        'requestid': requestid,
-        'requestContentInJSON': requestContentInJSON
-    }
-    
     temp_session_value =  {
         'requestid': requestid,
         'job_alias': job_alias,
