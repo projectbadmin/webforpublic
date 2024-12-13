@@ -178,6 +178,7 @@ def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
     else:
         cloudbatchjob_in_session = session.get(cloudbatchjob_id, 'No cloudbatchjob_id found')
         alias = cloudbatchjob_in_session.get('ALIAS', 'No message found')
+    application.logger.info('2222 --- CloudBatchJobLocalDraft:' + str(session['CloudBatchJobLocalDraft']))
     cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias)
     return cloudbatchjobinjava_template
 
@@ -220,6 +221,8 @@ def use_data_streaming_and_save(tempPageRequestID):
 
     session['CloudBatchJobLocalDraft'] = new_temp_session_value
     session.modified = True  # Force save the session
+
+    application.logger.info('1111 --- CloudBatchJobLocalDraft:' + str(session['CloudBatchJobLocalDraft']))
 
     return "Saved successfully"
     
