@@ -17,11 +17,10 @@
 </head>
 <body>
     <div class="button-overlay"><button onclick="location.href='/home';">Back</button></div>
-    {% if status == 'SUBMITTED' %}
-    <div class="button-overlay"><button onclick="location.href='/home';">Clone</button></div>
-    {% endif %}
+    <div class="button-overlay"><button onclick="cloneToNewRequest();">Clone</button></div>
     <h1 class="header">Java Code Editor</h1>
     <form id="main" action="/cloudbatchjobinjava/submit/{{tempPageRequestID}}" method="post">
+        <param id="requestid" name="requestid" value='{{ requestid }}'>
         <param id="tempPageRequestID" name="tempPageRequestID" value='{{ tempPageRequestID }}'>
         <p style="margin: 50px 0;"></p>
         <div>
@@ -284,6 +283,21 @@
         }
     </script>
     {% endif %}
+    <script>
+        function cloneToNewRequest() {
+            let formData = new FormData();
+            formData.append('job_alias', document.getElementById('job_alias').value);
+            formData.append('clone_from', document.querySelector('param[name="tempPageRequestID"]').value);
+            formData.append('code_for_onStart', editor_for_OnStart.getValue());
+            formData.append('code_for_onProcess', editor_for_OnProcess.getValue());
+            formData.append('code_for_onEnd', editor_for_OnEnd.getValue());
+            fetch('/home/use-data-streaming/'+ document.querySelector('param[name="requestid"]').value +'/clone', {
+                method: 'POST',
+                body: formData
+            })
+        }
+    </script>
+        
 </body>
 {% extends "base.html" %}
 </html>

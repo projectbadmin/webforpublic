@@ -26,7 +26,7 @@ def cloudbatchjobinjava(application, requestid, requestContentInJSON):
         'requestContentInJSON': requestContentInJSON
     }
     shutil.rmtree(f"{application.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
-    return render_template('cloudbatchjobinjava.html', newReq=True, tempPageRequestID=tempPageRequestID, code_for_onStart="", code_for_onProcess="", code_for_onEnd="", alias="")
+    return render_template('cloudbatchjobinjava.html', newReq=True, requestid=requestid, tempPageRequestID=tempPageRequestID, code_for_onStart="", code_for_onProcess="", code_for_onEnd="", alias="")
 
 
 def cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias, status):
@@ -56,7 +56,7 @@ def cloudbatchjobinjava_edit_program_file(application, requestid, requestContent
         code_for_onStart = cloudbatchjob_in_draft_value['code_for_onStart']
         code_for_onProcess = cloudbatchjob_in_draft_value['code_for_onProcess']
         code_for_onEnd = cloudbatchjob_in_draft_value['code_for_onEnd']
-        return render_template('cloudbatchjobinjava.html', newReq=False, tempPageRequestID=tempPageRequestID, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd, alias=alias, status=status)
+        return render_template('cloudbatchjobinjava.html', newReq=False, requestid=requestid, tempPageRequestID=tempPageRequestID, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd, alias=alias, status=status)
 
 
     # get the code for onStart, onProcess, onEnd
@@ -104,7 +104,18 @@ def cloudbatchjobinjava_edit_program_file(application, requestid, requestContent
 
     os.remove(tempProgramFilePath)
 
-    return render_template('cloudbatchjobinjava.html', newReq=False, tempPageRequestID=tempPageRequestID, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd, alias=alias, status=status)
+    return render_template('cloudbatchjobinjava.html', newReq=False, requestid=requestid, tempPageRequestID=tempPageRequestID, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd, alias=alias, status=status)
+
+
+def cloneToNewRequest(application, requestid, requestContentInJSON, code_for_onStart, code_for_onProcess, code_for_onEnd, alias):
+    read_javap_result(application)
+    tempPageRequestID = str(uuid.uuid4())
+    session[tempPageRequestID] = {
+        'requestid': requestid,
+        'requestContentInJSON': requestContentInJSON
+    }
+    shutil.rmtree(f"{application.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
+    return render_template('cloudbatchjobinjava.html', newReq=True, requestid=requestid, tempPageRequestID=tempPageRequestID, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd, alias=alias)
 
 
 def check_and_generate_keywords_(line, cursor_pos, method):

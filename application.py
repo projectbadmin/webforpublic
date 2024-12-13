@@ -6,7 +6,7 @@ from commonFunction import check_logged_in_or_not, send_post_request
 from home import get_dataStreamingList, request_newJob
 from initialize import initialize
 from processUserCode import checkSyntaxBeforeCompile, process, realTimeUpdateLog, checkSyntax
-from cloudbatchjobinjava import check_and_generate_keywords_, cloudbatchjobinjava, cloudbatchjobinjava_edit_program_file, read_javap_result
+from cloudbatchjobinjava import check_and_generate_keywords_, cloneToNewRequest, cloudbatchjobinjava, cloudbatchjobinjava_edit_program_file, read_javap_result
 
 application = Flask(__name__)
 initialize(application)
@@ -225,6 +225,27 @@ def use_data_streaming_and_save(tempPageRequestID):
     session.modified = True
 
     return "Draft saved successfully"
+
+
+
+@application.route('/home/use-data-streaming/<stream_id>/clone', methods=['POST'])
+def use_data_streaming_clone(stream_id):
+    job_alias = request.form['job_alias']+"(clone)"
+    clone_from = request.form['clone_from']
+    code_for_onStart = request.form['code_for_onStart']
+    code_for_onProcess = request.form['code_for_onProcess']
+    code_for_onEnd = request.form['code_for_onEnd']
+
+    # get the requestContentInJSON
+    requestContentInJSON = {}
+    for i in range(len(session['CloudBatchJobLocalDraft'])):
+        if session['CloudBatchJobLocalDraft'][i]['ID'] == clone_from:
+            requestContentInJSON = session['CloudBatchJobLocalDraft'][i]['requestContentInJSON']
+            break
+
+    clone_template = cloneToNewRequest(application, stream_id, requestContentInJSON, code_for_onStart, code_for_onProcess, code_for_onEnd, job_alias)
+    return clone_template
+
     
 
 @application.route('/home/view-cloudbatchjob-result/<stream_id>/<cloudbatchjob_id>')
