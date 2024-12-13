@@ -220,7 +220,7 @@ def use_data_streaming_and_save(tempPageRequestID):
 
     session['CloudBatchJobLocalDraft'] = new_temp_session_value
 
-    application.logger.info('CloudBatchJobLocalDraft' + session.get('CloudBatchJobLocalDraft'))
+    application.logger.info('CloudBatchJobLocalDraft' + str(session['CloudBatchJobLocalDraft']))
 
     return "Saved successfully"
     
