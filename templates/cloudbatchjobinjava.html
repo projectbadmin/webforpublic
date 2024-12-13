@@ -17,7 +17,7 @@
 </head>
 <body>
     <div class="button-overlay"><button onclick="location.href='/home';">Back</button></div>
-    {% if newReq == false %}
+    {% if status == 'SUBMITTED' %}
     <div class="button-overlay"><button onclick="location.href='/home';">Clone</button></div>
     {% endif %}
     <h1 class="header">Java Code Editor</h1>
@@ -48,7 +48,7 @@
         </div>
         <div class="button-overlay"><button type="submit" id="submitCloudbatchjobinjava" disabled>Submit</button></div>
     </form>
-    {% if newReq %}
+    {% if status != 'SUBMITTED' %}
     <script>
         function customAutocomplete(cm, filteredList, start, end, cursorline) {
             CodeMirror.showHint(cm, function(cm) {

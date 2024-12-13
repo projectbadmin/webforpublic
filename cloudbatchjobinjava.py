@@ -29,18 +29,19 @@ def cloudbatchjobinjava(application, requestid, requestContentInJSON):
     return render_template('cloudbatchjobinjava.html', newReq=True, tempPageRequestID=tempPageRequestID, code_for_onStart="", code_for_onProcess="", code_for_onEnd="", alias="")
 
 
-def cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias):
+def cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias, status):
     read_javap_result(application)
     tempPageRequestID = cloudbatchjob_id
     
     # check if the cloudbatchjob is in draft
     cloudbatchjob_in_draft = False 
     cloudbatchjob_in_draft_value = []
-    for key in session.get('CloudBatchJobLocalDraft'):
-        if key['ID'] == cloudbatchjob_id:
-            cloudbatchjob_in_draft = True
-            cloudbatchjob_in_draft_value = key
-            break
+    if 'CloudBatchJobLocalDraft' in session:
+        for key in session.get('CloudBatchJobLocalDraft'):
+            if key['ID'] == cloudbatchjob_id:
+                cloudbatchjob_in_draft = True
+                cloudbatchjob_in_draft_value = key
+                break
     
     if not cloudbatchjob_in_draft:
         session[tempPageRequestID] = {
@@ -55,7 +56,7 @@ def cloudbatchjobinjava_edit_program_file(application, requestid, requestContent
         code_for_onStart = cloudbatchjob_in_draft_value['code_for_onStart']
         code_for_onProcess = cloudbatchjob_in_draft_value['code_for_onProcess']
         code_for_onEnd = cloudbatchjob_in_draft_value['code_for_onEnd']
-        return render_template('cloudbatchjobinjava.html', newReq=False, tempPageRequestID=tempPageRequestID, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd, alias=alias)
+        return render_template('cloudbatchjobinjava.html', newReq=False, tempPageRequestID=tempPageRequestID, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd, alias=alias, status=status)
 
 
     # get the code for onStart, onProcess, onEnd
@@ -103,7 +104,7 @@ def cloudbatchjobinjava_edit_program_file(application, requestid, requestContent
 
     os.remove(tempProgramFilePath)
 
-    return render_template('cloudbatchjobinjava.html', newReq=False, tempPageRequestID=tempPageRequestID, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd, alias=alias)
+    return render_template('cloudbatchjobinjava.html', newReq=False, tempPageRequestID=tempPageRequestID, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd, alias=alias, status=status)
 
 
 def check_and_generate_keywords_(line, cursor_pos, method):

@@ -176,10 +176,12 @@ def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
     cloudbatchjoblist = filtered_list[0].get('CLOUDBATCHJOBLIST')
     if len(cloudbatchjoblist) > 0:
         alias = cloudbatchjoblist[0].get('ALIAS', 'No message found')
+        status = cloudbatchjoblist[0].get('STATUS', 'No message found')
     else:
         cloudbatchjob_in_session = session.get(cloudbatchjob_id, 'No cloudbatchjob_id found')
         alias = cloudbatchjob_in_session.get('ALIAS', 'No message found')
-    cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias)
+        status = cloudbatchjob_in_session.get('STATUS', 'No message found')
+    cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias, status)
     return cloudbatchjobinjava_template
 
 
