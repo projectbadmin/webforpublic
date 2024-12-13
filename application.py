@@ -10,6 +10,7 @@ from cloudbatchjobinjava import check_and_generate_keywords_, cloudbatchjobinjav
 
 application = Flask(__name__)
 initialize(application)
+session(application)
 
 @application.route('/')
 def index():
@@ -219,14 +220,11 @@ def use_data_streaming_and_save(tempPageRequestID):
             new_temp_session_value.append(session['CloudBatchJobLocalDraft'][i])
     
     new_temp_session_value.append(temp_session_value)
+    session.modified = True
 
     session['CloudBatchJobLocalDraft'] = new_temp_session_value
-    session.modified = True  # Force save the session
 
-    application.logger.info('1111 --- CloudBatchJobLocalDraft:' + str(session.get('CloudBatchJobLocalDraft')))
-    application.logger.info('2222 --- CloudBatchJobLocalDraft:' + str(session['CloudBatchJobLocalDraft']))
-
-    return "Saved successfully"
+    return redirect(url_for('home'))
     
 
 @application.route('/home/view-cloudbatchjob-result/<stream_id>/<cloudbatchjob_id>')
