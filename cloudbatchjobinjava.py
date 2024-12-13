@@ -30,8 +30,6 @@ def cloudbatchjobinjava(application, requestid, requestContentInJSON):
 
 
 def cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias):
-    application.logger.info('5555 --- CloudBatchJobLocalDraft:' + str(session.get('CloudBatchJobLocalDraft')))
-    application.logger.info('6666 --- CloudBatchJobLocalDraft:' + str(session['CloudBatchJobLocalDraft']))
     read_javap_result(application)
     tempPageRequestID = cloudbatchjob_id
     
@@ -53,8 +51,6 @@ def cloudbatchjobinjava_edit_program_file(application, requestid, requestContent
     shutil.rmtree(f"{application.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
 
     # use session value dirrectly
-    application.logger.info('7777 --- CloudBatchJobLocalDraft:' + str(cloudbatchjob_in_draft_value.get('code_for_onStart')))
-    application.logger.info('8888 --- CloudBatchJobLocalDraft:' + str(cloudbatchjob_in_draft_value['code_for_onStart']))
     if cloudbatchjob_in_draft:
         code_for_onStart = cloudbatchjob_in_draft_value['code_for_onStart']
         code_for_onProcess = cloudbatchjob_in_draft_value['code_for_onProcess']

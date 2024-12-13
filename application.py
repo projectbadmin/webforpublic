@@ -181,8 +181,6 @@ def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
     else:
         cloudbatchjob_in_session = session.get(cloudbatchjob_id, 'No cloudbatchjob_id found')
         alias = cloudbatchjob_in_session.get('ALIAS', 'No message found')
-    application.logger.info('3333 --- CloudBatchJobLocalDraft:' + str(session.get('CloudBatchJobLocalDraft')))
-    application.logger.info('4444 --- CloudBatchJobLocalDraft:' + str(session['CloudBatchJobLocalDraft']))
     cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias)
     return cloudbatchjobinjava_template
 
