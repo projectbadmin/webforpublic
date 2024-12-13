@@ -72,6 +72,6 @@ def initialize(application):
     application.logger.info('Initialized logging')
 
     # Initialize session
-    application.config["SESSION_PERMANENT"] = False
+    application.config["SESSION_PERMANENT"] = True
     application.config["SESSION_TYPE"] = "filesystem"
     Session(application)
