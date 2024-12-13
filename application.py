@@ -10,7 +10,7 @@ from cloudbatchjobinjava import check_and_generate_keywords_, cloudbatchjobinjav
 
 application = Flask(__name__)
 initialize(application)
-session(application)
+
 
 @application.route('/')
 def index():
