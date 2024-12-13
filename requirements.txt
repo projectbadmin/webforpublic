@@ -22,6 +22,7 @@ cryptography==43.0.1
 dateparser==1.2.0
 docker==7.1.0
 Flask==3.0.3
+Flask-Session==0.8.0
 git-remote-codecommit==1.17
 gitdb==4.0.11
 GitPython==3.1.43
