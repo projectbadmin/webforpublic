@@ -198,12 +198,15 @@ def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
 
 @application.route('/home/use-data-streaming/save/<tempPageRequestID>', methods=['POST'])
 def use_data_streaming_and_save(tempPageRequestID):
-    tempPageRequestID_value = session.get(tempPageRequestID, 'No request found')
-    if(tempPageRequestID_value=='No request found'):
-        return render_template('error.html', error_message="No request found")
-    requestid = tempPageRequestID_value['requestid']
+    requestid = request.form['requestid']
     job_alias = request.form['job_alias']
-    requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
+
+    # get the requestContentInJSON
+    requestContentInJSON = {}
+    for i in range(len(session['CloudBatchJobSubmitted'])):
+        if session['CloudBatchJobSubmitted'][i]['ID'] == stream_id:
+            requestContentInJSON = session['CloudBatchJobSubmitted'][i]['REQUEST_CONTENT']
+    
     code_for_onStart = request.form['code_for_onStart']
     code_for_onProcess = request.form['code_for_onProcess']
     code_for_onEnd = request.form['code_for_onEnd']
