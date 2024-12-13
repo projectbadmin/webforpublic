@@ -51,6 +51,10 @@ def cloudbatchjobinjava_edit_program_file(application, requestid, requestContent
     shutil.rmtree(f"{application.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
 
     # use session value dirrectly
+    application.logger.info('get --- CloudBatchJobLocalDraft:' + str(session['CloudBatchJobLocalDraft']))
+    application.logger.info('get --- cloudbatchjob_id:' + cloudbatchjob_id)
+    application.logger.info('get --- cloudbatchjob_in_draft:' + cloudbatchjob_in_draft)
+    application.logger.info('get --- code_for_onStart:' + cloudbatchjob_in_draft_value['code_for_onStart'])
     if cloudbatchjob_in_draft:
         code_for_onStart = cloudbatchjob_in_draft_value['code_for_onStart']
         code_for_onProcess = cloudbatchjob_in_draft_value['code_for_onProcess']
