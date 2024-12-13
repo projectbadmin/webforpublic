@@ -26,7 +26,7 @@ def cloudbatchjobinjava(application, requestid, requestContentInJSON):
         'requestContentInJSON': requestContentInJSON
     }
     shutil.rmtree(f"{application.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
-    return render_template('cloudbatchjobinjava.html', newReq=True, requestid=requestid, tempPageRequestID=tempPageRequestID, code_for_onStart="", code_for_onProcess="", code_for_onEnd="", alias="")
+    return render_template('cloudbatchjobinjava.html', newReq=True, requestid=requestid, tempPageRequestID=tempPageRequestID, code_for_onStart="", code_for_onProcess="", code_for_onEnd="", alias="", status="NEW")
 
 
 def cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias, status):
