@@ -204,7 +204,7 @@ def use_data_streaming_and_save(tempPageRequestID):
     # get the requestContentInJSON
     requestContentInJSON = {}
     for i in range(len(session['CloudBatchJobSubmitted'])):
-        if session['CloudBatchJobSubmitted'][i]['ID'] == stream_id:
+        if session['CloudBatchJobSubmitted'][i]['ID'] == requestid:
             requestContentInJSON = session['CloudBatchJobSubmitted'][i]['REQUEST_CONTENT']
     
     code_for_onStart = request.form['code_for_onStart']
