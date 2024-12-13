@@ -167,8 +167,6 @@ def use_data_streaming(stream_id):
 
 @application.route('/home/use-data-streaming/<stream_id>/<cloudbatchjob_id>')
 def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
-    application.logger.info('1111 --- CloudBatchJobLocalDraft:' + str(session.get('CloudBatchJobLocalDraft')))
-    application.logger.info('2222 --- CloudBatchJobLocalDraft:' + str(session['CloudBatchJobLocalDraft']))
     filtered_list = get_dataStreamingList("", "", "", stream_id, cloudbatchjob_id)
     if len(filtered_list) == 0:
         return "Invalid stream id"
@@ -224,6 +222,9 @@ def use_data_streaming_and_save(tempPageRequestID):
 
     session['CloudBatchJobLocalDraft'] = new_temp_session_value
     session.modified = True  # Force save the session
+
+    application.logger.info('1111 --- CloudBatchJobLocalDraft:' + str(session.get('CloudBatchJobLocalDraft')))
+    application.logger.info('2222 --- CloudBatchJobLocalDraft:' + str(session['CloudBatchJobLocalDraft']))
 
     return "Saved successfully"
     
