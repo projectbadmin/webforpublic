@@ -1,5 +1,4 @@
 from flask import  Flask, Response, jsonify, redirect, render_template, request, session, stream_template, url_for
-from flask_session import Session
 import json
 from applogging import init_logging
 from cloudbatchjobresult import fetch_result
@@ -11,7 +10,6 @@ from cloudbatchjobinjava import check_and_generate_keywords_, cloudbatchjobinjav
 
 application = Flask(__name__)
 initialize(application)
-Session(application)
 
 
 @application.route('/')

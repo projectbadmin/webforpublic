@@ -3,6 +3,7 @@ import argparse
 import configparser
 import os
 import subprocess
+from flask_session import Session
 
 from applogging import init_logging
 
@@ -70,4 +71,7 @@ def initialize(application):
     init_logging(application)
     application.logger.info('Initialized logging')
 
-    # Configure your application and register blueprints here
+    # Initialize session
+    application.config["SESSION_PERMANENT"] = False
+    application.config["SESSION_TYPE"] = "filesystem"
+    Session(application)
