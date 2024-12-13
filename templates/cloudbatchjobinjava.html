@@ -293,7 +293,10 @@
             fetch('/home/use-data-streaming/'+ document.querySelector('param[name="requestid"]').value +'/clone', {
                 method: 'POST',
                 body: formData
-            })
+            }).then(response => response.text())
+            .then(data => {
+                window.location.href = data;
+            });
         }
     </script>
         

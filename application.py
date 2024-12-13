@@ -245,7 +245,7 @@ def use_data_streaming_clone(stream_id):
     
     # clone the request
     clone_tempPageRequestID = cloneToNewRequest(application, stream_id, requestContentInJSON, code_for_onStart, code_for_onProcess, code_for_onEnd, job_alias)
-    return redirect(url_for(f'/home/use-data-streaming/{stream_id}/{clone_tempPageRequestID}'))
+    return f'/home/use-data-streaming/{stream_id}/{clone_tempPageRequestID}'
 
     
 
