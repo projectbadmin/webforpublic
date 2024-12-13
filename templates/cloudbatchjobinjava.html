@@ -241,34 +241,6 @@
                 saveAsDraft();
             }
         }   
-
-        function check_and_generate_keywords(cm, event, method) {
-            if (event.keyCode != 13) {
-                var cursor = cm.getCursor();
-                var token = cm.getTokenAt(cursor);
-                var start = token.start;
-                var end = cursor.ch;
-                var word = token.string;
-                var line = cm.getLine(cursor.line);
-                fetch('/cloudbatchjobinjava/check_and_generate_keywords', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ 
-                        'line': line ,
-                        'cursor_pos': end,
-                        'method': method
-                    })  // Send input as JSON
-                })
-                .then(response => response.json())
-                .then(data => {
-                    customAutocomplete(cm, data.output, start, end, cursor.line);
-                })
-                .catch(error => console.error('Error:', error));
-            }
-        }
-
         
         function saveAsDraft(){
             let formData = new FormData();
@@ -284,6 +256,33 @@
     </script>
     {% endif %}
     <script>
+        function check_and_generate_keywords(cm, event, method) {
+            if (event.keyCode != 13) {
+                var cursor = cm.getCursor();
+                var token = cm.getTokenAt(cursor);
+                var start = token.start;
+                var end = cursor.ch;
+                var word = token.string;
+                var line = cm.getLine(cursor.line);
+                fetch('/cloudbatchjobinjava/check_and_generate_keywords', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'line': line,
+                        'cursor_pos': end,
+                        'method': method
+                    })  // Send input as JSON
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        customAutocomplete(cm, data.output, start, end, cursor.line);
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        }
+
         function cloneToNewRequest() {
             let formData = new FormData();
             formData.append('job_alias', document.getElementById('job_alias').value);
