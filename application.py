@@ -219,6 +219,7 @@ def use_data_streaming_and_save(tempPageRequestID):
     new_temp_session_value.append(temp_session_value)
 
     session['CloudBatchJobLocalDraft'] = new_temp_session_value
+    session.modified = True  # Force save the session
 
     return "Saved successfully"
     
