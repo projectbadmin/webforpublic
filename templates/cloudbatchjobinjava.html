@@ -17,13 +17,16 @@
 </head>
 <body>
     <div class="button-overlay"><button onclick="location.href='/home';">Back</button></div>
+    {% if newReq == false %}
+    <div class="button-overlay"><button onclick="location.href='/home';">Clone</button></div>
+    {% endif %}
     <h1 class="header">Java Code Editor</h1>
     <form id="main" action="/cloudbatchjobinjava/submit/{{tempPageRequestID}}" method="post">
         <param id="tempPageRequestID" name="tempPageRequestID" value='{{ tempPageRequestID }}'>
         <p style="margin: 50px 0;"></p>
         <div>
             <label for="job_alias" class="code-label">Job alias: </label>
-            <input type="text" id="job_alias" name="job_alias" value="{{ alias }}">
+            <input type="text" id="job_alias" name="job_alias" value="{{ alias }}" onchange="saveAsDraft();">
         </div>
         <p style="margin: 50px 0;"></p>
         <div style="height: 25%;">
@@ -45,7 +48,7 @@
         </div>
         <div class="button-overlay"><button type="submit" id="submitCloudbatchjobinjava" disabled>Submit</button></div>
     </form>
-
+    {% if newReq %}
     <script>
         function customAutocomplete(cm, filteredList, start, end, cursorline) {
             CodeMirror.showHint(cm, function(cm) {
@@ -111,7 +114,6 @@
         var onstart_annotations = [];
         function checkSyntaxForOnStart(cm, updateLinting, options) {
             if(editor_for_OnStart!=null){
-                saveAsDraft();
                 fetch('/cloudbatchjobinjava/check_syntax_for_onStart', {
                     method: 'POST',
                     headers: {
@@ -149,13 +151,13 @@
                     updateLinting(onstart_annotations);
                 })
                 .catch(error => console.error('Error checking syntax:', error));
+                saveAsDraft();
             }
         }
 
         var onprocess_annotations = [];
         function checkSyntaxForOnProcess(cm, updateLinting, options) {
             if(editor_for_OnProcess!=null){
-                saveAsDraft();
                 fetch('/cloudbatchjobinjava/check_syntax_for_onProcess', {
                     method: 'POST',
                     headers: {
@@ -193,13 +195,13 @@
                     updateLinting(onprocess_annotations);
                 })
                 .catch(error => console.error('Error checking syntax:', error));
+                saveAsDraft();
             }
         }
 
         var onend_annotations = [];
         function checkSyntaxForOnEnd(cm, updateLinting, options) {
             if(editor_for_OnEnd!=null){
-                saveAsDraft();
                 fetch('/cloudbatchjobinjava/check_syntax_for_onEnd', {
                     method: 'POST',
                     headers: {
@@ -237,6 +239,7 @@
                     updateLinting(onend_annotations);
                 })
                 .catch(error => console.error('Error checking syntax:', error));
+                saveAsDraft();
             }
         }   
 
@@ -280,6 +283,7 @@
             })
         }
     </script>
+    {% endif %}
 </body>
 {% extends "base.html" %}
 </html>
