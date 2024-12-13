@@ -220,11 +220,11 @@ def use_data_streaming_and_save(tempPageRequestID):
             new_temp_session_value.append(session['CloudBatchJobLocalDraft'][i])
     
     new_temp_session_value.append(temp_session_value)
-    session.modified = True
 
     session['CloudBatchJobLocalDraft'] = new_temp_session_value
+    session.modified = True
 
-    return redirect(url_for('home'))
+    return "Draft saved successfully"
     
 
 @application.route('/home/view-cloudbatchjob-result/<stream_id>/<cloudbatchjob_id>')
