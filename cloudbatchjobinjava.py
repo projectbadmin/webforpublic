@@ -118,8 +118,8 @@ def cloneToNewRequest(application, requestid, streamRequest, code_for_onStart, c
     }
     if 'CloudBatchJobLocalDraft' not in session:
         session['CloudBatchJobLocalDraft'] = []
-        streamRequest['CLOUDBATCHJOBLIST'] = []
         session['CloudBatchJobLocalDraft'].append(streamRequest)
+        session['CloudBatchJobLocalDraft'][0]['CLOUDBATCHJOBLIST'] = []
         
     temp_CloudBatchJobLocalDraft = session['CloudBatchJobLocalDraft']
     for i in range(len(temp_CloudBatchJobLocalDraft)):
