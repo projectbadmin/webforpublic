@@ -203,8 +203,8 @@ def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
     if request is None:
         return render_template('error.html', error_message="Cloub Batch Job not found")
     else:
-        job_alias = request['job_alias']
-        status = request['status']
+        job_alias = request['ALIAS']
+        status = request['STATUS']
     
     streamRequest = findStreamRequestFromSession(stream_id)
     requestContentInJSON = streamRequest['REQUEST_CONTENT']
