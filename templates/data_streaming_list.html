@@ -73,8 +73,9 @@
                 </div>
                 <div class="modal-body modal-body-longer">
                     <td>
-                        <div class="icon-button-visible button-overlay"><button
-                                onclick="location.href='/home/use-data-streaming/{{ stream.ID }}';">Add</button></div>
+                        <div class="icon-button-visible button-overlay">
+                            <button onclick="window.open('/home/use-data-streaming/{{ stream.ID }}', '_blank');">Add</button>
+                        </div>
                     </td>
                     <!-- Modal content will be populated here -->
                     <div id="modal-content" class=" justify-content-center align-items-center">
@@ -103,7 +104,7 @@
                                     </td>
                                     {% if cloudbatchjob.STATUS == 'DRAFT' %}
                                     <td style="width: 10%; border-color:#fff; text-align: center;">
-                                        <div class="button-overlay"><button onclick="deleteDraft('{{ cloudbatchjob.ID }}'');">Delete</button></div>
+                                        <div class="button-overlay"><button onclick="deleteDraft('{{ cloudbatchjob.ID }}');">Delete</button></div>
                                     </td>
                                     {% endif %}
                                 </tr>
@@ -130,7 +131,7 @@
         }
 
         function deleteDraft(cloudbatchjobId) {
-            fetch('/home/delete-draft/' + cloudbatchjobId.value, {
+            fetch('/home/delete-draft/' + cloudbatchjobId, {
                 method: 'POST'
             }).then(response => response.text())
             .then(data => {

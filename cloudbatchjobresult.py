@@ -1,11 +1,5 @@
-import json
 import os
-import re
-import shutil
 import subprocess
-import uuid
-
-from flask import render_template, session
 
 def fetch_result(application, stream_id, cloudbatchjob_id):
     env = os.environ.copy()

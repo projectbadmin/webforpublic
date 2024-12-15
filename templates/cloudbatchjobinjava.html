@@ -193,34 +193,34 @@
                         code_for_onStart: editor_for_OnStart.getValue()
                     })
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        onstart_annotations = [];
-                        if (data.errors) {
-                            var lines = data.errors.split('\n');
-                            for (var i = 0; i < lines.length; i++) {
-                                var match = lines[i].match(/:(\d+): error: (.*)/);
-                                if (match) {
-                                    onstart_annotations.push({
-                                        message: match[2],
-                                        severity: 'error',
-                                        from: CodeMirror.Pos(parseInt(match[1]) - 17, 0),
-                                        to: CodeMirror.Pos(parseInt(match[1]) - 17, 0)
-                                    });
-                                }
+                .then(response => response.json())
+                .then(data => {
+                    onstart_annotations = [];
+                    if (data.errors) {
+                        var lines = data.errors.split('\n');
+                        for (var i = 0; i < lines.length; i++) {
+                            var match = lines[i].match(/:(\d+): error: (.*)/);
+                            if (match) {
+                                onstart_annotations.push({
+                                    message: match[2],
+                                    severity: 'error',
+                                    from: CodeMirror.Pos(parseInt(match[1]) - 17, 0),
+                                    to: CodeMirror.Pos(parseInt(match[1]) - 17, 0)
+                                });
                             }
                         }
-                        document.getElementById('submitCloudbatchjobinjava').disabled =
-                            (onstart_annotations.length > 0) ||
-                            (onprocess_annotations.length > 0) ||
-                            (onend_annotations.length > 0) ||
-                            !editor_for_OnStart.getValue().trim() ||
-                            !editor_for_OnProcess.getValue().trim() ||
-                            !editor_for_OnEnd.getValue().trim();
-                        updateLinting(onstart_annotations);
-                    })
-                    .catch(error => console.error('Error checking syntax:', error));
-                saveAsDraft();
+                    }
+                    document.getElementById('submitCloudbatchjobinjava').disabled =
+                        (onstart_annotations.length > 0) ||
+                        (onprocess_annotations.length > 0) ||
+                        (onend_annotations.length > 0) ||
+                        !editor_for_OnStart.getValue().trim() ||
+                        !editor_for_OnProcess.getValue().trim() ||
+                        !editor_for_OnEnd.getValue().trim();
+                    updateLinting(onstart_annotations);
+                    saveAsDraft();
+                })
+                .catch(error => console.error('Error checking syntax:', error));
             }
         }
 
@@ -238,34 +238,34 @@
                         code_for_onProcess: editor_for_OnProcess.getValue()
                     })
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        onprocess_annotations = [];
-                        if (data.errors) {
-                            var lines = data.errors.split('\n');
-                            for (var i = 0; i < lines.length; i++) {
-                                var match = lines[i].match(/:(\d+): error: (.*)/);
-                                if (match) {
-                                    onprocess_annotations.push({
-                                        message: match[2],
-                                        severity: 'error',
-                                        from: CodeMirror.Pos(parseInt(match[1]) - 30, 0),
-                                        to: CodeMirror.Pos(parseInt(match[1]) - 30, 0)
-                                    });
-                                }
+                .then(response => response.json())
+                .then(data => {
+                    onprocess_annotations = [];
+                    if (data.errors) {
+                        var lines = data.errors.split('\n');
+                        for (var i = 0; i < lines.length; i++) {
+                            var match = lines[i].match(/:(\d+): error: (.*)/);
+                            if (match) {
+                                onprocess_annotations.push({
+                                    message: match[2],
+                                    severity: 'error',
+                                    from: CodeMirror.Pos(parseInt(match[1]) - 30, 0),
+                                    to: CodeMirror.Pos(parseInt(match[1]) - 30, 0)
+                                });
                             }
                         }
-                        document.getElementById('submitCloudbatchjobinjava').disabled =
-                            (onstart_annotations.length > 0) ||
-                            (onprocess_annotations.length > 0) ||
-                            (onend_annotations.length > 0) ||
-                            !editor_for_OnStart.getValue().trim() ||
-                            !editor_for_OnProcess.getValue().trim() ||
-                            !editor_for_OnEnd.getValue().trim();
-                        updateLinting(onprocess_annotations);
-                    })
-                    .catch(error => console.error('Error checking syntax:', error));
-                saveAsDraft();
+                    }
+                    document.getElementById('submitCloudbatchjobinjava').disabled =
+                        (onstart_annotations.length > 0) ||
+                        (onprocess_annotations.length > 0) ||
+                        (onend_annotations.length > 0) ||
+                        !editor_for_OnStart.getValue().trim() ||
+                        !editor_for_OnProcess.getValue().trim() ||
+                        !editor_for_OnEnd.getValue().trim();
+                    updateLinting(onprocess_annotations);
+                    saveAsDraft();
+                })
+                .catch(error => console.error('Error checking syntax:', error));
             }
         }
 
@@ -283,34 +283,34 @@
                         code_for_onEnd: editor_for_OnEnd.getValue()
                     })
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        onend_annotations = [];
-                        if (data.errors) {
-                            var lines = data.errors.split('\n');
-                            for (var i = 0; i < lines.length; i++) {
-                                var match = lines[i].match(/:(\d+): error: (.*)/);
-                                if (match) {
-                                    onend_annotations.push({
-                                        message: match[2],
-                                        severity: 'error',
-                                        from: CodeMirror.Pos(parseInt(match[1]) - 34, 0),
-                                        to: CodeMirror.Pos(parseInt(match[1]) - 34, 0)
-                                    });
-                                }
+                .then(response => response.json())
+                .then(data => {
+                    onend_annotations = [];
+                    if (data.errors) {
+                        var lines = data.errors.split('\n');
+                        for (var i = 0; i < lines.length; i++) {
+                            var match = lines[i].match(/:(\d+): error: (.*)/);
+                            if (match) {
+                                onend_annotations.push({
+                                    message: match[2],
+                                    severity: 'error',
+                                    from: CodeMirror.Pos(parseInt(match[1]) - 34, 0),
+                                    to: CodeMirror.Pos(parseInt(match[1]) - 34, 0)
+                                });
                             }
                         }
-                        document.getElementById('submitCloudbatchjobinjava').disabled =
-                            (onstart_annotations.length > 0) ||
-                            (onprocess_annotations.length > 0) ||
-                            (onend_annotations.length > 0) ||
-                            !editor_for_OnStart.getValue().trim() ||
-                            !editor_for_OnProcess.getValue().trim() ||
-                            !editor_for_OnEnd.getValue().trim();
-                        updateLinting(onend_annotations);
-                    })
-                    .catch(error => console.error('Error checking syntax:', error));
-                saveAsDraft();
+                    }
+                    document.getElementById('submitCloudbatchjobinjava').disabled =
+                        (onstart_annotations.length > 0) ||
+                        (onprocess_annotations.length > 0) ||
+                        (onend_annotations.length > 0) ||
+                        !editor_for_OnStart.getValue().trim() ||
+                        !editor_for_OnProcess.getValue().trim() ||
+                        !editor_for_OnEnd.getValue().trim();
+                    updateLinting(onend_annotations);
+                    saveAsDraft();
+                })
+                .catch(error => console.error('Error checking syntax:', error));
             }
         }
 

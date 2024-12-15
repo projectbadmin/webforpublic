@@ -1,6 +1,4 @@
-from flask import  Flask, Response, jsonify, redirect, render_template, request, session, stream_template, url_for
-import json
-from applogging import init_logging
+from flask import  Flask, jsonify, redirect, render_template, request, session, url_for
 from cloudbatchjobresult import fetch_result
 from commonFunction import check_logged_in_or_not, findStreamRequestFromSession, findRequestFromSession, send_post_request
 from home import get_dataStreamingList, request_newJob
@@ -256,10 +254,10 @@ def fetch_cloudbatchjob_result():
 @application.route('/home/delete-draft/<cloudbatchjob_id>', methods=['POST'])
 def delete_draft(cloudbatchjob_id):
     for i in range(len(session['CloudBatchJobLocalDraft'])):
-        if session['CloudBatchJobLocalDraft'][i]['ID'] == cloudbatchjob_id:
-            del session['CloudBatchJobLocalDraft'][i]
-            break
-    return "Draft deleted successfully"
+        for j in range(len(session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'])):
+            if session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'][j]['ID'] == cloudbatchjob_id:
+                del session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'][j]
+                return "Draft deleted successfully"
 
 # Register the function to run before each request
 @application.before_request

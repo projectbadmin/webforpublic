@@ -1,10 +1,8 @@
 import json
-
 from flask import session
 from applogging import write_log
 import git
 import requests
-import time
 
 def git_clone_repo(repo_url, target_directory):
     try:

@@ -1,5 +1,4 @@
-import datetime
-from flask import redirect, request, session, url_for, jsonify
+from flask import session
 from commonFunction import send_post_request
 
 
