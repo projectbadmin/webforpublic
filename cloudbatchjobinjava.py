@@ -21,7 +21,8 @@ classMethodsforOnProcess = {}
 classMethodsforOnEnd = {}
 
 def cloudbatchjobinjava(application, requestid):
-    tempPageRequestID = cloneToNewRequest(application, requestid, {}, "", "", "", "")
+    streamRequest = findStreamRequestFromSession(requestid)
+    tempPageRequestID = cloneToNewRequest(application, requestid, streamRequest['REQUEST_CONTENT'], "", "", "", "")
     shutil.rmtree(f"{application.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
     return render_template('cloudbatchjobinjava.html', newReq=True, requestid=requestid, tempPageRequestID=tempPageRequestID, code_for_onStart="", code_for_onProcess="", code_for_onEnd="", alias="", status="NEW")
 
