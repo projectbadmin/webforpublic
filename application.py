@@ -61,14 +61,11 @@ def check_and_generate_keywords():
     output = check_and_generate_keywords_(line, cursor_pos, method)
     return jsonify({'output': output})
 
-@application.route('/cloudbatchjobinjava/submit', methods=['POST'])
-def submitCloudbatchjobinjava():
-    requestid = request.form['requestid']
-    tempPageRequestID = request.form['tempPageRequestID']
-    
+@application.route('/cloudbatchjobinjava/submit/<stream_id>/<cloudbatchjob_id>', methods=['POST'])
+def submitCloudbatchjobinjava(stream_id, cloudbatchjob_id):    
     # get the requestContentInJSON
     requestContentInJSON = ""
-    cloudBatchJobrequest = findRequestFromSession(requestid, tempPageRequestID)
+    cloudBatchJobrequest = findRequestFromSession(stream_id, cloudbatchjob_id)
     if cloudBatchJobrequest is None:
         return render_template('error.html', error_message="Cloub Batch Job not found")
     else:
@@ -78,16 +75,16 @@ def submitCloudbatchjobinjava():
     code_for_onStart = request.form['code_for_onStart']
     code_for_onProcess = request.form['code_for_onProcess']
     code_for_onEnd = request.form['code_for_onEnd']
-    result = checkSyntaxBeforeCompile(application, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid, requestContentInJSON)
+    result = checkSyntaxBeforeCompile(application, code_for_onStart, code_for_onProcess, code_for_onEnd, stream_id, requestContentInJSON)
     if(result != ""):
         return render_template('error.html', error_message=result)
     # process the code
-    result = process(application, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid, requestContentInJSON, job_alias)
+    result = process(application, code_for_onStart, code_for_onProcess, code_for_onEnd, stream_id, requestContentInJSON, job_alias)
     # remove the draft session
     for i in range(len(session['CloudBatchJobLocalDraft'])):
-        if session['CloudBatchJobLocalDraft'][i]['ID'] == requestid:
+        if session['CloudBatchJobLocalDraft'][i]['ID'] == stream_id:
             for j in range(len(session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'])):
-                if session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'][j]['ID'] == tempPageRequestID:
+                if session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'][j]['ID'] == cloudbatchjob_id:
                     del session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'][j]
                     break
             break
