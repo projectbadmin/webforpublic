@@ -71,7 +71,7 @@ def submitCloudbatchjobinjava(tempPageRequestID):
     # get the requestContentInJSON
     requestContentInJSON = ""
     cloudBatchJobrequest = findRequestFromSession(requestid, tempPageRequestID)
-    if reqcloudBatchJobrequestuest is None:
+    if cloudBatchJobrequest is None:
         return render_template('error.html', error_message="Cloub Batch Job not found")
     else:
         requestContentInJSON = cloudBatchJobrequest['requestContentInJSON']
@@ -171,7 +171,7 @@ def use_data_streaming_and_save(tempPageRequestID):
     code_for_onProcess = request.form['code_for_onProcess']
     code_for_onEnd = request.form['code_for_onEnd']
 
-    result = save(application, requestid, requestContentInJSON, code_for_onStart, code_for_onProcess, code_for_onEnd, job_alias)
+    result = save(requestid, job_alias, requestContentInJSON, code_for_onStart, code_for_onProcess, code_for_onEnd, tempPageRequestID)
     return result
 
 

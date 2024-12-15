@@ -145,13 +145,15 @@ def save(requestid, job_alias, requestContentInJSON, code_for_onStart, code_for_
     }
 
     # check if the cloudbatchjob is in draft        
-    for i in range(len(session['CloudBatchJobLocalDraft'])):
-        if session['CloudBatchJobLocalDraft'][i]['ID'] == requestid:
-            for j in range(len(session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'])):
-                if session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'][j]['ID'] == tempPageRequestID:
-                    session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'][j] = temp_session_value
+    temp_session_CloudBatchJobLocalDraft = session['CloudBatchJobLocalDraft']
+    for i in range(len(temp_session_CloudBatchJobLocalDraft)):
+        if temp_session_CloudBatchJobLocalDraft[i]['ID'] == requestid:
+            for j in range(len(temp_session_CloudBatchJobLocalDraft[i]['CLOUDBATCHJOBLIST'])):
+                if temp_session_CloudBatchJobLocalDraft[i]['CLOUDBATCHJOBLIST'][j]['ID'] == tempPageRequestID:
+                    temp_session_CloudBatchJobLocalDraft[i]['CLOUDBATCHJOBLIST'][j] = temp_session_value
                     break
             break
+    session['CloudBatchJobLocalDraft'] = temp_session_CloudBatchJobLocalDraft
 
     return "Draft saved successfully"
 
