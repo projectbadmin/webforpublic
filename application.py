@@ -70,11 +70,11 @@ def submitCloudbatchjobinjava(tempPageRequestID):
     
     # get the requestContentInJSON
     requestContentInJSON = ""
-    request = findRequestFromSession(requestid, tempPageRequestID)
-    if request is None:
+    cloudBatchJobrequest = findRequestFromSession(requestid, tempPageRequestID)
+    if reqcloudBatchJobrequestuest is None:
         return render_template('error.html', error_message="Cloub Batch Job not found")
     else:
-        requestContentInJSON = request['requestContentInJSON']
+        requestContentInJSON = cloudBatchJobrequest['requestContentInJSON']
     
     job_alias = request.form['job_alias']
     code_for_onStart = request.form['code_for_onStart']
@@ -112,11 +112,11 @@ def check_syntax_for_onStart():
     tempPageRequestID = data['tempPageRequestID']
     # get the requestContentInJSON
     requestContentInJSON = ""
-    request = findRequestFromSession(requestid, tempPageRequestID)
-    if request is None:
-        return jsonify({'errors': 'No request found'})
+    cloudBatchJobrequest = findRequestFromSession(requestid, tempPageRequestID)
+    if cloudBatchJobrequest is None:
+        return jsonify({'errors': 'No cloud batch job request found'})
     else:
-        requestContentInJSON = request['requestContentInJSON']
+        requestContentInJSON = cloudBatchJobrequest['requestContentInJSON']
         code_for_onStart = data['code_for_onStart']
         result = checkSyntax(application, "onStart", code_for_onStart, requestid, requestContentInJSON)
         return jsonify({'errors': result})
@@ -128,11 +128,11 @@ def check_syntax_for_onProcess():
     tempPageRequestID = data['tempPageRequestID']
     # get the requestContentInJSON
     requestContentInJSON = ""
-    request = findRequestFromSession(requestid, tempPageRequestID)
-    if request is None:
+    cloudBatchJobrequest = findRequestFromSession(requestid, tempPageRequestID)
+    if cloudBatchJobrequest is None:
         return jsonify({'errors': 'No request found'})
     else:
-        requestContentInJSON = request['requestContentInJSON']
+        requestContentInJSON = cloudBatchJobrequest['requestContentInJSON']
         code_for_onProcess = data['code_for_onProcess']
         result = checkSyntax(application, "onProcess", code_for_onProcess, requestid, requestContentInJSON)
         return jsonify({'errors': result})
@@ -144,11 +144,11 @@ def check_syntax_for_onEnd():
     tempPageRequestID = data['tempPageRequestID']
     # get the requestContentInJSON
     requestContentInJSON = ""
-    request = findRequestFromSession(requestid, tempPageRequestID)
-    if request is None:
+    cloudBatchJobrequest = findRequestFromSession(requestid, tempPageRequestID)
+    if cloudBatchJobrequest is None:
         return jsonify({'errors': 'No request found'})
     else:
-        requestContentInJSON = request['requestContentInJSON']
+        requestContentInJSON = cloudBatchJobrequest['requestContentInJSON']
         code_for_onEnd = data['code_for_onEnd']
         result = checkSyntax(application, "onEnd", code_for_onEnd, requestid, requestContentInJSON)
         return jsonify({'errors': result})
@@ -161,9 +161,9 @@ def use_data_streaming_and_save(tempPageRequestID):
 
     # get the requestContentInJSON
     requestContentInJSON = ""
-    request = findRequestFromSession(requestid, tempPageRequestID)
-    if request is not None:
-        requestContentInJSON = request['requestContentInJSON']
+    cloudBatchJobrequest = findRequestFromSession(requestid, tempPageRequestID)
+    if cloudBatchJobrequest is not None:
+        requestContentInJSON = cloudBatchJobrequest['requestContentInJSON']
     else:
         requestContentInJSON = findStreamRequestFromSession(requestid)['REQUEST_CONTENT']
     
@@ -207,12 +207,12 @@ def use_data_streaming(stream_id):
 
 @application.route('/home/use-data-streaming/<stream_id>/<cloudbatchjob_id>')
 def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
-    request = findRequestFromSession(stream_id, cloudbatchjob_id)
-    if request is None:
+    cloudBatchJobrequest = findRequestFromSession(stream_id, cloudbatchjob_id)
+    if cloudBatchJobrequest is None:
         return render_template('error.html', error_message="Cloub Batch Job not found")
     else:
-        job_alias = request['ALIAS']
-        status = request['STATUS']
+        job_alias = cloudBatchJobrequest['ALIAS']
+        status = cloudBatchJobrequest['STATUS']
     
     streamRequest = findStreamRequestFromSession(stream_id)
     requestContentInJSON = streamRequest['REQUEST_CONTENT']
