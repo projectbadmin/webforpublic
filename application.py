@@ -89,7 +89,7 @@ def submitCloudbatchjobinjava(stream_id, cloudbatchjob_id):
                     break
             break
     # return the output
-    return view_cloudbatchjob_result(stream_id, cloudbatchjob_id)
+    return redirect(url_for('view_cloudbatchjob_result', stream_id=stream_id, cloudbatchjob_id=cloudbatchjob_id))
 
 
 @application.route('/cloudbatchjobinjava/latest_output', methods=['POST'])
