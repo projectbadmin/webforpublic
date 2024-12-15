@@ -232,11 +232,9 @@ def use_data_streaming_clone(stream_id):
     # get the requestContentInJSON
     requestContentInJSON = {}
     streamRequest = findStreamRequestFromSession(stream_id)
-    if streamRequest is not None:
-        requestContentInJSON = streamRequest['REQUEST_CONTENT']
     
     # clone the request
-    clone_tempPageRequestID = cloneToNewRequest(application, stream_id, requestContentInJSON, code_for_onStart, code_for_onProcess, code_for_onEnd, job_alias)
+    clone_tempPageRequestID = cloneToNewRequest(application, stream_id, streamRequest, code_for_onStart, code_for_onProcess, code_for_onEnd, job_alias)
     return f'/home/use-data-streaming/{stream_id}/{clone_tempPageRequestID}'
 
     
