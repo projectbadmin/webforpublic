@@ -130,11 +130,11 @@
         }
 
         function deleteDraft(cloudbatchjobId) {
-            fetch('/home/delete-draft/' + cloudbatchjobId).value, {
+            fetch('/home/delete-draft/' + cloudbatchjobId.value, {
                 method: 'POST'
             }).then(response => response.text())
             .then(data => {
-                if data == 'Draft deleted successfully' {
+                if(data == 'Draft deleted successfully'){
                     document.querySelector(`[data-stream-id='${cloudbatchjobId}']`).remove();
                 }
             });
