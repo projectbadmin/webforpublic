@@ -84,7 +84,15 @@ def submitCloudbatchjobinjava(tempPageRequestID):
     if(result != ""):
         return render_template('error.html', error_message=result)
     # process the code
-    process(application, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid, requestContentInJSON, job_alias)
+    result = process(application, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid, requestContentInJSON, job_alias)
+    # remove the draft session
+    for i in range(len(session['CloudBatchJobLocalDraft'])):
+        if session['CloudBatchJobLocalDraft'][i]['ID'] == requestid:
+            for j in range(len(session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'])):
+                if session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'][j]['ID'] == tempPageRequestID:
+                    del session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'][j]
+                    break
+            break
     # return the output
     return redirect(url_for('home'))
 

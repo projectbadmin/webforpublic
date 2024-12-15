@@ -7,6 +7,8 @@ import uuid
 
 from flask import render_template, session
 
+from commonFunction import findStreamRequestFromSession
+
 commonJavaKeyWords = [
 #    "System", "out", "println", "String", "Integer", "Double", "Boolean", "ArrayList", "HashMap", "HashSet", "List", "Map", "Set",
 #    "public", "private", "protected", "static", "final", "void", "int", "double", "float", "char", "boolean", "long", "short", "byte",
@@ -19,8 +21,7 @@ classMethodsforOnProcess = {}
 classMethodsforOnEnd = {}
 
 def cloudbatchjobinjava(application, requestid):
-    read_javap_result(application)
-    tempPageRequestID = str(uuid.uuid4())
+    tempPageRequestID = cloneToNewRequest(application, requestid, {}, "", "", "", "")
     shutil.rmtree(f"{application.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
     return render_template('cloudbatchjobinjava.html', newReq=True, requestid=requestid, tempPageRequestID=tempPageRequestID, code_for_onStart="", code_for_onProcess="", code_for_onEnd="", alias="", status="NEW")
 
@@ -115,10 +116,10 @@ def cloneToNewRequest(application, requestid, requestContentInJSON, code_for_onS
     if 'CloudBatchJobLocalDraft' not in session:
         session['CloudBatchJobLocalDraft'] = []
     temp_CloudBatchJobLocalDraft = session['CloudBatchJobLocalDraft']
-    temp_CloudBatchJobLocalDraft.append(temp_session_value)
-    session['CloudBatchJobLocalDraft'] = temp_CloudBatchJobLocalDraft
-
-    return tempPageRequestID
+    for i in range(len(temp_CloudBatchJobLocalDraft)):
+        if temp_CloudBatchJobLocalDraft[i]['ID'] == requestid:
+            temp_CloudBatchJobLocalDraft[i]['CLOUDBATCHJOBLIST'].append(temp_session_value)
+            return tempPageRequestID
 
 
 def save(requestid, job_alias, requestContentInJSON, code_for_onStart, code_for_onProcess, code_for_onEnd, tempPageRequestID):

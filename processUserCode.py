@@ -99,9 +99,12 @@ def process(app, code_for_onStart, code_for_onProcess, code_for_onEnd, requestid
         response['requestContentInJSON'] = requestContentInJSON
 
         app.logger.info(f"Submitted Batch job {job_name} to queue {job_queue_name} with existing job definition {job_definition_name}")
+        
+        return True
 
     except Exception as e:
         app.logger.error(e)
+        return False
     finally:
         shutil.rmtree(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}", ignore_errors=True)
         shutil.rmtree(f"{app.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
