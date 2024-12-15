@@ -144,20 +144,14 @@ def save(requestid, job_alias, requestContentInJSON, code_for_onStart, code_for_
         'ID': tempPageRequestID
     }
 
-    # check if the cloudbatchjob is in draft    
-    new_temp_session_value = []
+    # check if the cloudbatchjob is in draft        
     for i in range(len(session['CloudBatchJobLocalDraft'])):
-        for j in range(len(session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'])):
-            if session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'][j]['ID'] != tempPageRequestID:
-                new_temp_session_value.append(temp_session_value)
-    
-    for i in range(len(new_temp_session_value)):
-        for j in range(len(new_temp_session_value[i]['CLOUDBATCHJOBLIST'])):
-            if new_temp_session_value[i]['CLOUDBATCHJOBLIST'][j]['ID'] == tempPageRequestID:
-                new_temp_session_value[i]['CLOUDBATCHJOBLIST'].append(temp_session_value)
-                break
-
-    session['CloudBatchJobLocalDraft'] = new_temp_session_value
+        if session['CloudBatchJobLocalDraft'][i]['ID'] == requestid:
+            for j in range(len(session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'])):
+                if session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'][j]['ID'] == tempPageRequestID:
+                    session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'][j] = temp_session_value
+                    break
+            break
 
     return "Draft saved successfully"
 
