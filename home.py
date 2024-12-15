@@ -27,8 +27,6 @@ def get_dataStreamingList(stream_status, retention_hour, class_code, id, cloudba
         }   
     )
 
-    cloudBatchJobListInSession = session.get('CloudBatchJobLocalDraft')
-
     if 'message' in cloudBatchJobList and cloudBatchJobList.get('message', 'No message found')=='request fail':
         return {}
     
@@ -40,12 +38,12 @@ def get_dataStreamingList(stream_status, retention_hour, class_code, id, cloudba
     session['CloudBatchJobSubmitted'] = dataStreamList
 
     # set the cloudBatchJobList from section to the corresponding dataStream
-    if cloudBatchJobListInSession is not None:
-        for dataStream in dataStreamList:
-            for cloudBatchJob in cloudBatchJobListInSession:
-                if dataStream['ID'] == cloudBatchJob['requestid']:
+    if session.get('CloudBatchJobLocalDraft') is not None:
+        for dataStream in session.get('CloudBatchJobLocalDraft'):
+            for cloudBatchJob in dataStream['CLOUDBATCHJOBLIST']:
+                if dataStream['ID'] == cloudBatchJob['DATA_STREAM_ID']:
                     dataStream['CLOUDBATCHJOBLIST'].append(cloudBatchJob)
-    
+
     return dataStreamList
 
 def request_newJob(datetimeselectiontype, fromdate, todate, fromtime, totime, class_code, fut_opt, expiry_mth, strike_prc, call_put, retention_hour):    
