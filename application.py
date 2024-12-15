@@ -61,7 +61,7 @@ def check_and_generate_keywords():
     output = check_and_generate_keywords_(line, cursor_pos, method)
     return jsonify({'output': output})
 
-@application.route('/cloudbatchjobinjava/submit/<tempPageRequestID>', methods=['POST'])
+@application.route('/cloudbatchjobinjava/submit', methods=['POST'])
 def submitCloudbatchjobinjava(tempPageRequestID):
     requestid = request.form['requestid']
     tempPageRequestID = request.form['tempPageRequestID']
