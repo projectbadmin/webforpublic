@@ -6,7 +6,7 @@ from commonFunction import check_logged_in_or_not, send_post_request
 from home import get_dataStreamingList, request_newJob
 from initialize import initialize
 from processUserCode import checkSyntaxBeforeCompile, process, realTimeUpdateLog, checkSyntax
-from cloudbatchjobinjava import check_and_generate_keywords_, cloneToNewRequest, cloudbatchjobinjava, cloudbatchjobinjava_edit_program_file, read_javap_result
+from cloudbatchjobinjava import check_and_generate_keywords_, cloneToNewRequest, cloudbatchjobinjava, cloudbatchjobinjava_edit_program_file, read_javap_result, save
 
 application = Flask(__name__)
 initialize(application)
@@ -131,6 +131,26 @@ def check_syntax_for_onEnd():
     return jsonify({'errors': result})
 
 
+@application.route('/cloudbatchjobinjava/use-data-streaming/save/<tempPageRequestID>', methods=['POST'])
+def use_data_streaming_and_save(tempPageRequestID):
+    requestid = request.form['requestid']
+    job_alias = request.form['job_alias']
+
+    # get the requestContentInJSON
+    requestContentInJSON = {}
+    for i in range(len(session['CloudBatchJobSubmitted'])):
+        if session['CloudBatchJobSubmitted'][i]['ID'] == requestid:
+            requestContentInJSON = session['CloudBatchJobSubmitted'][i]['REQUEST_CONTENT']
+    
+    code_for_onStart = request.form['code_for_onStart']
+    code_for_onProcess = request.form['code_for_onProcess']
+    code_for_onEnd = request.form['code_for_onEnd']
+
+    result = save(application, requestid, requestContentInJSON, code_for_onStart, code_for_onProcess, code_for_onEnd, job_alias)
+    return result
+
+
+
 @application.route('/home/request-new-data-streaming', methods=['POST'])
 def request_new_data_streaming():
     datetimeselectiontype = request.form['datetime-selection-type']
@@ -196,52 +216,6 @@ def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
         return render_template('error.html', error_message="Cloub Batch Job not found")
 
 
-@application.route('/home/use-data-streaming/save/<tempPageRequestID>', methods=['POST'])
-def use_data_streaming_and_save(tempPageRequestID):
-    requestid = request.form['requestid']
-    job_alias = request.form['job_alias']
-
-    # get the requestContentInJSON
-    requestContentInJSON = {}
-    for i in range(len(session['CloudBatchJobSubmitted'])):
-        if session['CloudBatchJobSubmitted'][i]['ID'] == requestid:
-            requestContentInJSON = session['CloudBatchJobSubmitted'][i]['REQUEST_CONTENT']
-    
-    code_for_onStart = request.form['code_for_onStart']
-    code_for_onProcess = request.form['code_for_onProcess']
-    code_for_onEnd = request.form['code_for_onEnd']
-
-    temp_session_value =  {
-        'requestid': requestid,
-        'job_alias': job_alias,
-        'requestContentInJSON': requestContentInJSON,
-        'code_for_onStart': code_for_onStart,
-        'code_for_onProcess': code_for_onProcess,
-        'code_for_onEnd': code_for_onEnd,
-        'status': 'DRAFT',
-        'ALIAS': job_alias,
-        'STATUS': 'DRAFT',
-        'ID': tempPageRequestID
-    }
-
-    if session.get('CloudBatchJobLocalDraft', None) is None:
-        session['CloudBatchJobLocalDraft'] = []
-
-    # check if the cloudbatchjob is in draft    
-    new_temp_session_value = []
-    for i in range(len(session['CloudBatchJobLocalDraft'])):
-        if session['CloudBatchJobLocalDraft'][i]['ID'] != tempPageRequestID:
-            new_temp_session_value.append(session['CloudBatchJobLocalDraft'][i])
-    
-    new_temp_session_value.append(temp_session_value)
-
-    session['CloudBatchJobLocalDraft'] = new_temp_session_value
-    session.modified = True
-
-    return "Draft saved successfully"
-
-
-
 @application.route('/home/use-data-streaming/<stream_id>/clone', methods=['POST'])
 def use_data_streaming_clone(stream_id):
     job_alias = request.form['job_alias']+"(clone)"
@@ -275,6 +249,14 @@ def fetch_cloudbatchjob_result():
     result = fetch_result(application, stream_id, cloudbatchjob_id)
     return result
 
+
+@application.route('/home/delete-draft/<cloudbatchjob_id>', methods=['POST'])
+def delete_draft(cloudbatchjob_id):
+    for i in range(len(session['CloudBatchJobLocalDraft'])):
+        if session['CloudBatchJobLocalDraft'][i]['ID'] == cloudbatchjob_id:
+            del session['CloudBatchJobLocalDraft'][i]
+            break
+    return "Draft deleted successfully"
 
 # Register the function to run before each request
 @application.before_request

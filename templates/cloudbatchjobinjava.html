@@ -12,12 +12,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/lint.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/anyword-hint.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='cloudbatchjobinjava.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}">
 </head>
 <body>
-    <div class="button-overlay"><button onclick="location.href='/home';">Back</button></div>
-    <div class="button-overlay"><button onclick="cloneToNewRequest();">Clone</button></div>
+    <tbody>
+        <tr name="cloudbatchjob_item" data-stream-id="{{ cloudbatchjob.ID }}">
+            <td style="width: 30%; border-color:#fff; text-align: center;">
+                <div class="button-overlay"><button onclick="location.href='/home';">Back</button></div>
+            <td style="width: 30%; border-color:#fff; text-align: center;">
+                <div class="button-overlay"><button onclick="cloneToNewRequest();">Clone</button></div>
+            </td>
+            <td style="width: 30%; border-color:#fff; text-align: center;">
+                <p id="status"></p>
+            </td>
+        </tr>
+    </tbody>
     <h1 class="header">Java Code Editor</h1>
     <form id="main" action="/cloudbatchjobinjava/submit/{{tempPageRequestID}}" method="post">
         <param id="requestid" name="requestid" value='{{ requestid }}'>
@@ -77,16 +89,20 @@
         }
         
         function saveAsDraft(){
+            document.getElementById('status').innerHTML = 'Saving';
             let formData = new FormData();
             formData.append('requestid', document.getElementById('requestid').value);
             formData.append('job_alias', document.getElementById('job_alias').value);
             formData.append('code_for_onStart', editor_for_OnStart.getValue());
             formData.append('code_for_onProcess', editor_for_OnProcess.getValue());
             formData.append('code_for_onEnd', editor_for_OnEnd.getValue());
-            fetch('/home/use-data-streaming/save/'+ document.querySelector('param[name="tempPageRequestID"]').value, {
+            fetch('/cloudbatchjobinjava/use-data-streaming/save/'+ document.querySelector('param[name="tempPageRequestID"]').value, {
                 method: 'POST',
                 body: formData
-            })
+            }).then(response => response.text())
+            .then(data => {
+                document.getElementById('status').innerHTML = '';
+            });
         }
     </script>
     {% endif %}
@@ -285,6 +301,7 @@
         }
 
         function cloneToNewRequest() {
+            document.getElementById('status').innerHTML = 'Cloning...';
             let formData = new FormData();
             formData.append('job_alias', document.getElementById('job_alias').value);
             formData.append('clone_from', document.querySelector('param[name="tempPageRequestID"]').value);

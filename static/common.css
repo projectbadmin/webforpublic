@@ -28,24 +28,33 @@ html {
 }
 
 /* Styles for buttons */
-.button-overlay button {
+.button-overlay button,
+.button-overlay input[type="text"] {
     padding: 10px 20px;
     margin: 5px;
     background-color: #157f87f7;
     color: #fff;
     border-radius: 5px;
+    border: none; /* Remove default border */
+    font-size: 16px; /* Adjust font size */
 }
 
 /* Disabled button styles */
-.button-overlay button:disabled {
-    padding: 10px 20px;
-        margin: 5px;
-        background-color: #9e9e9ef7;
-        color: #fff;
-        border-radius: 5px;
+.button-overlay button:disabled,
+.button-overlay input[type="text"]:disabled {
+    background-color: #9e9e9ef7;
+    color: #fff;
+}
+
+/* Disabled button hover styles */
+.button-overlay button:disabled:hover,
+.button-overlay input[type="text"]:disabled:hover {
+    background-color: #9e9e9ef7;
 }
 
 /* Hover effect for buttons */
-.button-overlay button:hover {
+.button-overlay button:hover,
+.button-overlay input[type="text"]:hover {
     background-color: #1badb8f7;
 }
+

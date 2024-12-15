@@ -101,6 +101,11 @@
                                     <td style="width: 10%; border-color:#fff; text-align: center;">
                                         <div class="button-overlay"><button onclick="location.href='/home/view-cloudbatchjob-result/{{ stream.ID }}/{{ cloudbatchjob.ID }}';">View</button></div>
                                     </td>
+                                    {% if cloudbatchjob.STATUS == 'DRAFT' %}
+                                    <td style="width: 10%; border-color:#fff; text-align: center;">
+                                        <div class="button-overlay"><button onclick="deleteDraft({{ stream.ID }}, {{ cloudbatchjob.ID }});">Delete</button></div>
+                                    </td>
+                                    {% endif %}
                                 </tr>
                                 {% endfor %}
                                 {% endif %}
@@ -122,6 +127,17 @@
     <script>
         function showCloudBatchJobList(streamId) {
             $('#' + streamId + '_cloudbatchjob').modal('show');
+        }
+
+        function deleteDraft(streamId, cloudbatchjobId) {
+            fetch('/home/delete-draft/' + cloudbatchjobId).value, {
+                method: 'POST'
+            }).then(response => response.text())
+            .then(data => {
+                if data == 'Draft deleted successfully' {
+                    document.querySelector(`[data-stream-id='${cloudbatchjobId}']`).remove();
+                }
+            });
         }
     </script>
 </body>

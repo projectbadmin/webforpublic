@@ -121,6 +121,37 @@ def cloneToNewRequest(application, requestid, requestContentInJSON, code_for_onS
     return tempPageRequestID
 
 
+def save(requestid, job_alias, requestContentInJSON, code_for_onStart, code_for_onProcess, code_for_onEnd, tempPageRequestID):
+    temp_session_value =  {
+        'requestid': requestid,
+        'job_alias': job_alias,
+        'requestContentInJSON': requestContentInJSON,
+        'code_for_onStart': code_for_onStart,
+        'code_for_onProcess': code_for_onProcess,
+        'code_for_onEnd': code_for_onEnd,
+        'status': 'DRAFT',
+        'ALIAS': job_alias,
+        'STATUS': 'DRAFT',
+        'ID': tempPageRequestID
+    }
+
+    if session.get('CloudBatchJobLocalDraft', None) is None:
+        session['CloudBatchJobLocalDraft'] = []
+
+    # check if the cloudbatchjob is in draft    
+    new_temp_session_value = []
+    for i in range(len(session['CloudBatchJobLocalDraft'])):
+        if session['CloudBatchJobLocalDraft'][i]['ID'] != tempPageRequestID:
+            new_temp_session_value.append(session['CloudBatchJobLocalDraft'][i])
+    
+    new_temp_session_value.append(temp_session_value)
+
+    session['CloudBatchJobLocalDraft'] = new_temp_session_value
+    session.modified = True
+
+    return "Draft saved successfully"
+
+
 def check_and_generate_keywords_(line, cursor_pos, method):
     match = re.search(r'(\w+)\.$', line[:cursor_pos])
     if match:
