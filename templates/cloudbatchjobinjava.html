@@ -18,18 +18,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}">
 </head>
 <body>
-    <tbody>
-        <tr>
-            <td style="width: 30%; border-color:#fff; text-align: center;">
-                <div class="button-overlay"><button onclick="location.href='/home';">Back</button></div>
-            <td style="width: 30%; border-color:#fff; text-align: center;">
-                <div class="button-overlay"><button onclick="cloneToNewRequest();">Clone</button></div>
-            </td>
-            <td style="width: 30%; border-color:#fff; text-align: center;">
-                <p id="status"></p>
-            </td>
-        </tr>
-    </tbody>
+    <table class="display" style="width:90%">
+        <tbody>
+            <tr>
+                <td style="width: 30%; text-align: center;">
+                    <div class="button-overlay"><button onclick="location.href='/home';">Back</button></div>
+                <td style="width: 30%; text-align: center;">
+                    <div class="button-overlay"><button onclick="cloneToNewRequest();">Clone</button></div>
+                </td>
+                <td style="width: 30%; text-align: center;">
+                    <p id="status" style="color:#b0b0b0;"></p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
     <h1 class="header">Java Code Editor</h1>
     <form id="main" action="/cloudbatchjobinjava/submit/{{tempPageRequestID}}" method="post">
         <param id="requestid" name="requestid" value='{{ requestid }}'>
