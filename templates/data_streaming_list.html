@@ -103,7 +103,7 @@
                                     </td>
                                     {% if cloudbatchjob.STATUS == 'DRAFT' %}
                                     <td style="width: 10%; border-color:#fff; text-align: center;">
-                                        <div class="button-overlay"><button onclick="deleteDraft({{ stream.ID }}, {{ cloudbatchjob.ID }});">Delete</button></div>
+                                        <div class="button-overlay"><button onclick="deleteDraft('{{ cloudbatchjob.ID }}'');">Delete</button></div>
                                     </td>
                                     {% endif %}
                                 </tr>
@@ -129,7 +129,7 @@
             $('#' + streamId + '_cloudbatchjob').modal('show');
         }
 
-        function deleteDraft(streamId, cloudbatchjobId) {
+        function deleteDraft(cloudbatchjobId) {
             fetch('/home/delete-draft/' + cloudbatchjobId).value, {
                 method: 'POST'
             }).then(response => response.text())
