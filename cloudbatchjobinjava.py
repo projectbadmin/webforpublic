@@ -22,7 +22,7 @@ classMethodsforOnEnd = {}
 
 def cloudbatchjobinjava(application, requestid):
     streamRequest = findStreamRequestFromSession(requestid)
-    tempPageRequestID = cloneToNewRequest(application, requestid, streamRequest['REQUEST_CONTENT'], "", "", "", "")
+    tempPageRequestID = cloneToNewRequest(application, requestid, streamRequest, "", "", "", "")
     shutil.rmtree(f"{application.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
     return render_template('cloudbatchjobinjava.html', newReq=True, requestid=requestid, tempPageRequestID=tempPageRequestID, code_for_onStart="", code_for_onProcess="", code_for_onEnd="", alias="", status="NEW")
 
@@ -99,9 +99,10 @@ def cloudbatchjobinjava_edit_program_file(application, requestid, requestContent
     return render_template('cloudbatchjobinjava.html', newReq=False, requestid=requestid, tempPageRequestID=tempPageRequestID, code_for_onStart=code_for_onStart, code_for_onProcess=code_for_onProcess, code_for_onEnd=code_for_onEnd, alias=alias, status=status)
 
 
-def cloneToNewRequest(application, requestid, requestContentInJSON, code_for_onStart, code_for_onProcess, code_for_onEnd, job_alias):
+def cloneToNewRequest(application, requestid, streamRequest, code_for_onStart, code_for_onProcess, code_for_onEnd, job_alias):
     read_javap_result(application)
     tempPageRequestID = str(uuid.uuid4())
+    requestContentInJSON = streamRequest['REQUEST_CONTENT']
     temp_session_value =  {
         'requestid': requestid,
         'job_alias': job_alias,
@@ -116,11 +117,16 @@ def cloneToNewRequest(application, requestid, requestContentInJSON, code_for_onS
     }
     if 'CloudBatchJobLocalDraft' not in session:
         session['CloudBatchJobLocalDraft'] = []
+        streamRequest['CLOUDBATCHJOBLIST'] = []
+        session['CloudBatchJobLocalDraft'].append(streamRequest)
+        
     temp_CloudBatchJobLocalDraft = session['CloudBatchJobLocalDraft']
     for i in range(len(temp_CloudBatchJobLocalDraft)):
         if temp_CloudBatchJobLocalDraft[i]['ID'] == requestid:
             temp_CloudBatchJobLocalDraft[i]['CLOUDBATCHJOBLIST'].append(temp_session_value)
-            return tempPageRequestID
+    session['CloudBatchJobLocalDraft'] = temp_CloudBatchJobLocalDraft
+            
+    return tempPageRequestID
 
 
 def save(requestid, job_alias, requestContentInJSON, code_for_onStart, code_for_onProcess, code_for_onEnd, tempPageRequestID):
