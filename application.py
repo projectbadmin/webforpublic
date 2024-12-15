@@ -2,7 +2,7 @@ from flask import  Flask, Response, jsonify, redirect, render_template, request,
 import json
 from applogging import init_logging
 from cloudbatchjobresult import fetch_result
-from commonFunction import check_logged_in_or_not, send_post_request
+from commonFunction import check_logged_in_or_not, findStreamRequestFromSession, findRequestFromSession, send_post_request
 from home import get_dataStreamingList, request_newJob
 from initialize import initialize
 from processUserCode import checkSyntaxBeforeCompile, process, realTimeUpdateLog, checkSyntax
@@ -65,12 +65,18 @@ def check_and_generate_keywords():
 
 @application.route('/cloudbatchjobinjava/submit/<tempPageRequestID>', methods=['POST'])
 def submitCloudbatchjobinjava(tempPageRequestID):
-    tempPageRequestID_value = session.get(tempPageRequestID, 'No request found')
-    if(tempPageRequestID_value=='No request found'):
-        return render_template('error.html', error_message="No request found")
-    requestid = tempPageRequestID_value['requestid']
+    requestid = request.form['requestid']
+    tempPageRequestID = request.form['tempPageRequestID']
+    
+    # get the requestContentInJSON
+    requestContentInJSON = ""
+    request = findRequestFromSession(requestid, tempPageRequestID)
+    if request is None:
+        return render_template('error.html', error_message="Cloub Batch Job not found")
+    else:
+        requestContentInJSON = request['requestContentInJSON']
+    
     job_alias = request.form['job_alias']
-    requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
     code_for_onStart = request.form['code_for_onStart']
     code_for_onProcess = request.form['code_for_onProcess']
     code_for_onEnd = request.form['code_for_onEnd']
@@ -94,41 +100,50 @@ def get_latest_output():
 @application.route('/cloudbatchjobinjava/check_syntax_for_onStart', methods=['POST'])
 def check_syntax_for_onStart():
     data = request.get_json()
+    requestid = data['requestid']
     tempPageRequestID = data['tempPageRequestID']
-    tempPageRequestID_value = session.get(tempPageRequestID, 'No request found')
-    if(tempPageRequestID_value=='No request found'):
-        return jsonify({'errors': tempPageRequestID_value})
-    requestid = tempPageRequestID_value['requestid']
-    requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
-    code_for_onStart = data['code_for_onStart']
-    result = checkSyntax(application, "onStart", code_for_onStart, requestid, requestContentInJSON)
-    return jsonify({'errors': result})
+    # get the requestContentInJSON
+    requestContentInJSON = ""
+    request = findRequestFromSession(requestid, tempPageRequestID)
+    if request is None:
+        return jsonify({'errors': 'No request found'})
+    else:
+        requestContentInJSON = request['requestContentInJSON']
+        code_for_onStart = data['code_for_onStart']
+        result = checkSyntax(application, "onStart", code_for_onStart, requestid, requestContentInJSON)
+        return jsonify({'errors': result})
 
 @application.route('/cloudbatchjobinjava/check_syntax_for_onProcess', methods=['POST'])
 def check_syntax_for_onProcess():
     data = request.get_json()
+    requestid = data['requestid']
     tempPageRequestID = data['tempPageRequestID']
-    tempPageRequestID_value = session.get(tempPageRequestID, 'No request found')
-    if(tempPageRequestID_value=='No request found'):
-        return jsonify({'errors': tempPageRequestID_value})
-    requestid = tempPageRequestID_value['requestid']
-    requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
-    code_for_onProcess = data['code_for_onProcess']
-    result = checkSyntax(application, "onProcess", code_for_onProcess, requestid, requestContentInJSON)
-    return jsonify({'errors': result})
+    # get the requestContentInJSON
+    requestContentInJSON = ""
+    request = findRequestFromSession(requestid, tempPageRequestID)
+    if request is None:
+        return jsonify({'errors': 'No request found'})
+    else:
+        requestContentInJSON = request['requestContentInJSON']
+        code_for_onProcess = data['code_for_onProcess']
+        result = checkSyntax(application, "onProcess", code_for_onProcess, requestid, requestContentInJSON)
+        return jsonify({'errors': result})
 
 @application.route('/cloudbatchjobinjava/check_syntax_for_onEnd', methods=['POST'])
 def check_syntax_for_onEnd():
     data = request.get_json()
+    requestid = data['requestid']
     tempPageRequestID = data['tempPageRequestID']
-    tempPageRequestID_value = session.get(tempPageRequestID, 'No request found')
-    if(tempPageRequestID_value=='No request found'):
-        return jsonify({'errors': tempPageRequestID_value})
-    requestid = tempPageRequestID_value['requestid']
-    requestContentInJSON = tempPageRequestID_value['requestContentInJSON']
-    code_for_onEnd = data['code_for_onEnd']
-    result = checkSyntax(application, "onEnd", code_for_onEnd, requestid, requestContentInJSON)
-    return jsonify({'errors': result})
+    # get the requestContentInJSON
+    requestContentInJSON = ""
+    request = findRequestFromSession(requestid, tempPageRequestID)
+    if request is None:
+        return jsonify({'errors': 'No request found'})
+    else:
+        requestContentInJSON = request['requestContentInJSON']
+        code_for_onEnd = data['code_for_onEnd']
+        result = checkSyntax(application, "onEnd", code_for_onEnd, requestid, requestContentInJSON)
+        return jsonify({'errors': result})
 
 
 @application.route('/cloudbatchjobinjava/use-data-streaming/save/<tempPageRequestID>', methods=['POST'])
@@ -137,10 +152,12 @@ def use_data_streaming_and_save(tempPageRequestID):
     job_alias = request.form['job_alias']
 
     # get the requestContentInJSON
-    requestContentInJSON = {}
-    for i in range(len(session['CloudBatchJobSubmitted'])):
-        if session['CloudBatchJobSubmitted'][i]['ID'] == requestid:
-            requestContentInJSON = session['CloudBatchJobSubmitted'][i]['REQUEST_CONTENT']
+    requestContentInJSON = ""
+    request = findRequestFromSession(requestid, tempPageRequestID)
+    if request is not None:
+        requestContentInJSON = request['requestContentInJSON']
+    else:
+        requestContentInJSON = findStreamRequestFromSession(requestid)['REQUEST_CONTENT']
     
     code_for_onStart = request.form['code_for_onStart']
     code_for_onProcess = request.form['code_for_onProcess']
@@ -168,8 +185,7 @@ def request_new_data_streaming():
     message = response.get('message', 'No message found')
     if message == "request successful":
         requestid = response.get('DATA_STREAM_ID', 'No message found')
-        requestContentInJSON = response.get('requestContentInJSON', 'No message found')
-        cloudbatchjobinjava_template = cloudbatchjobinjava(application, requestid, requestContentInJSON)
+        cloudbatchjobinjava_template = cloudbatchjobinjava(application, requestid)
         return cloudbatchjobinjava_template
     else:
         return redirect(url_for('home'))
@@ -177,43 +193,18 @@ def request_new_data_streaming():
 
 @application.route('/home/use-data-streaming/<stream_id>')
 def use_data_streaming(stream_id):
-    for i in range(len(session['CloudBatchJobSubmitted'])):
-        if session['CloudBatchJobSubmitted'][i]['ID'] == stream_id:
-            requestid = session['CloudBatchJobSubmitted'][i]['ID']
-            requestContentInJSON = session['CloudBatchJobSubmitted'][i]['REQUEST_CONTENT']
-            cloudbatchjobinjava_template = cloudbatchjobinjava(application, requestid, requestContentInJSON)
-            return cloudbatchjobinjava_template
+    cloudbatchjobinjava_template = cloudbatchjobinjava(application, stream_id)
+    return cloudbatchjobinjava_template
     
 
 @application.route('/home/use-data-streaming/<stream_id>/<cloudbatchjob_id>')
 def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
-    temp_check = False
-    for i in range(len(session['CloudBatchJobSubmitted'])):
-        if session['CloudBatchJobSubmitted'][i]['ID'] == stream_id:
-            requestid = session['CloudBatchJobSubmitted'][i]['ID']
-            requestContentInJSON = session['CloudBatchJobSubmitted'][i]['REQUEST_CONTENT']
-            if len(session['CloudBatchJobSubmitted'][i]['CLOUDBATCHJOBLIST']):
-                for j in range(len(session['CloudBatchJobSubmitted'][i]['CLOUDBATCHJOBLIST'])):
-                    if session['CloudBatchJobSubmitted'][i]['CLOUDBATCHJOBLIST'][j]['ID'] == cloudbatchjob_id:
-                        alias = session['CloudBatchJobSubmitted'][i]['CLOUDBATCHJOBLIST'][j]['ALIAS']
-                        status = session['CloudBatchJobSubmitted'][i]['CLOUDBATCHJOBLIST'][j]['STATUS']
-                        temp_check = True
-                        cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias, status)
-                        return cloudbatchjobinjava_template
-    
-    if not temp_check:
-        if session.get('CloudBatchJobLocalDraft', None) is not None:
-            for i in range(len(session['CloudBatchJobLocalDraft'])):
-                if session['CloudBatchJobLocalDraft'][i]['ID'] == cloudbatchjob_id:
-                    requestid = session['CloudBatchJobLocalDraft'][i]['requestid']
-                    requestContentInJSON = session['CloudBatchJobLocalDraft'][i]['requestContentInJSON']
-                    alias = session['CloudBatchJobLocalDraft'][i]['job_alias']
-                    status = session['CloudBatchJobLocalDraft'][i]['status']
-                    cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, requestid, requestContentInJSON, cloudbatchjob_id, alias, status)
-                    return cloudbatchjobinjava_template
-
-    if not temp_check:
+    request = findRequestFromSession(stream_id, cloudbatchjob_id)
+    if request is None:
         return render_template('error.html', error_message="Cloub Batch Job not found")
+    else:
+        cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, stream_id, request['requestContentInJSON'], cloudbatchjob_id, request['job_alias'], request['status'])
+        return cloudbatchjobinjava_template
 
 
 @application.route('/home/use-data-streaming/<stream_id>/clone', methods=['POST'])
@@ -226,9 +217,9 @@ def use_data_streaming_clone(stream_id):
 
     # get the requestContentInJSON
     requestContentInJSON = {}
-    for i in range(len(session['CloudBatchJobSubmitted'])):
-        if session['CloudBatchJobSubmitted'][i]['ID'] == stream_id:
-            requestContentInJSON = session['CloudBatchJobSubmitted'][i]['REQUEST_CONTENT']
+    streamRequest = findStreamRequestFromSession(stream_id)
+    if streamRequest is not None:
+        requestContentInJSON = streamRequest['REQUEST_CONTENT']
     
     # clone the request
     clone_tempPageRequestID = cloneToNewRequest(application, stream_id, requestContentInJSON, code_for_onStart, code_for_onProcess, code_for_onEnd, job_alias)

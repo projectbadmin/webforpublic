@@ -18,7 +18,7 @@ classMethodsforOnStart = {}
 classMethodsforOnProcess = {}
 classMethodsforOnEnd = {}
 
-def cloudbatchjobinjava(application, requestid, requestContentInJSON):
+def cloudbatchjobinjava(application, requestid):
     read_javap_result(application)
     tempPageRequestID = str(uuid.uuid4())
     shutil.rmtree(f"{application.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
@@ -135,19 +135,20 @@ def save(requestid, job_alias, requestContentInJSON, code_for_onStart, code_for_
         'ID': tempPageRequestID
     }
 
-    if session.get('CloudBatchJobLocalDraft', None) is None:
-        session['CloudBatchJobLocalDraft'] = []
-
     # check if the cloudbatchjob is in draft    
     new_temp_session_value = []
     for i in range(len(session['CloudBatchJobLocalDraft'])):
-        if session['CloudBatchJobLocalDraft'][i]['ID'] != tempPageRequestID:
-            new_temp_session_value.append(session['CloudBatchJobLocalDraft'][i])
+        for j in range(len(session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'])):
+            if session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'][j]['ID'] != tempPageRequestID:
+                new_temp_session_value.append(temp_session_value)
     
-    new_temp_session_value.append(temp_session_value)
+    for i in range(len(new_temp_session_value)):
+        for j in range(len(new_temp_session_value[i]['CLOUDBATCHJOBLIST'])):
+            if new_temp_session_value[i]['CLOUDBATCHJOBLIST'][j]['ID'] == tempPageRequestID:
+                new_temp_session_value[i]['CLOUDBATCHJOBLIST'].append(temp_session_value)
+                break
 
     session['CloudBatchJobLocalDraft'] = new_temp_session_value
-    session.modified = True
 
     return "Draft saved successfully"
 

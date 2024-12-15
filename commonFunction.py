@@ -45,3 +45,29 @@ def check_logged_in_or_not():
         if message == "Login session valid":
             return True
     return False
+
+
+def findStreamRequestFromSession(requestid):
+    for i in range(len(session['StreamRequest'])):
+        if session['StreamRequest'][i]['ID'] == requestid:
+            return session['StreamRequest'][i]
+    return None
+
+
+def findRequestFromSession(requestid, tempPageRequestID):
+    for i in range(len(session['CloudBatchJobSubmitted'])):
+        if session['CloudBatchJobSubmitted'][i]['ID'] == requestid:
+            for j in range(len(session['CloudBatchJobSubmitted'][i]['CLOUDBATCHJOBLIST'])):
+                if session['CloudBatchJobSubmitted'][i]['CLOUDBATCHJOBLIST'][j]['ID'] == tempPageRequestID:
+                    return session['CloudBatchJobSubmitted'][i]['CLOUDBATCHJOBLIST'][j]
+    
+    for i in range(len(session['CloudBatchJobLocalDraft'])):
+        if session['CloudBatchJobLocalDraft'][i]['ID'] == requestid:
+            for j in range(len(session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'])):
+                if session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'][j]['ID'] == tempPageRequestID:
+                    return session['CloudBatchJobLocalDraft'][i]['CLOUDBATCHJOBLIST'][j]
+    
+    return None
+    
+    
+    

@@ -96,10 +96,10 @@
                                     <td style="width: 20%; border-color:#fff; text-align: center;">{{ cloudbatchjob.CREATE_DATETIME }}</td>
                                     <td style="width: 20%; border-color:#fff; text-align: center;">{{ cloudbatchjob.STATUS }}</td>
                                     <td style="width: 10%; border-color:#fff; text-align: center;">
-                                        <div class="button-overlay"><button onclick="location.href='/home/use-data-streaming/{{ stream.ID }}/{{ cloudbatchjob.ID }}';">Edit</button></div>
+                                        <div class="button-overlay"><button onclick="window.open('/home/use-data-streaming/{{ stream.ID }}/{{ cloudbatchjob.ID }}', '_blank');">Edit</button></div>
                                     </td>
                                     <td style="width: 10%; border-color:#fff; text-align: center;">
-                                        <div class="button-overlay"><button onclick="location.href='/home/view-cloudbatchjob-result/{{ stream.ID }}/{{ cloudbatchjob.ID }}';">View</button></div>
+                                        <div class="button-overlay"><button onclick="window.open('/home/view-cloudbatchjob-result/{{ stream.ID }}/{{ cloudbatchjob.ID }}', '_blank');">View</button></div>
                                     </td>
                                     {% if cloudbatchjob.STATUS == 'DRAFT' %}
                                     <td style="width: 10%; border-color:#fff; text-align: center;">

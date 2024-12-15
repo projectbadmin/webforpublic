@@ -16,6 +16,8 @@ def get_dataStreamingList(stream_status, retention_hour, class_code, id, cloudba
     if 'message' in dataStreamList and dataStreamList.get('message', 'No message found')=='request fail':
         return {}
     
+    session['StreamRequest'] = dataStreamList
+    
     for dataStream in dataStreamList:
         dataStream['CLOUDBATCHJOBLIST'] = []
     

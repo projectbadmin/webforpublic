@@ -21,9 +21,9 @@
     <table class="display" style="width:90%">
         <tbody>
             <tr>
-                <td style="width: 30%; text-align: center;">
+                <td style="width: 10%; text-align: center;">
                     <div class="button-overlay"><button onclick="location.href='/home';">Back</button></div>
-                <td style="width: 30%; text-align: center;">
+                <td style="width: 10%; text-align: center;">
                     <div class="button-overlay"><button onclick="cloneToNewRequest();">Clone</button></div>
                 </td>
                 <td style="width: 30%; text-align: center;">
@@ -33,7 +33,11 @@
         </tbody>
     </table>
     <h1 class="header">Java Code Editor</h1>
+    {% if status != 'SUBMITTED' %}
     <form id="main" action="/cloudbatchjobinjava/submit/{{tempPageRequestID}}" method="post">
+    {% else %}
+    <form id="main">
+    {% endif %}
         <param id="requestid" name="requestid" value='{{ requestid }}'>
         <param id="tempPageRequestID" name="tempPageRequestID" value='{{ tempPageRequestID }}'>
         <p style="margin: 50px 0;"></p>
@@ -59,7 +63,11 @@
             <textarea id="code_for_onEnd" name="code_for_onEnd">{{ code_for_onEnd }}</textarea>
             <label for="code_for_onStart" class="code-label">}</label>
         </div>
+        {% if status != 'SUBMITTED' %}
+        <div class="button-overlay"><button id="submitCloudbatchjobinjava" disabled>Submit</button></div>
+        {% else %}
         <div class="button-overlay"><button type="submit" id="submitCloudbatchjobinjava" disabled>Submit</button></div>
+        {% endif %}
     </form>
     {% if status != 'SUBMITTED' %}
     <script>
@@ -179,6 +187,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        requestid: document.querySelector('param[name="requestid"]').value,
                         tempPageRequestID: document.querySelector('param[name="tempPageRequestID"]').value,
                         code_for_onStart: editor_for_OnStart.getValue()
                     })
@@ -223,6 +232,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        requestid: document.querySelector('param[name="requestid"]').value,
                         tempPageRequestID: document.querySelector('param[name="tempPageRequestID"]').value,
                         code_for_onProcess: editor_for_OnProcess.getValue()
                     })
@@ -267,6 +277,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        requestid: document.querySelector('param[name="requestid"]').value,
                         tempPageRequestID: document.querySelector('param[name="tempPageRequestID"]').value,
                         code_for_onEnd: editor_for_OnEnd.getValue()
                     })
