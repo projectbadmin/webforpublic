@@ -36,10 +36,11 @@ def cloudbatchjobinjava_edit_program_file(application, requestid, requestContent
     cloudbatchjob_in_draft_value = []
     if 'CloudBatchJobLocalDraft' in session:
         for key in session.get('CloudBatchJobLocalDraft'):
-            if key['ID'] == cloudbatchjob_id:
-                cloudbatchjob_in_draft = True
-                cloudbatchjob_in_draft_value = key
-                break
+            for key in key['CLOUDBATCHJOBLIST']:
+                if key['ID'] == cloudbatchjob_id:
+                    cloudbatchjob_in_draft = True
+                    cloudbatchjob_in_draft_value = key
+                    break
     
     shutil.rmtree(f"{application.config['clone_of_cloudBatchJobTemplate']}{requestid}_interfaceOnly", ignore_errors=True)
 
