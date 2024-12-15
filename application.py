@@ -203,8 +203,14 @@ def use_data_streaming_and_edit_program_file(stream_id, cloudbatchjob_id):
     if request is None:
         return render_template('error.html', error_message="Cloub Batch Job not found")
     else:
-        cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, stream_id, request['requestContentInJSON'], cloudbatchjob_id, request['job_alias'], request['status'])
-        return cloudbatchjobinjava_template
+        job_alias = request['job_alias']
+        status = request['status']
+    
+    streamRequest = findStreamRequestFromSession(stream_id)
+    requestContentInJSON = streamRequest['REQUEST_CONTENT']
+    
+    cloudbatchjobinjava_template = cloudbatchjobinjava_edit_program_file(application, stream_id, requestContentInJSON, cloudbatchjob_id, job_alias, status)
+    return cloudbatchjobinjava_template
 
 
 @application.route('/home/use-data-streaming/<stream_id>/clone', methods=['POST'])
