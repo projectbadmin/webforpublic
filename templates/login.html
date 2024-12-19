@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="http://cdn.jsdelivr.net/npm/@docsearch/css@3">
     <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
-    <script type="text/javascript" src="{{ url_for('static', filename='color-modes.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -90,7 +88,8 @@
 </head>
 
 <body class="d-flex align-items-center py-4 bg-body-tertiary">
-
+    <script type="text/javascript" src="{{ url_for('static', filename='color-modes.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
     <main class="form-signin w-100 m-auto">
         <form method="POST" action="{{ url_for('login') }}">
             <!--<img class="mb-4" src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">-->
