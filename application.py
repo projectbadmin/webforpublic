@@ -39,7 +39,7 @@ def login():
             return redirect(url_for('home'))
         else:
             return "Invalid credentials"
-    return render_template('login.html')
+    return render_template('login.html', title='Sign In')
 
 @application.route('/logout', methods=['GET'])
 def logout():

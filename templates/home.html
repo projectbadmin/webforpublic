@@ -14,8 +14,6 @@
     </script>
 </head>
 <body>
-    <script type="text/javascript" src="{{ url_for('static', filename='color-modes.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
     {% if session.cookie is none %}
     <div class="button-overlay"><button onclick="location.href='/login';">Login</button></div>
     {% else %}
