@@ -214,16 +214,15 @@
             </div>
         </section>
         <section id="request-job">
-            <h2 class="sticky-xl-top fw-bold pt-3 pt-xl-5 pb-2 pb-xl-3">Step 1</h2>
+            <h2 class="fw-bold pt-3 pt-xl-5 pb-2 pb-xl-3 text-center">Step 1</h2>
             <article class="my-3" id="overview">
-                <div class="bd-heading sticky-xl-top align-self-start mt-5 mb-3 mt-xl-0 mb-xl-2">
+                <div class="bd-heading align-self-center mt-5 mb-3 mt-xl-0 mb-xl-2 text-center"></div>
                     <h3>Prepare BackTest Data</h3>
-                    <a class="d-flex align-items-center" href="../forms/overview/">Documentation</a>
                 </div>
                 <div>
                     <div class="bd-example-snippet bd-code-snippet">
                         <div class="bd-example m-0 border-0">
-                            <form action="/home/request-new-data-streaming" method="post">
+                            <form action="/home/request-new-data-streaming" method="post" style="width: 50%; margin: 0 auto;"></form>
                                 <div class="mb-3">
                                     <label for="job-name" class="form-label">Date Time selection type:</label>
                                     <input type="text" id="datetime-selection-type" name="datetime-selection-type" class="form-control" value="1" required>
@@ -268,7 +267,9 @@
                                     <label for="retention-hour" class="form-label">Retention Hour:</label>
                                     <input type="number" id="retention-hour" name="retention-hour" class="form-control" value="1" >
                                 </div>
-                                <div class="button-overlay"><button type="submit">Request Job</button></div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary">Request Job</button>
+                                </div>
                                 <img id="requesting-new-job-icon" class="icon-button-hidden" src="{{ url_for('static', filename='loading.gif') }}">
                             </form>
                         </div>
