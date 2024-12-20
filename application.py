@@ -45,6 +45,7 @@ def login():
 def logout():
     send_post_request('https://b22md47un2.execute-api.ap-south-1.amazonaws.com/Logout', {})
     session.clear()
+    session['temprequestid'] = str(uuid.uuid4())
     return redirect(url_for('login'))
 
 @application.route('/cloudbatchjobingui')
@@ -265,6 +266,7 @@ def before_request():
         logged_in = check_logged_in_or_not()
         if not logged_in:
             session.clear()
+            session['temprequestid'] = str(uuid.uuid4())
             return redirect(url_for('login'))
 
 if __name__ == '__main__':
