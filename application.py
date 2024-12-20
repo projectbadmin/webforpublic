@@ -19,27 +19,30 @@ def home():
     data_streaming_list = get_dataStreamingList("","","","","")
     return render_template('home.html', data_streaming_list=data_streaming_list)
 
-@application.route('/login', methods=['GET','POST'])
+@application.route('/login')
 def login():
     logged_in = check_logged_in_or_not()
     if logged_in:
         return redirect(url_for('home'))
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        response = send_post_request(
-            'https://nk32qyplih.execute-api.ap-south-1.amazonaws.com/Login', 
-            {'USERNAME': username, 'PASSWORD': password}
-        )
-        message = response.get('message', 'No message found')
-        if message == "Login successful":
-            session.permanent = True
-            session['userid'] = response.get('userid', None)
-            session['cookie'] = response.get('cookie', None)
-            return redirect(url_for('home'))
-        else:
-            return "Invalid credentials"
-    return render_template('login.html')
+
+
+@application.route('/login_process', methods=['POST'])
+def login_process():
+    username = request.form['username']
+    password = request.form['password']
+    response = send_post_request(
+        'https://nk32qyplih.execute-api.ap-south-1.amazonaws.com/Login', 
+        {'USERNAME': username, 'PASSWORD': password}
+    )
+    message = response.get('message', 'No message found')
+    if message == "Login successful":
+        session.permanent = True
+        session['userid'] = response.get('userid', None)
+        session['cookie'] = response.get('cookie', None)
+        return redirect(url_for('home'))
+    else:
+        return "Invalid credentials"
+    
 
 @application.route('/logout', methods=['GET'])
 def logout():
