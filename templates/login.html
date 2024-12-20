@@ -89,7 +89,12 @@
 
 <body class="d-flex align-items-center py-4 bg-body-tertiary">
     <script type="text/javascript" src="{{ url_for('static', filename='color-modes.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}">
+        document.addEventListener('DOMContentLoaded', function () {
+                console.log('color-modes.js loaded successfully');
+                // Your JavaScript code here
+            });
+    </script>
     <main class="form-signin w-100 m-auto">
         <form method="POST" action="{{ url_for('login_process') }}">
             <!--<img class="mb-4" src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">-->
