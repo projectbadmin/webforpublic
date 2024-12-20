@@ -1,3 +1,4 @@
+import uuid
 from flask import  Flask, jsonify, redirect, render_template, request, session, url_for
 from cloudbatchjobresult import fetch_result
 from commonFunction import check_logged_in_or_not, findStreamRequestFromSession, findRequestFromSession, send_post_request
