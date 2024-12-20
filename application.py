@@ -261,13 +261,13 @@ def delete_draft(cloudbatchjob_id):
 # Register the function to run before each request
 @application.before_request
 def before_request():
+    session['temprequestid'] = str(uuid.uuid4())
     if request.endpoint != 'login':
         if request.method not in ['GET', 'POST']:
             return "Method not allowed", 405
         logged_in = check_logged_in_or_not()
         if not logged_in:
             session.clear()
-            session['temprequestid'] = str(uuid.uuid4())
             return redirect(url_for('login'))
 
 if __name__ == '__main__':
