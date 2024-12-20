@@ -7,7 +7,7 @@ from initialize import initialize
 from processUserCode import checkSyntaxBeforeCompile, process, realTimeUpdateLog, checkSyntax
 from cloudbatchjobinjava import check_and_generate_keywords_, cloneToNewRequest, cloudbatchjobinjava, cloudbatchjobinjava_edit_program_file, read_javap_result, save
 
-application = Flask(__name__)
+application = Flask(__name__, static_folder='static', template_folder='templates')
 initialize(application)
 
 
@@ -46,7 +46,6 @@ def login():
 def logout():
     send_post_request('https://b22md47un2.execute-api.ap-south-1.amazonaws.com/Logout', {})
     session.clear()
-    session['temprequestid'] = str(uuid.uuid4())
     return redirect(url_for('login'))
 
 @application.route('/cloudbatchjobingui')
@@ -261,7 +260,6 @@ def delete_draft(cloudbatchjob_id):
 # Register the function to run before each request
 @application.before_request
 def before_request():
-    session['temprequestid'] = str(uuid.uuid4())
     if request.endpoint != 'login':
         if request.method not in ['GET', 'POST']:
             return "Method not allowed", 405
