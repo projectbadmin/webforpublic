@@ -24,6 +24,7 @@ def login():
     logged_in = check_logged_in_or_not()
     if logged_in:
         return redirect(url_for('home'))
+    return render_template('login.html')
 
 
 @application.route('/login_process', methods=['POST'])
