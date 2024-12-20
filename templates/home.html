@@ -7,8 +7,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
     <link rel="canonical" href="http://getbootstrap.com/docs/5.3/examples/navbars/">
+    <link rel="canonical" href="http://getbootstrap.com/docs/5.3/examples/cheatsheet/">
     <link rel="stylesheet" href="http://cdn.jsdelivr.net/npm/@docsearch/css@3">
     <link rel="stylesheet" href="{{ url_for('static', filename='navbars.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='cheatsheet.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='color-modes.js') }}"></script>
@@ -18,6 +20,83 @@
         });
     </script>
     <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+            }
+        }
+
+        .b-example-divider {
+            width: 100%;
+            height: 3rem;
+            background-color: rgba(0, 0, 0, .1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+
+        .b-example-vr {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 100vh;
+        }
+
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: auto;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .btn-bd-primary {
+            --bd-violet-bg: #712cf9;
+            --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+            --bs-btn-font-weight: 600;
+            --bs-btn-color: var(--bs-white);
+            --bs-btn-bg: var(--bd-violet-bg);
+            --bs-btn-border-color: var(--bd-violet-bg);
+            --bs-btn-hover-color: var(--bs-white);
+            --bs-btn-hover-bg: #6528e0;
+            --bs-btn-hover-border-color: #6528e0;
+            --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+            --bs-btn-active-color: var(--bs-btn-hover-color);
+            --bs-btn-active-bg: #5a23c8;
+            --bs-btn-active-border-color: #5a23c8;
+        }
+
+        .bd-mode-toggle {
+            z-index: 1500;
+        }
+
+        .bd-mode-toggle .dropdown-menu .active .bi {
+            display: block !important;
+        }
+
         .bd-placeholder-img {
             font-size: 1.125rem;
             text-anchor: middle;
@@ -136,42 +215,58 @@
         </section>
         <section id="request-job">
             <h2>Request New Job</h2>
-            <form action="/home/request-new-data-streaming" method="post">
-                <label for="job-name">Date Time selection type:</label>
-                <input type="text" id="datetime-selection-type" name="datetime-selection-type" value="1" required>
-                
-                <label for="from-date">From Date:</label>
-                <input type="date" id="from-date" name="from-date" value="2023-04-03" required>
-                
-                <label for="to-date">To Date:</label>
-                <input type="date" id="to-date" name="to-date" value="2023-05-03" required>
-                
-                <label for="from-time">From Time:</label>
-                <input type="time" id="from-time" name="from-time" value="09:00:00" required>
-                
-                <label for="to-time">To Time:</label>
-                <input type="time" id="to-time" name="to-time" value="16:30:00" required>
-                
-                <label for="class-code">Class Code:</label>
-                <input type="text" id="class-code" name="class-code" value="HSI" required>
-                
-                <label for="fut-opt">Future Option:</label>
-                <input type="text" id="fut-opt" name="fut-opt" value="F" required>
-                
-                <label for="expiry-mth">Expiry Month:</label>
-                <input type="text" id="expiry-mth" name="expiry-mth" >
-                
-                <label for="strike-prc">Strike Price:</label>
-                <input type="text" id="strike-prc" name="strike-prc" >
-                
-                <label for="call-put">Call/Put:</label>
-                <input type="text" id="call-put" name="call-put" >
-                
-                <label for="retention-hour">Retention Hour:</label>
-                <input type="number" id="retention-hour" name="retention-hour" value="1" >
-                <div class="button-overlay"><button type="submit">Request Job</button></div>
-                <img id="requesting-new-job-icon" class="icon-button-hidden" src="{{ url_for('static', filename='loading.gif') }}">
-            </form>
+            <div class="bd-example-snippet bd-code-snippet">
+                <div class="bd-example m-0 border-0">
+                    <form action="/home/request-new-data-streaming" method="post">
+                        <div class="mb-3">
+                            <label for="job-name" class="form-label">Date Time selection type:</label>
+                            <input type="text" id="datetime-selection-type" name="datetime-selection-type" class="form-control" value="1" required>
+                        </div> 
+                        <div class="mb-3">
+                            <label for="from-date" class="form-label">From Date:</label>
+                            <input type="date" id="from-date" name="from-date" class="form-control" value="2023-04-03" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="to-date" class="form-label">To Date:</label>
+                            <input type="date" id="to-date" name="to-date" class="form-control" value="2023-05-03" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="from-time" class="form-label">From Time:</label>
+                            <input type="time" id="from-time" name="from-time" class="form-control" value="09:00:00" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="to-time" class="form-label">To Time:</label>
+                            <input type="time" id="to-time" name="to-time" class="form-control" value="16:30:00" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="class-code" class="form-label">Class Code:</label>
+                            <input type="text" id="class-code" name="class-code" class="form-control" value="HSI" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fut-opt" class="form-label">Future Option:</label>
+                            <input type="text" id="fut-opt" name="fut-opt" class="form-control" value="F" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="expiry-mth" class="form-label">Expiry Month:</label>
+                            <input type="text" id="expiry-mth" name="expiry-mth" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="strike-prc" class="form-label">Strike Price:</label>
+                            <input type="text" id="strike-prc" name="strike-prc" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="call-put" class="form-label">Call/Put:</label>
+                            <input type="text" id="call-put" name="call-put" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="retention-hour" class="form-label">Retention Hour:</label>
+                            <input type="number" id="retention-hour" name="retention-hour" class="form-control" value="1" >
+                        </div>
+                        <div class="button-overlay"><button type="submit">Request Job</button></div>
+                        <img id="requesting-new-job-icon" class="icon-button-hidden" src="{{ url_for('static', filename='loading.gif') }}">
+                    </form>
+                </div>
+            </div>
         </section>
     </main>
 </body>
