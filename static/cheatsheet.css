@@ -97,7 +97,7 @@ body {
     body {
         display: grid;
         grid-template-rows: auto;
-        grid-template-columns: 1fr 4fr 1fr;
+        
         gap: 1rem;
     }
 
