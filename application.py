@@ -22,7 +22,7 @@ def home():
 
 @application.route('/creation')
 def creation():
-    return render_template('creation.html')
+    return redirect(url_for('creation'))
 
 @application.route('/login', methods=['GET','POST'])
 def login():
