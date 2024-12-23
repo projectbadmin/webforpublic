@@ -1,0 +1,26 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProjectB</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='common_head.css') }}">
+</head>
+<nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Thirteenth navbar example">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11"
+            aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
+            <a class="navbar-brand col-lg-3 me-0" href="#">ProjectB</a>
+            <div class="d-lg-flex col-lg-3 justify-content-lg-end">
+                {% if session.cookie is none %}
+                <button class="btn btn-primary" onclick="location.href='/login';">Login</button>
+                {% else %}
+                <button class="btn btn-primary" onclick="location.href='/logout';">Logout</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>

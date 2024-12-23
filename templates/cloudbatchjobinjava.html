@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}">
 </head>
 <body>
-    {% include "top.html" %}
+    {% include "top_title_only.html" %}
     <table class="display" style="width:90%">
         <tbody>
             <tr>
@@ -27,6 +27,22 @@
             </tr>
         </tbody>
     </table>
+
+    <div class="row  row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    Featured
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">onStart() {</h5>
+                    <textarea id="code_for_onStart" name="code_for_onStart">{{ code_for_onStart }}</textarea>
+                </div>
+                <div class="card-footer text-body-secondary">}</div>
+            </div>
+        </div>
+    </div>
+
     {% if status != 'SUBMITTED' %}
     <form id="main" action="/cloudbatchjobinjava/submit/{{ requestid }}/{{tempPageRequestID}}" method="post">
     {% else %}

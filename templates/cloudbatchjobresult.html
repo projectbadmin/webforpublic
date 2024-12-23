@@ -4,10 +4,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
 </head>
 <body>
+    {% include "top_title_only.html" %}
     <param id="stream_id" name="stream_id" value='{{ stream_id }}'>
     <param id="cloudbatchjob_id" name="cloudbatchjob_id" value='{{ cloudbatchjob_id }}'>
-    <button class="btn btn-primary" onclick="window.close();">Close</button>
-    <pre id="result" style="width: 100%; height: 50px;"></pre>
+    <div id="result" style="width: 100%; height: 50px;"></div>
 
     <script>
         fetch('/home/view-cloudbatchjob-result/fetch', {
