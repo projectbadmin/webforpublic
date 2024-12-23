@@ -176,7 +176,7 @@ def use_data_streaming_and_save(tempPageRequestID):
 
 
 
-@application.route('/home/request-new-data-streaming', methods=['POST'])
+@application.route('/creation/request-new-data-streaming', methods=['POST'])
 def request_new_data_streaming():
     datetimeselectiontype = request.form['datetime-selection-type']
     fromdate = request.form['from-date']
