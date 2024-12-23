@@ -3,6 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='common_head.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -71,9 +72,7 @@
                 </div>
                 <div class="modal-body modal-body-longer">
                     <td>
-                        <div class="icon-button-visible button-overlay">
-                            <button onclick="window.open('/home/use-data-streaming/{{ stream.ID }}', '_blank');">Add</button>
-                        </div>
+                        <button class="btn btn-primary" onclick="window.open('/home/use-data-streaming/{{ stream.ID }}', '_blank');">Add</button>
                     </td>
                     <!-- Modal content will be populated here -->
                     <div id="modal-content" class=" justify-content-center align-items-center">
@@ -95,14 +94,14 @@
                                     <td style="width: 20%; border-color:#fff; text-align: center;">{{ cloudbatchjob.CREATE_DATETIME }}</td>
                                     <td style="width: 20%; border-color:#fff; text-align: center;">{{ cloudbatchjob.STATUS }}</td>
                                     <td style="width: 10%; border-color:#fff; text-align: center;">
-                                        <div class="button-overlay"><button onclick="window.open('/home/use-data-streaming/{{ stream.ID }}/{{ cloudbatchjob.ID }}', '_blank');">Edit</button></div>
+                                        <button class="btn btn-primary" onclick="window.open('/home/use-data-streaming/{{ stream.ID }}/{{ cloudbatchjob.ID }}', '_blank');">Edit</button>
                                     </td>
                                     <td style="width: 10%; border-color:#fff; text-align: center;">
-                                        <div class="button-overlay"><button onclick="window.open('/home/view-cloudbatchjob-result/{{ stream.ID }}/{{ cloudbatchjob.ID }}', '_blank');">View</button></div>
+                                        <button class="btn btn-primary" onclick="window.open('/home/view-cloudbatchjob-result/{{ stream.ID }}/{{ cloudbatchjob.ID }}', '_blank');">View</button>
                                     </td>
                                     {% if cloudbatchjob.STATUS == 'DRAFT' %}
                                     <td style="width: 10%; border-color:#fff; text-align: center;">
-                                        <div class="button-overlay"><button onclick="deleteDraft('{{ cloudbatchjob.ID }}');">Delete</button></div>
+                                        <button class="btn btn-primary" onclick="deleteDraft('{{ cloudbatchjob.ID }}');">Delete</button>
                                     </td>
                                     {% endif %}
                                 </tr>
@@ -113,9 +112,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <div class="button-overlay">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
+                    <button class="btn btn-primary" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

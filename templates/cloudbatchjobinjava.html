@@ -14,7 +14,6 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='cloudbatchjobinjava.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}">
 </head>
 <body>
@@ -23,7 +22,7 @@
         <tbody>
             <tr>
                 <td style="width: 10%; text-align: center;">
-                    <div class="button-overlay"><button onclick="cloneToNewRequest();">Clone</button></div>
+                    <button class="btn btn-primary" onclick="cloneToNewRequest();">Clone</button>
                 </td>
                 <td style="width: 30%; text-align: center;">
                     <p id="status" style="color:#b0b0b0;"></p>
@@ -63,9 +62,9 @@
             <label for="code_for_onStart" class="code-label">}</label>
         </div>
         {% if status != 'SUBMITTED' %}
-        <div class="button-overlay"><button id="submitCloudbatchjobinjava" disabled>Submit</button></div>
+        <button class="btn btn-primary" id="submitCloudbatchjobinjava" disabled>Submit</button>
         {% else %}
-        <div class="button-overlay"><button type="submit" id="submitCloudbatchjobinjava" disabled>Submit</button></div>
+        <button class="btn btn-primary" type="submit" id="submitCloudbatchjobinjava" disabled>Submit</button>
         {% endif %}
     </form>
     {% if status != 'SUBMITTED' %}
