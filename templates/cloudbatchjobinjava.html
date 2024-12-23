@@ -15,18 +15,6 @@
 </head>
 <body>
     {% include "top_title_only.html" %}
-    <table class="display" style="width:90%">
-        <tbody>
-            <tr>
-                <td style="width: 10%; text-align: center;">
-                    <button class="btn btn-primary" onclick="cloneToNewRequest();">Clone</button>
-                </td>
-                <td style="width: 30%; text-align: center;">
-                    <p id="status" style="color:#b0b0b0;"></p>
-                </td>
-            </tr>
-        </tbody>
-    </table>
     {% if status != 'SUBMITTED' %}
     <form id="main" action="/cloudbatchjobinjava/submit/{{ requestid }}/{{tempPageRequestID}}" method="post">
     {% else %}
@@ -35,7 +23,10 @@
         <param id="requestid" name="requestid" value='{{ requestid }}'>
         <param id="tempPageRequestID" name="tempPageRequestID" value='{{ tempPageRequestID }}'>
         <p style="margin: 50px 0;"></p>
-        <div class="row  row-cols-1 row-cols-md-2 g-4">
+        <div class="row row-cols-1 row-cols-md-1 g-4" style="margin: 0 auto; width: 80%;"></div>
+            <div class="col">
+                <button class="btn btn-primary" onclick="cloneToNewRequest();">Clone</button>
+            </div>
             <div class="col">
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="job_alias" name="job_alias" value='{{ alias }}' onchange="saveAsDraft();">
@@ -72,12 +63,14 @@
                     </div>
                 </div>
             </div>
+            <div class="col">
+                {% if status != 'SUBMITTED' %}
+                <button class="btn btn-primary" id="submitCloudbatchjobinjava" disabled>Submit</button>
+                {% else %}
+                <button class="btn btn-primary" type="submit" id="submitCloudbatchjobinjava" disabled>Submit</button>
+                {% endif %}
+            </div>
         </div>
-        {% if status != 'SUBMITTED' %}
-        <button class="btn btn-primary" id="submitCloudbatchjobinjava" disabled>Submit</button>
-        {% else %}
-        <button class="btn btn-primary" type="submit" id="submitCloudbatchjobinjava" disabled>Submit</button>
-        {% endif %}
     </form>
     {% if status != 'SUBMITTED' %}
     <script>
