@@ -9,13 +9,13 @@
             <a class="navbar-brand col-lg-3 me-0" href="#">ProjectB</a>
             <ul class="navbar-nav col-lg-6 justify-content-lg-center">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/home">Home</a>
+                    <a class="nav-link {% if request.path == '/home' %}active{% endif %}" href="/home">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/creation">Creation</a>
+                    <a class="nav-link {% if request.path == '/creation' %}active{% endif %}" href="/creation">Creation</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link disabled" aria-disabled="true">Configure</a>
+                    <a class="nav-link {% if request.path == '/configure' %}active{% endif %}" href="/configure">Configure</a>
                 </li>
             </ul>
             <div class="d-lg-flex col-lg-3 justify-content-lg-end">
