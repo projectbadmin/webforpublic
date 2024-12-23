@@ -27,22 +27,6 @@
             </tr>
         </tbody>
     </table>
-
-    <div class="row  row-cols-1 row-cols-md-2 g-4">
-        <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    Featured
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">onStart() {</h5>
-                    <textarea id="code_for_onStart" name="code_for_onStart">{{ code_for_onStart }}</textarea>
-                </div>
-                <div class="card-footer text-body-secondary">}</div>
-            </div>
-        </div>
-    </div>
-
     {% if status != 'SUBMITTED' %}
     <form id="main" action="/cloudbatchjobinjava/submit/{{ requestid }}/{{tempPageRequestID}}" method="post">
     {% else %}
@@ -51,27 +35,43 @@
         <param id="requestid" name="requestid" value='{{ requestid }}'>
         <param id="tempPageRequestID" name="tempPageRequestID" value='{{ tempPageRequestID }}'>
         <p style="margin: 50px 0;"></p>
-        <div>
-            <label for="job_alias" class="code-label">Job alias: </label>
-            <input type="text" id="job_alias" name="job_alias" value='{{ alias }}' onchange="saveAsDraft();">
-        </div>
-        <p style="margin: 50px 0;"></p>
-        <div style="height: 25%;">
-            <label for="code_for_onStart" class="code-label">onStart() {</label>
-            <textarea id="code_for_onStart" name="code_for_onStart">{{ code_for_onStart }}</textarea>
-            <label for="code_for_onStart" class="code-label">}</label>
-        </div>
-        <p style="margin: 50px 0;">
-        <div style="height: 50%;">
-            <label for="code_for_onProcess" class="code-label">onProess(FutureDataStructure data) {</label>
-            <textarea id="code_for_onProcess" name="code_for_onProcess">{{ code_for_onProcess }}</textarea>
-            <label for="code_for_onStart" class="code-label">}</label>
-        </div>
-        <p style="margin: 50px 0;">
-        <div style="height: 25%;">
-            <label for="code_for_onEnd" class="code-label">onEnd() {</label>
-            <textarea id="code_for_onEnd" name="code_for_onEnd">{{ code_for_onEnd }}</textarea>
-            <label for="code_for_onStart" class="code-label">}</label>
+        <div class="row  row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="job_alias" name="job_alias" value='{{ alias }}' onchange="saveAsDraft();">
+                    <label for="floatingInput">Alias</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">Featured</div>
+                    <div class="card-body">
+                        <h5 class="card-title">onStart() {</h5>
+                        <textarea id="code_for_onStart" name="code_for_onStart">{{ code_for_onStart }}</textarea>
+                        <h5 class="card-title">}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">Featured</div>
+                    <div class="card-body">
+                        <h5 class="card-title">onProess(FutureDataStructure data) {</h5>
+                        <textarea id="code_for_onProcess" name="code_for_onProcess">{{ code_for_onProcess }}</textarea>
+                        <h5 class="card-title">}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">Featured</div>
+                    <div class="card-body">
+                        <h5 class="card-title">onEnd() {</h5>
+                        <textarea id="code_for_onEnd" name="code_for_onEnd">{{ code_for_onEnd }}</textarea>
+                        <h5 class="card-title">}</h5>
+                    </div>
+                </div>
+            </div>
         </div>
         {% if status != 'SUBMITTED' %}
         <button class="btn btn-primary" id="submitCloudbatchjobinjava" disabled>Submit</button>
