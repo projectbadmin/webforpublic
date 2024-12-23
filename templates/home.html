@@ -177,7 +177,7 @@
 </head>
 <body>
     <main>
-        {% extends "top.html" %}
+        {% include "top.html" %}
         <section id="running-jobs">
             <div id="data-streaming-container">
                 {% include 'data_streaming_list.html' %}
@@ -249,5 +249,5 @@
         </section>
     </main>
 </body>
-{% extends "base.html" %}
+{% include "base.html" %}
 </html>
