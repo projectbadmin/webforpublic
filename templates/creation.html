@@ -27,55 +27,55 @@
                 <div class="row row-cols-1 row-cols-md-1 g-4" style="margin: 0 auto; width: 30%;">
                     <div class="bd-example-snippet bd-code-snippet">
                         <div class="bd-example m-0 border-0">
-                            <form action="/creation/request-new-data-streaming" method="post" style="width: 50%; margin: 0 auto;"></form>
-                            <div class="mb-3">
-                                <label for="job-name" class="form-label">*Date Time selection type:</label>
-                                <input type="text" id="datetime-selection-type" name="datetime-selection-type" class="form-control text-center {% if showinputwarningicon and 'datetime-selection-type' in showinputwarningicon %}is-invalid{% endif %}" value="1" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="from-date" class="form-label">*From Date:</label>
-                                <input type="date" id="from-date" name="from-date" class="form-control text-center {% if showinputwarningicon and 'from-date' in showinputwarningicon %}is-invalid{% endif %}" value="2023-04-03" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="to-date" class="form-label">*To Date:</label>
-                                <input type="date" id="to-date" name="to-date" class="form-control text-center {% if showinputwarningicon and 'to-date' in showinputwarningicon %}is-invalid{% endif %}" value="2023-05-03" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="from-time" class="form-label">*From Time:</label>
-                                <input type="time" id="from-time" name="from-time" class="form-control text-center {% if showinputwarningicon and 'from-time' in showinputwarningicon %}is-invalid{% endif %}" value="09:00:00" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="to-time" class="form-label">*To Time:</label>
-                                <input type="time" id="to-time" name="to-time" class="form-control text-center {% if showinputwarningicon and 'to-time' in showinputwarningicon %}is-invalid{% endif %}" value="16:30:00" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="class-code" class="form-label">*Class Code:</label>
-                                <input type="text" id="class-code" name="class-code" class="form-control text-center {% if showinputwarningicon and 'class-code' in showinputwarningicon %}is-invalid{% endif %}" value="HSI" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="fut-opt" class="form-label">*Future Option:</label>
-                                <input type="text" id="fut-opt" name="fut-opt" class="form-control text-center {% if showinputwarningicon and 'fut-opt' in showinputwarningicon %}is-invalid{% endif %}" value="F" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="expiry-mth" class="form-label">Expiry Month:</label>
-                                <input type="text" id="expiry-mth" name="expiry-mth" class="form-control text-center ">
-                            </div>
-                            <div class="mb-3">
-                                <label for="strike-prc" class="form-label">Strike Price:</label>
-                                <input type="text" id="strike-prc" name="strike-prc" class="form-control text-center">
-                            </div>
-                            <div class="mb-3">
-                                <label for="call-put" class="form-label">Call/Put:</label>
-                                <input type="text" id="call-put" name="call-put" class="form-control text-center">
-                            </div>
-                            <div class="mb-3">
-                                <label for="retention-hour" class="form-label">*Retention Hour:</label>
-                                <input type="number" id="retention-hour" name="retention-hour" class="form-control text-center {% if showinputwarningicon and 'retention-hour' in showinputwarningicon %}is-invalid{% endif %}" value="1">
-                            </div>
-                            <div class="text-center">
-                                <button class="btn btn-primary" type="submit">Request Job</button>
-                            </div>
-                            <img id="requesting-new-job-icon" class="icon-button-hidden" src="{{ url_for('static', filename='loading.gif') }}">
+                            <form action="/creation/request-new-data-streaming" method="post" style="width: 50%; margin: 0 auto;">
+                                <div class="mb-3">
+                                    <label for="job-name" class="form-label">*Date Time selection type:</label>
+                                    <input type="text" id="datetime-selection-type" name="datetime-selection-type" class="form-control text-center {% if showinputwarningicon and 'datetime-selection-type' in showinputwarningicon %}is-invalid{% endif %}" value="1" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="from-date" class="form-label">*From Date:</label>
+                                    <input type="date" id="from-date" name="from-date" class="form-control text-center {% if showinputwarningicon and 'from-date' in showinputwarningicon %}is-invalid{% endif %}" value="2023-04-03" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="to-date" class="form-label">*To Date:</label>
+                                    <input type="date" id="to-date" name="to-date" class="form-control text-center {% if showinputwarningicon and 'to-date' in showinputwarningicon %}is-invalid{% endif %}" value="2023-05-03" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="from-time" class="form-label">*From Time:</label>
+                                    <input type="time" id="from-time" name="from-time" class="form-control text-center {% if showinputwarningicon and 'from-time' in showinputwarningicon %}is-invalid{% endif %}" value="09:00:00" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="to-time" class="form-label">*To Time:</label>
+                                    <input type="time" id="to-time" name="to-time" class="form-control text-center {% if showinputwarningicon and 'to-time' in showinputwarningicon %}is-invalid{% endif %}" value="16:30:00" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="class-code" class="form-label">*Class Code:</label>
+                                    <input type="text" id="class-code" name="class-code" class="form-control text-center {% if showinputwarningicon and 'class-code' in showinputwarningicon %}is-invalid{% endif %}" value="HSI" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="fut-opt" class="form-label">*Future Option:</label>
+                                    <input type="text" id="fut-opt" name="fut-opt" class="form-control text-center {% if showinputwarningicon and 'fut-opt' in showinputwarningicon %}is-invalid{% endif %}" value="F" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="expiry-mth" class="form-label">Expiry Month:</label>
+                                    <input type="text" id="expiry-mth" name="expiry-mth" class="form-control text-center ">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="strike-prc" class="form-label">Strike Price:</label>
+                                    <input type="text" id="strike-prc" name="strike-prc" class="form-control text-center">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="call-put" class="form-label">Call/Put:</label>
+                                    <input type="text" id="call-put" name="call-put" class="form-control text-center">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="retention-hour" class="form-label">*Retention Hour:</label>
+                                    <input type="number" id="retention-hour" name="retention-hour" class="form-control text-center {% if showinputwarningicon and 'retention-hour' in showinputwarningicon %}is-invalid{% endif %}" value="1">
+                                </div>
+                                <div class="text-center">
+                                    <button class="btn btn-primary" type="submit">Request Job</button>
+                                </div>
+                                <img id="requesting-new-job-icon" class="icon-button-hidden" src="{{ url_for('static', filename='loading.gif') }}">
                             </form>
                         </div>
                     </div>
