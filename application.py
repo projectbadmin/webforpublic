@@ -20,6 +20,10 @@ def home():
     data_streaming_list = get_dataStreamingList("","","","","")
     return render_template('home.html', data_streaming_list=data_streaming_list)
 
+@application.route('/creation')
+def home():
+    return render_template('creation.html')
+
 @application.route('/login', methods=['GET','POST'])
 def login():
     logged_in = check_logged_in_or_not()

@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}">
 </head>
 <body>
+    {% extends "top.html" %}
     <param id="stream_id" name="stream_id" value='{{ stream_id }}'>
     <param id="cloudbatchjob_id" name="cloudbatchjob_id" value='{{ cloudbatchjob_id }}'>
     <div class="button-overlay"><button onclick="location.href='/home';">Back</button></div>
