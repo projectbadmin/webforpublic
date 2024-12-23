@@ -21,7 +21,7 @@ def home():
     return render_template('home.html', data_streaming_list=data_streaming_list)
 
 @application.route('/creation')
-def home():
+def creation():
     return render_template('creation.html')
 
 @application.route('/login', methods=['GET','POST'])
