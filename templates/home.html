@@ -23,8 +23,12 @@
         {% include "top.html" %}
         <div class="row row-cols-1 row-cols-md-1 g-4" style="margin: 0 auto; width: 80%;">
             <section id="running-jobs">
-                <div id="data-streaming-container">
-                    {% include 'data_streaming_list.html' %}
+                <div class="card">
+                    <div class="card-header">The data you already prepared</div>
+                        <div id="data-streaming-container">
+                            {% include 'data_streaming_list.html' %}
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>

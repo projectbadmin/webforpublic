@@ -22,7 +22,7 @@ def home():
 
 @application.route('/creation')
 def creation():
-    return render_template('creation.html')
+    return render_template('creation.html', showinputwarningicon=None)
 
 @application.route('/login', methods=['GET','POST'])
 def login():
@@ -178,17 +178,43 @@ def use_data_streaming_and_save(tempPageRequestID):
 
 @application.route('/creation/request-new-data-streaming', methods=['POST'])
 def request_new_data_streaming():
+    showinputwarningicon = []
     datetimeselectiontype = request.form['datetime-selection-type']
+    if not datetimeselectiontype:
+        showinputwarningicon.append('datetime-selection-type')
     fromdate = request.form['from-date']
+    if not fromdate:
+        showinputwarningicon.append('from-date')
     todate = request.form['to-date']
+    if not todate:
+        showinputwarningicon.append('to-date')
     fromtime = request.form['from-time']
+    if not fromtime:
+        showinputwarningicon.append('from-time')
     totime = request.form['to-time']
+    if not totime:
+        showinputwarningicon.append('to-time')
     class_code = request.form['class-code']
+    if not class_code:
+        showinputwarningicon.append('class-code')
     fut_opt = request.form['fut-opt']
+    if not fut_opt:
+        showinputwarningicon.append('fut-opt')
     expiry_mth = request.form['expiry-mth']
+    if not expiry_mth:
+        showinputwarningicon.append('expiry-mth')
     strike_prc = request.form['strike-prc']
+    if not strike_prc:
+        showinputwarningicon.append('strike-prc')
     call_put = request.form['call-put']
+    if not call_put:
+        showinputwarningicon.append('call-put')
     retention_hour = request.form['retention-hour']
+    if not retention_hour:
+        showinputwarningicon.append('retention-hour')
+
+    if showinputwarningicon:
+        return render_template('creation.html', showinputwarningicon=showinputwarningicon)
     response = request_newJob(datetimeselectiontype, fromdate, todate, fromtime, totime, class_code, fut_opt, expiry_mth, strike_prc, call_put, retention_hour)
     message = response.get('message', 'No message found')
     if message == "request successful":
