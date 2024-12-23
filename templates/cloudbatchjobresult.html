@@ -8,7 +8,7 @@
     {% include "top_title_only.html" %}
     <param id="stream_id" name="stream_id" value='{{ stream_id }}'>
     <param id="cloudbatchjob_id" name="cloudbatchjob_id" value='{{ cloudbatchjob_id }}'>
-    <pre id="result" style="width: 100%; height: 50px;"></pre>
+    <pre id="result" style="width: 100%; height: 100%;"></pre>
 
     <script>
         fetch('/home/view-cloudbatchjob-result/fetch', {
