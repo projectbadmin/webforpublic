@@ -241,7 +241,11 @@ def use_data_streaming_clone(stream_id):
 
 @application.route('/home/view-cloudbatchjob-result/<stream_id>/<cloudbatchjob_id>')
 def view_cloudbatchjob_result(stream_id, cloudbatchjob_id):
-    return render_template('cloudbatchjobresult.html', stream_id=stream_id, cloudbatchjob_id=cloudbatchjob_id)
+    temprequest = findRequestFromSession(stream_id, cloudbatchjob_id)
+    if temprequest is None:
+        return render_template('error.html', error_message="Cloub Batch Job not found")
+    alias = temprequest['ALIAS']
+    return render_template('cloudbatchjobresult.html', stream_id=stream_id, cloudbatchjob_id=cloudbatchjob_id, alias=alias)
 
 
 @application.route('/home/view-cloudbatchjob-result/fetch', methods=['POST'])
