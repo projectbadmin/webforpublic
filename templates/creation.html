@@ -39,7 +39,7 @@
                                                 url: form.attr('action'),
                                                 data: form.serialize(),
                                                 success: function(response) {
-                                                    $('#response-message').text(response.message).show();
+                                                    $('#response-message').text(response.message || 'Success').show();
                                                 },
                                                 error: function(xhr, status, error) {
                                                     $('#response-message').text('An error occurred: ' + error).show();
