@@ -196,12 +196,12 @@ def request_new_data_streaming():
     request_newJob(datetimeselectiontype, fromdate, todate, fromtime, totime, class_code, fut_opt, expiry_mth, strike_prc, call_put, retention_hour, stream_unique_id)
     get_dataStreamingList("","","","","")
     session['requestingNewStreamingData'] = False
-    return redirect(url_for('use_data_streaming', stream_id=stream_unique_id))
+    return use_data_streaming(stream_unique_id, True)
     
 
 @application.route('/home/use-data-streaming/<stream_id>')
-def use_data_streaming(stream_id):
-    cloudbatchjobinjava_template = cloudbatchjobinjava(application, stream_id)
+def use_data_streaming(stream_id, stepbystep=False):
+    cloudbatchjobinjava_template = cloudbatchjobinjava(application, stream_id, stepbystep)
     return cloudbatchjobinjava_template
     
 
