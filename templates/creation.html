@@ -73,9 +73,8 @@
                                     <input type="number" id="retention-hour" name="retention-hour" class="form-control text-center" value="1">
                                 </div>
                                 <div class="text-center">
-                                    <button class="btn btn-primary" onclick="requestNewDataStreaming()">Request Job</button>
+                                    <button class="btn btn-primary" id="submit" onclick="requestNewDataStreaming()">Request Job</button>
                                 </div>
-                                <img id="requesting-new-job-icon" class="icon-button-hidden" src="{{ url_for('static', filename='loading.gif') }}">
                             </form>
                         </div>
                     </div>
@@ -87,9 +86,20 @@
 {% include "base.html" %}
 <script>
     function requestNewDataStreaming(){
-        var form = $(this);
         var url = "/creation/request-new-data-streaming";
-        var formData = form.serialize();
+        let formData = new FormData();
+        formData.append('datetime-selection-type', document.getElementById('datetime-selection-type').value);
+        formData.append('from-date', document.getElementById('from-date').value);
+        formData.append('to-date', document.getElementById('to-date').value);
+        formData.append('from-time', document.getElementById('from-time').value);
+        formData.append('to-time', document.getElementById('to-time').value);
+        formData.append('class-code', document.getElementById('class-code').value);
+        formData.append('fut-opt', document.getElementById('fut-opt').value);
+        formData.append('expiry-mth', document.getElementById('expiry-mth').value);
+        formData.append('strike-prc', document.getElementById('strike-prc').value);
+        formData.append('call-put', document.getElementById('call-put').value);
+        formData.append('retention-hour', document.getElementById('retention-hour').value);
+        //document.getElementById('submit').disabled = true;
         fetch(url, {
             method: 'POST',
             body: formData
