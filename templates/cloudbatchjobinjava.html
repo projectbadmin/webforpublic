@@ -17,11 +17,13 @@
 <body>
     {% include "top_title_only.html" %}
 
-    <h2 class="fw-bold pt-3 pt-xl-5 pb-2 pb-xl-3 text-center">Step 2</h2>
+    {% if stepbystep %}<h2 class="fw-bold pt-3 pt-xl-5 pb-2 pb-xl-3 text-center">Step 2</h2>{% endif %}
     <article class="my-3" id="overview">
+        {% if stepbystep %}
         <div class="bd-heading align-self-center mt-5 mb-3 mt-xl-0 mb-xl-2 text-center">
             <h3>Write your stratgy</h3>
         </div>
+        {% endif %}
         {% if status != 'SUBMITTED' %}
         <form id="main" action="/cloudbatchjobinjava/submit/{{ requestid }}/{{tempPageRequestID}}" method="post">
         {% else %}
