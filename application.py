@@ -180,7 +180,7 @@ def use_data_streaming_and_save(tempPageRequestID):
 def request_new_data_streaming():
     if session.get('requestingNewStreamingData') is not None and session.get('requestingNewStreamingData') is True:
         return render_template('error.html', error_message="The previous request is still in progress. Please wait for the previous request to complete.")
-    session.get('requestingNewStreamingData') = True
+    session['requestingNewStreamingData'] = True
     datetimeselectiontype = request.form['datetime-selection-type']
     fromdate = request.form['from-date']
     todate = request.form['to-date']
