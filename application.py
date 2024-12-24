@@ -178,6 +178,9 @@ def use_data_streaming_and_save(tempPageRequestID):
 
 @application.route('/creation/request-new-data-streaming', methods=['POST'])
 def request_new_data_streaming():
+    if session.get('requestingNewStreamingData') is not None and session.get('requestingNewStreamingData') is True:
+        return render_template('error.html', error_message="The previous request is still in progress. Please wait for the previous request to complete.")
+    session.get('requestingNewStreamingData') = True
     datetimeselectiontype = request.form['datetime-selection-type']
     fromdate = request.form['from-date']
     todate = request.form['to-date']
@@ -192,6 +195,7 @@ def request_new_data_streaming():
     stream_unique_id = str(uuid.uuid1())
     request_newJob(datetimeselectiontype, fromdate, todate, fromtime, totime, class_code, fut_opt, expiry_mth, strike_prc, call_put, retention_hour, stream_unique_id)
     get_dataStreamingList("","","","","")
+    session['requestingNewStreamingData'] = False
     return redirect(url_for('use_data_streaming', stream_id=stream_unique_id))
     
 

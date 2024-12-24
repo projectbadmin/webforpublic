@@ -73,9 +73,8 @@
                                     <input type="number" id="retention-hour" name="retention-hour" class="form-control text-center" value="1">
                                 </div>
                                 <div class="text-center">
-                                    <button class="btn btn-primary" type="submit">Request Job</button>
+                                    <button class="btn btn-primary" type="submit" onclick="this.disabled=true; this.form.submit();">Request Job</button>
                                 </div>
-                                <img id="requesting-new-job-icon" class="icon-button-hidden" src="{{ url_for('static', filename='loading.gif') }}">
                             </form>
                         </div>
                     </div>
