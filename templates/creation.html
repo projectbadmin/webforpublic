@@ -89,7 +89,7 @@
     function requestNewDataStreaming(){
         var form = $(this);
         var url = form.attr('action');
-        var data = form.serialize();
+        var formData = form.serialize();
         fetch(url, {
             method: 'POST',
             body: formData
