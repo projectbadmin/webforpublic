@@ -27,7 +27,7 @@
                 <div class="row row-cols-1 row-cols-md-1 g-4" style="margin: 0 auto; width: 30%;">
                     <div class="bd-example-snippet bd-code-snippet">
                         <div class="bd-example m-0 border-0">
-                            <div style="width: 50%; margin: 0 auto;">
+                            <form action="/creation/request-new-data-streaming" method="post" style="width: 50%; margin: 0 auto;">
                                 <div class="mb-3">
                                     <label for="job-name" class="form-label">*Date Time selection type:</label>
                                     <input type="text" id="datetime-selection-type" name="datetime-selection-type" class="form-control text-center" value="1" required>
@@ -73,9 +73,10 @@
                                     <input type="number" id="retention-hour" name="retention-hour" class="form-control text-center" value="1">
                                 </div>
                                 <div class="text-center">
-                                    <button class="btn btn-primary" id="submit" onclick="requestNewDataStreaming()">Request Job</button>
+                                    <button class="btn btn-primary" type="submit">Request Job</button>
                                 </div>
-                            </div>
+                                <img id="requesting-new-job-icon" class="icon-button-hidden" src="{{ url_for('static', filename='loading.gif') }}">
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -84,39 +85,5 @@
     </main>
 </body>
 {% include "base.html" %}
-<script>
-    function requestNewDataStreaming(){
-        var url = "/creation/request-new-data-streaming";
-        let formData = new FormData();
-        formData.append('datetime-selection-type', document.getElementById('datetime-selection-type').value);
-        formData.append('from-date', document.getElementById('from-date').value);
-        formData.append('to-date', document.getElementById('to-date').value);
-        formData.append('from-time', document.getElementById('from-time').value);
-        formData.append('to-time', document.getElementById('to-time').value);
-        formData.append('class-code', document.getElementById('class-code').value);
-        formData.append('fut-opt', document.getElementById('fut-opt').value);
-        formData.append('expiry-mth', document.getElementById('expiry-mth').value);
-        formData.append('strike-prc', document.getElementById('strike-prc').value);
-        formData.append('call-put', document.getElementById('call-put').value);
-        formData.append('retention-hour', document.getElementById('retention-hour').value);
-        //document.getElementById('submit').disabled = true;
-        fetch(url, {
-            method: 'POST',
-            body: formData
-        }).then(response => response.text())
-        .then(data => {
-            var toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = data;
-            document.body.appendChild(toast);
-            setTimeout(function() {
-                toast.classList.add('show');
-            }, 100);
-            setTimeout(function() {
-                toast.classList.remove('show');
-                document.body.removeChild(toast);
-            }, 3000);
-        });
-    }
-</script>
+
 </html>

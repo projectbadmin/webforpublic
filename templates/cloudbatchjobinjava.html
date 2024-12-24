@@ -16,68 +16,75 @@
 </head>
 <body>
     {% include "top_title_only.html" %}
-    {% if status != 'SUBMITTED' %}
-    <form id="main" action="/cloudbatchjobinjava/submit/{{ requestid }}/{{tempPageRequestID}}" method="post">
-    {% else %}
-    <form id="main">
-    {% endif %}
-        <param id="requestid" name="requestid" value='{{ requestid }}'>
-        <param id="tempPageRequestID" name="tempPageRequestID" value='{{ tempPageRequestID }}'>
-        <p style="margin: 50px 0;"></p>
-        <div class="row row-cols-1 row-cols-md-1 g-4" style="margin: 0 auto; width: 80%;">
-            <div class="col">
-                <p><em id="status"></em></p>
-            </div>
-            <div class="col">
-                <div class="mb-3">
-                    <button class="btn btn-primary" onclick="cloneToNewRequest();">Clone</button>
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="job_alias" name="job_alias" value='{{ alias }}' onchange="saveAsDraft();">
-                    <label for="floatingInput">Alias</label>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-header">Featured</div>
-                    <div class="card-body">
-                        <h5 class="card-title">onStart() {</h5>
-                        <textarea id="code_for_onStart" name="code_for_onStart">{{ code_for_onStart }}</textarea>
-                        <h5 class="card-title">}</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-header">Featured</div>
-                    <div class="card-body">
-                        <h5 class="card-title">onProess(FutureDataStructure data) {</h5>
-                        <textarea id="code_for_onProcess" name="code_for_onProcess">{{ code_for_onProcess }}</textarea>
-                        <h5 class="card-title">}</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-header">Featured</div>
-                    <div class="card-body">
-                        <h5 class="card-title">onEnd() {</h5>
-                        <textarea id="code_for_onEnd" name="code_for_onEnd">{{ code_for_onEnd }}</textarea>
-                        <h5 class="card-title">}</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col mb-3">
-                {% if status != 'SUBMITTED' %}
-                <button class="btn btn-primary" id="submitCloudbatchjobinjava" disabled>Submit</button>
-                {% else %}
-                <button class="btn btn-primary" type="submit" id="submitCloudbatchjobinjava" disabled>Submit</button>
-                {% endif %}
-            </div>
+
+    <h2 class="fw-bold pt-3 pt-xl-5 pb-2 pb-xl-3 text-center">Step 1</h2>
+    <article class="my-3" id="overview">
+        <div class="bd-heading align-self-center mt-5 mb-3 mt-xl-0 mb-xl-2 text-center">
+            <h3>Prepare BackTest Data</h3>
         </div>
-    </form>
+        {% if status != 'SUBMITTED' %}
+        <form id="main" action="/cloudbatchjobinjava/submit/{{ requestid }}/{{tempPageRequestID}}" method="post">
+        {% else %}
+        <form id="main">
+        {% endif %}
+            <param id="requestid" name="requestid" value='{{ requestid }}'>
+            <param id="tempPageRequestID" name="tempPageRequestID" value='{{ tempPageRequestID }}'>
+            <p style="margin: 50px 0;"></p>
+            <div class="row row-cols-1 row-cols-md-1 g-4" style="margin: 0 auto; width: 80%;">
+                <div class="col">
+                    <p><em id="status"></em></p>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <button class="btn btn-primary" onclick="cloneToNewRequest();">Clone</button>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="job_alias" name="job_alias" value='{{ alias }}' onchange="saveAsDraft();">
+                        <label for="floatingInput">Alias</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">Featured</div>
+                        <div class="card-body">
+                            <h5 class="card-title">onStart() {</h5>
+                            <textarea id="code_for_onStart" name="code_for_onStart">{{ code_for_onStart }}</textarea>
+                            <h5 class="card-title">}</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">Featured</div>
+                        <div class="card-body">
+                            <h5 class="card-title">onProess(FutureDataStructure data) {</h5>
+                            <textarea id="code_for_onProcess" name="code_for_onProcess">{{ code_for_onProcess }}</textarea>
+                            <h5 class="card-title">}</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">Featured</div>
+                        <div class="card-body">
+                            <h5 class="card-title">onEnd() {</h5>
+                            <textarea id="code_for_onEnd" name="code_for_onEnd">{{ code_for_onEnd }}</textarea>
+                            <h5 class="card-title">}</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col mb-3">
+                    {% if status != 'SUBMITTED' %}
+                    <button class="btn btn-primary" id="submitCloudbatchjobinjava" disabled>Submit</button>
+                    {% else %}
+                    <button class="btn btn-primary" type="submit" id="submitCloudbatchjobinjava" disabled>Submit</button>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </article>
     {% if status != 'SUBMITTED' %}
     <script>
         function check_and_generate_keywords(cm, event, method) {
