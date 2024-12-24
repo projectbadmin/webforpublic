@@ -28,6 +28,26 @@
                     <div class="bd-example-snippet bd-code-snippet">
                         <div class="bd-example m-0 border-0">
                             <form action="/creation/request-new-data-streaming" method="post" style="width: 50%; margin: 0 auto;">
+                                <div id="response-message" class="alert alert-info" style="display: none;"></div>
+                                <script>
+                                    $(document).ready(function() {
+                                        $('form').on('submit', function(event) {
+                                            event.preventDefault();
+                                            var form = $(this);
+                                            $.ajax({
+                                                type: form.attr('method'),
+                                                url: form.attr('action'),
+                                                data: form.serialize(),
+                                                success: function(response) {
+                                                    $('#response-message').text(response.message).show();
+                                                },
+                                                error: function(xhr, status, error) {
+                                                    $('#response-message').text('An error occurred: ' + error).show();
+                                                }
+                                            });
+                                        });
+                                    });
+                                </script>
                                 <div class="mb-3">
                                     <label for="job-name" class="form-label">*Date Time selection type:</label>
                                     <input type="text" id="datetime-selection-type" name="datetime-selection-type" class="form-control text-center" value="1" required>

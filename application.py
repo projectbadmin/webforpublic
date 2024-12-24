@@ -178,22 +178,26 @@ def use_data_streaming_and_save(tempPageRequestID):
 
 @application.route('/creation/request-new-data-streaming', methods=['POST'])
 def request_new_data_streaming():
-    datetimeselectiontype = request.form['datetime-selection-type']
-    fromdate = request.form['from-date']
-    todate = request.form['to-date']
-    fromtime = request.form['from-time']
-    totime = request.form['to-time']
-    class_code = request.form['class-code']
-    fut_opt = request.form['fut-opt']
-    expiry_mth = request.form['expiry-mth']
-    strike_prc = request.form['strike-prc']
-    call_put = request.form['call-put']
-    retention_hour = request.form['retention-hour']
-    stream_unique_id = str(uuid.uuid1())
-    response = request_newJob(datetimeselectiontype, fromdate, todate, fromtime, totime, class_code, fut_opt, expiry_mth, strike_prc, call_put, retention_hour, stream_unique_id)
-    message = response.get('message', 'No message found')
-    get_dataStreamingList("","","","","")
-    return use_data_streaming(stream_unique_id)
+    if session.get('request-new-data-streaming') is False:
+        session['request-new-data-streaming'] = True
+        datetimeselectiontype = request.form['datetime-selection-type']
+        fromdate = request.form['from-date']
+        todate = request.form['to-date']
+        fromtime = request.form['from-time']
+        totime = request.form['to-time']
+        class_code = request.form['class-code']
+        fut_opt = request.form['fut-opt']
+        expiry_mth = request.form['expiry-mth']
+        strike_prc = request.form['strike-prc']
+        call_put = request.form['call-put']
+        retention_hour = request.form['retention-hour']
+        stream_unique_id = str(uuid.uuid1())
+        request_newJob(datetimeselectiontype, fromdate, todate, fromtime, totime, class_code, fut_opt, expiry_mth, strike_prc, call_put, retention_hour, stream_unique_id)
+        session['request-new-data-streaming'] = False
+        get_dataStreamingList("","","","","")
+        return redirect(url_for('use_data_streaming', stream_id=stream_unique_id))
+    else:
+        return "Last request is still in progress"
     
 
 @application.route('/home/use-data-streaming/<stream_id>')
