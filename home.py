@@ -46,7 +46,7 @@ def get_dataStreamingList(stream_status, retention_hour, class_code, id, cloudba
 
     return dataStreamList
 
-def request_newJob(datetimeselectiontype, fromdate, todate, fromtime, totime, class_code, fut_opt, expiry_mth, strike_prc, call_put, retention_hour):    
+def request_newJob(datetimeselectiontype, fromdate, todate, fromtime, totime, class_code, fut_opt, expiry_mth, strike_prc, call_put, retention_hour, stream_unique_id):    
     requestContentInJSON = {
         "DATETIMESELECTIONTYPE": datetimeselectiontype,
         "FROMDATE": fromdate.replace("-", ""),
@@ -58,7 +58,8 @@ def request_newJob(datetimeselectiontype, fromdate, todate, fromtime, totime, cl
         "EXPIRY_MTH": expiry_mth,
         "STRIKE_PRC": strike_prc,
         "CALL_PUT": call_put,
-        "RETENTION_HOUR": retention_hour
+        "RETENTION_HOUR": retention_hour,
+        "stream_unique_id": stream_unique_id
     }
     response = send_post_request(
         'https://7r1ppr7pe1.execute-api.ap-south-1.amazonaws.com/Prerequisite_for_stepFunction_DataProvider', requestContentInJSON

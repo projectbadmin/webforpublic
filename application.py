@@ -189,14 +189,11 @@ def request_new_data_streaming():
     strike_prc = request.form['strike-prc']
     call_put = request.form['call-put']
     retention_hour = request.form['retention-hour']
-    response = request_newJob(datetimeselectiontype, fromdate, todate, fromtime, totime, class_code, fut_opt, expiry_mth, strike_prc, call_put, retention_hour)
+    stream_unique_id = uuid.uuid1()
+    response = request_newJob(datetimeselectiontype, fromdate, todate, fromtime, totime, class_code, fut_opt, expiry_mth, strike_prc, call_put, retention_hour, stream_unique_id)
     message = response.get('message', 'No message found')
-    if message == "request successful":
-        requestid = response.get('DATA_STREAM_ID', 'No message found')
-        cloudbatchjobinjava_template = cloudbatchjobinjava(application, requestid)
-        return cloudbatchjobinjava_template
-    else:
-        return redirect(url_for('home'))
+    get_dataStreamingList("","","","","")
+    return use_data_streaming(stream_unique_id)
     
 
 @application.route('/home/use-data-streaming/<stream_id>')
