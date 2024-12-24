@@ -178,7 +178,7 @@ def use_data_streaming_and_save(tempPageRequestID):
 
 @application.route('/creation/request-new-data-streaming', methods=['POST'])
 def request_new_data_streaming():
-    if session.get('request-new-data-streaming') is False:
+    if session.get('request-new-data-streaming') is None or session.get('request-new-data-streaming') is False:
         session['request-new-data-streaming'] = True
         datetimeselectiontype = request.form['datetime-selection-type']
         fromdate = request.form['from-date']
